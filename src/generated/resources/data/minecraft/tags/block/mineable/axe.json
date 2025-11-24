@@ -1,0 +1,18 @@
+{
+  "values": [
+    "shroud:sculk_log",
+    "shroud:sculk_wood",
+    "shroud:stripped_sculk_log",
+    "shroud:stripped_sculk_wood",
+    "shroud:sculk_planks",
+    "shroud:sculk_stairs",
+    "shroud:sculk_slab",
+    "shroud:sculk_fence",
+    "shroud:sculk_fence_gate",
+    "shroud:sculk_wall",
+    "shroud:sculk_door",
+    "shroud:sculk_trapdoor",
+    "shroud:sculk_button",
+    "shroud:sculk_pressure_plate"
+  ]
+}

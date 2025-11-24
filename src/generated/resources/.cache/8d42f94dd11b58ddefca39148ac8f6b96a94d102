@@ -1,0 +1,23 @@
+// 1.21.1	2025-11-22T16:22:51.7972857	Tags for minecraft:block mod id shroud
+527ac695092b364acf77a7b926cf760859c787a9 data/minecraft/tags/block/buttons.json
+fcc3e75afed08c13873bb362a464db0e7dc8b0fc data/minecraft/tags/block/doors.json
+35fa575697f3cc04f61906c7f350d3bb0ded19fb data/minecraft/tags/block/fences.json
+bf7eea40bf095a06f5d6b53791aefc2430c5b395 data/minecraft/tags/block/fence_gates.json
+b2863ee8da6bb82c6f69450cdfea8fa36665b657 data/minecraft/tags/block/leaves.json
+e2abd6329173260b3359ff44ae444aa6853636f7 data/minecraft/tags/block/logs.json
+e2abd6329173260b3359ff44ae444aa6853636f7 data/minecraft/tags/block/logs_that_burn.json
+ad78a218338a3fc9a9269411d312b8b0c72c1ae5 data/minecraft/tags/block/mineable/axe.json
+b12780202d763f7fee9f288f16bdd29a64533a9a data/minecraft/tags/block/planks.json
+f3afbdc9181029200f2eb45ad6a60bf6e2114be6 data/minecraft/tags/block/pressure_plates.json
+5f2c9253d51a06cf3d60b12f9e167950a46ea6f1 data/minecraft/tags/block/saplings.json
+e0cc5300f6c6dcb3d5360937b246ba9b099198ad data/minecraft/tags/block/slabs.json
+cfd2f3b478d36a0bf7c6181d78142035ba28422d data/minecraft/tags/block/stairs.json
+c012ee0df1714386a09625fbeb629da7f73329e9 data/minecraft/tags/block/trapdoors.json
+3414b585d192b6b37312f160bef200b1dba505b9 data/minecraft/tags/block/walls.json
+527ac695092b364acf77a7b926cf760859c787a9 data/minecraft/tags/block/wooden_buttons.json
+fcc3e75afed08c13873bb362a464db0e7dc8b0fc data/minecraft/tags/block/wooden_doors.json
+35fa575697f3cc04f61906c7f350d3bb0ded19fb data/minecraft/tags/block/wooden_fences.json
+f3afbdc9181029200f2eb45ad6a60bf6e2114be6 data/minecraft/tags/block/wooden_pressure_plates.json
+e0cc5300f6c6dcb3d5360937b246ba9b099198ad data/minecraft/tags/block/wooden_slabs.json
+cfd2f3b478d36a0bf7c6181d78142035ba28422d data/minecraft/tags/block/wooden_stairs.json
+c012ee0df1714386a09625fbeb629da7f73329e9 data/minecraft/tags/block/wooden_trapdoors.json

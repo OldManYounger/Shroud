@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "axis=x": { "model": "shroud:block/sculk_portal_x" },
+    "axis=z": { "model": "shroud:block/sculk_portal_z" }
+  }
+}

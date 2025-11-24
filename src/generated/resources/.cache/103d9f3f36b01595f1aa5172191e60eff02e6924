@@ -1,0 +1,5 @@
+// 1.21.1	2025-11-24T12:42:41.5448393	Registries
+a55df67bb4b86f610ffecd9dcf74df69d8b1be67 data/shroud/worldgen/configured_feature/ore_emerald_block.json
+68868060917896d2256b6c9b040264ede1e7bea7 data/shroud/worldgen/configured_feature/sculk_tree.json
+9ac46843bfc505ce0603e86c8b1d71c70884f52b data/shroud/worldgen/placed_feature/ore_emerald_block_placed.json
+4d7305fa2ff4fde799a28b0a7824ea918d41e761 data/shroud/worldgen/placed_feature/sculk_tree_placed.json

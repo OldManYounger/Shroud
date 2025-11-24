@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sculk_planks": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:sculk_planks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:sculk_fence"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_sculk_planks"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shroud:sculk_fence"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+// 1.21.1	2025-11-24T14:44:23.0521082	Loot Tables
+47e451f7946e3d804b085855d2b8c079b9e475f0 data/shroud/loot_table/blocks/sculk_button.json
+49c67a03130aff09f28c9c76b33b5ef283ecb54a data/shroud/loot_table/blocks/sculk_door.json
+f6575b1189d3c8e6b1c068d7dc4c5bf61ec9cc17 data/shroud/loot_table/blocks/sculk_fence.json
+d1cd4799cbe59f6ec0e6cc71dd26840e9301cbfd data/shroud/loot_table/blocks/sculk_fence_gate.json
+43ee13d9a18adf5034135204d776b95eb5ae5764 data/shroud/loot_table/blocks/sculk_leaves.json
+2961afc5d16b03823df9a7086b90fed501c9f9ea data/shroud/loot_table/blocks/sculk_log.json
+57fb322ef3e58886d292cf3ad49bbb4bd276bbc4 data/shroud/loot_table/blocks/sculk_planks.json
+7e6bedbd3f1d0175b11c0c5cb130639828e489a6 data/shroud/loot_table/blocks/sculk_portal.json
+bdc056021428fda680eaf78e6afd70453b752d39 data/shroud/loot_table/blocks/sculk_pressure_plate.json
+16b4efaf8dc8e0cc43c93c8b30a20dba456d95e6 data/shroud/loot_table/blocks/sculk_sapling.json
+cfa358bfa3b8229bad50d8cfcc312770132bac2a data/shroud/loot_table/blocks/sculk_slab.json
+abcd0c7345cf619a168327999d62b805aec3b74f data/shroud/loot_table/blocks/sculk_stairs.json
+bc81813d7452418a2838dcddfeab90c66d8906d6 data/shroud/loot_table/blocks/sculk_trapdoor.json
+a8a7a04082ce707caa7ceffa0491f38707294e6f data/shroud/loot_table/blocks/sculk_wall.json
+8acec48ccbe205e21b077b9466f36639459f25b3 data/shroud/loot_table/blocks/sculk_wood.json
+d6599f98238f7c3a3325a1ebb82f5bcadabe2eef data/shroud/loot_table/blocks/stripped_sculk_log.json
+e5a5f709c4929cb54f3bf2d1c39d87f90dd02c8a data/shroud/loot_table/blocks/stripped_sculk_wood.json

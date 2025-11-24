@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "sculk",
+  "key": {
+    "#": {
+      "item": "shroud:sculk_planks"
+    }
+  },
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "result": {
+    "count": 2,
+    "id": "shroud:sculk_trapdoor"
+  }
+}

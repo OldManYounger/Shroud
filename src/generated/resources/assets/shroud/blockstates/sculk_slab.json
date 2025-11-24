@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shroud:block/sculk_slab"
+    },
+    "type=double": {
+      "model": "shroud:block/sculk_planks"
+    },
+    "type=top": {
+      "model": "shroud:block/sculk_slab_top"
+    }
+  }
+}

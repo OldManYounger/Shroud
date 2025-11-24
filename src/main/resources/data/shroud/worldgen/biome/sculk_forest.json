@@ -1,0 +1,54 @@
+{
+  "temperature": 0.4,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 0,
+    "foliage_color": 18,
+    "water_color": 2302743,
+    "water_fog_color": 329011,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "spawners": {
+    "monster": [],
+    "creature": [],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "underground_water_creature": []
+  },
+  "spawn_costs": {},
+  "carvers": {},
+  "features": [
+    [
+      "shroud:sculk_patch"
+    ],
+    [
+      "shroud:ore_emerald_block_placed"
+    ],
+    [],
+    [],
+    [
+      "shroud:sculk_tree_placed"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+}

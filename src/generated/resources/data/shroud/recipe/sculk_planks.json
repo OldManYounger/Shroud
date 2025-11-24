@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    [
+      {
+        "item": "shroud:sculk_log"
+      },
+      {
+        "item": "shroud:sculk_wood"
+      },
+      {
+        "item": "shroud:stripped_sculk_log"
+      },
+      {
+        "item": "shroud:stripped_sculk_wood"
+      }
+    ]
+  ],
+  "result": {
+    "count": 4,
+    "id": "shroud:sculk_planks"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "block.shroud.purp_sapling": "Purp Sapling",
+
+  "block.shroud.purp_log": "Purp Log",
+  "block.shroud.purp_planks": "Purp Planks",
+  "block.shroud.purp_wood": "Purp Wood",
+  "block.shroud.stripped_purp_log": "Stripped Purp Log",
+  "block.shroud.stripped_purp_wood": "Stripped Purp Wood",
+  "block.shroud.purp_leaves": "Purp Leaves",
+
+  "block.shroud.sculk_sapling": "Sculk Sapling",
+
+  "block.shroud.sculk_log": "Sculk Log",
+  "block.shroud.sculk_wood": "Sculk Wood",
+  "block.shroud.sculk_planks": "Sculk Planks",
+  "block.shroud.stripped_sculk_log": "Stripped Sculk Log",
+  "block.shroud.stripped_sculk_wood": "Stripped Sculk Wood",
+  "block.shroud.sculk_leaves": "Sculk Leaves",
+
+  "block.shroud.sculk_stairs": "Sculk Stairs",
+  "block.shroud.sculk_slab": "Sculk Slab",
+
+  "block.shroud.sculk_button": "Sculk Button",
+  "block.shroud.sculk_pressure_plate": "Sculk Pressure Plate",
+
+  "block.shroud.sculk_fence": "Sculk Fence",
+  "block.shroud.sculk_fence_gate": "Sculk Fence Gate",
+  "block.shroud.sculk_wall": "Sculk Wall",
+
+  "block.shroud.sculk_door": "Sculk Door",
+  "block.shroud.sculk_trapdoor": "Sculk Trapdoor",
+
+  "block.shroud.sculk_portal": "Sculk Portal",
+
+  "item.shroud.gecko_spawn_egg": "Gecko Spawn Egg",
+
+  "creativetab.shroud.shroud_blocks": "Shroud Blocks",
+  "creativetab.shroud.shroud_items": "Shroud Items"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "sculk",
+  "ingredients": [
+    {
+      "item": "shroud:sculk_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:sculk_button"
+  }
+}

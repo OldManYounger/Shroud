@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column_horizontal",
+  "textures": {
+    "end": "shroud:block/stripped_sculk_log",
+    "side": "shroud:block/stripped_sculk_log"
+  }
+}

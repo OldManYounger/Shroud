@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/door_top_right",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "bottom": "shroud:block/sculk_door_bottom",
+    "top": "shroud:block/sculk_door_top"
+  }
+}

@@ -11,6 +11,7 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 /**
  * Registers client-side render layers used by custom Shroud blocks.
  */
+@SuppressWarnings("deprecation")
 @EventBusSubscriber(modid = Shroud.MOD_ID, value = net.neoforged.api.distmarker.Dist.CLIENT)
 public class ModClientSetup {
 

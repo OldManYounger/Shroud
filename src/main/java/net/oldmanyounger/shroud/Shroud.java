@@ -7,6 +7,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
+import net.oldmanyounger.shroud.sound.ModSounds;
 import org.slf4j.Logger;
 
 /** Main entry point for the Shroud mod, responsible for all top-level initialization */
@@ -29,6 +30,8 @@ public class Shroud {
         ModBlocks.register(modEventBus);
 
         ModItems.register(modEventBus);
+
+        ModSounds.SOUND_EVENTS.register(modEventBus);
     }
 
     /** Runs common initialization after registry preparation on both client and server */
@@ -36,3 +39,5 @@ public class Shroud {
         // Reserved for future networking, capability registration, or synced setup tasks
     }
 }
+
+Warden

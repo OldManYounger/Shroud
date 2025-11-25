@@ -1,0 +1,7 @@
+{
+  "sculk_portal_activate": {
+    "sounds": [
+      { "name": "shroud:sculk_portal_activate" }
+    ]
+  }
+}

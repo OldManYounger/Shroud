@@ -25,10 +25,7 @@ public final class ShroudDimensions {
     private ShroudDimensions() {
     }
 
-    /**
-     * Resolves the destination dimension for a portal transition.
-     * Overworld -> Shroud, Shroud -> Overworld.
-     */
+    /** Resolves the destination dimension for a portal transition. Overworld -> Shroud, Shroud -> Overworld. */
     public static ResourceKey<Level> getTargetDimension(ResourceKey<Level> current) {
         if (current.equals(SHROUD_LEVEL)) {
             return OVERWORLD_LEVEL;

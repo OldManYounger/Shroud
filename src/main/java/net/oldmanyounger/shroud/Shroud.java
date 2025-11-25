@@ -39,5 +39,3 @@ public class Shroud {
         // Reserved for future networking, capability registration, or synced setup tasks
     }
 }
-
-Warden

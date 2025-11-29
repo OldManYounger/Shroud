@@ -106,6 +106,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity {
         }));
     }
 
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;

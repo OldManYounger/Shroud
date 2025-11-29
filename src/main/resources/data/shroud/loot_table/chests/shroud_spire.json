@@ -63,24 +63,6 @@
           ]
         },
         {
-          "type": "apotheosis:random_gem",
-          "purities": [
-            "flawless",
-            "perfect"
-          ],
-          "quality": 5,
-          "weight": 60
-        },
-        {
-          "type": "apotheosis:random_affix_item",
-          "quality": 5,
-          "rarities": [
-            "apotheosis:epic",
-            "apotheosis:mythic"
-          ],
-          "weight": 80
-        },
-        {
           "type": "item",
           "name": "minecraft:netherite_helmet",
           "functions": [

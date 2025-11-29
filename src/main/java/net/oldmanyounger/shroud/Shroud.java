@@ -2,6 +2,9 @@ package net.oldmanyounger.shroud;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -9,6 +12,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
@@ -31,6 +35,7 @@ public class Shroud {
     public Shroud(IEventBus modEventBus) {
 
         modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(this::registerSpawnPlacements);
 
         ModCreativeModeTabs.register(modEventBus);
 
@@ -54,6 +59,11 @@ public class Shroud {
 
     /** Runs common initialization after registry preparation on both client and server */
     private void commonSetup(FMLCommonSetupEvent event) {
-        // Reserved for future networking, capability registration, or synced setup tasks
+
     }
+
+    private void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
+        event.register(ModEntities.LIVING_SCULK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+   }
 }

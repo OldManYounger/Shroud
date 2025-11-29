@@ -10,6 +10,10 @@ public final class LivingSculkAnimations {
     public static final RawAnimation IDLE =
             RawAnimation.begin().thenLoop("animation.living_sculk.idle");
 
+    // Looped idle alt.
+    public static final RawAnimation IDLE_HEAD_SPLIT =
+            RawAnimation.begin().thenPlay("animation.living_sculk.idle_head_split");
+
     // Looped walk
     public static final RawAnimation WALKING =
             RawAnimation.begin().thenLoop("animation.living_sculk.walking");

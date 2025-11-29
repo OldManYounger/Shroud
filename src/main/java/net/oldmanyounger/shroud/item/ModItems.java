@@ -1,17 +1,22 @@
 package net.oldmanyounger.shroud.item;
 
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.entity.ModEntities;
+import net.minecraft.world.item.*;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.DeferredSpawnEggItem;
+import net.neoforged.neoforge.registries.DeferredItem;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-/** Declares and registers all standalone items for the Shroud mod */
+import java.util.List;
+
 public class ModItems {
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Shroud.MOD_ID);
 
-    /** Central item registry for Shroud, used for all items and BlockItems */
-    public static final DeferredRegister.Items ITEMS =
-            DeferredRegister.createItems(Shroud.MOD_ID);
+    public static final DeferredItem<Item> LIVING_SCULK_SPAWN_EGG = ITEMS.register("living_sculk_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,
+                    new Item.Properties()));
 
-    /** Registers this item registry with the NeoForge event bus */
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

@@ -10,6 +10,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
+import net.oldmanyounger.shroud.item.ModItems;
 
 /** Generates item models for Shroud items that are not handled by the blockstate provider */
 public class ModItemModelProvider extends ItemModelProvider {
@@ -33,6 +34,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         // Registers standard generated item model for the Sculk door item
         basicItem(ModBlocks.SCULK_DOOR.asItem());
+
+        // Registers item model for entity spawn egg(s)
+        withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }
 
     /** Creates the model for a Sculk sapling using item/generated */

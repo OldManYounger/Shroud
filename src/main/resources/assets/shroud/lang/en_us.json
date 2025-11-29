@@ -32,7 +32,9 @@
 
   "block.shroud.sculk_portal": "Sculk Portal",
 
-  "item.shroud.gecko_spawn_egg": "Gecko Spawn Egg",
+  "item.shroud.living_sculk_spawn_egg": "Living Sculk Spawn Egg",
+
+  "entity.shroud.living_sculk": "Living Sculk",
 
   "creativetab.shroud.shroud_blocks": "Shroud Blocks",
   "creativetab.shroud.shroud_items": "Shroud Items"

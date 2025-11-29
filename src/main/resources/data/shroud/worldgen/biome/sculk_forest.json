@@ -16,7 +16,14 @@
     }
   },
   "spawners": {
-    "monster": [],
+    "monster": [
+      {
+        "type": "shroud:living_sculk",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ],
     "creature": [],
     "ambient": [],
     "water_creature": [],

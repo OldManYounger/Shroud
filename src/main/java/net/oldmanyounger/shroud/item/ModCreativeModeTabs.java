@@ -12,18 +12,18 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 
 import java.util.function.Supplier;
 
+import static net.minecraft.core.registries.Registries.CREATIVE_MODE_TAB;
+
 /** Declares and registers the Shroud mod’s Creative Mode tabs */
 public class ModCreativeModeTabs {
 
     /** Central registry for all Creative Mode tabs owned by the Shroud mod */
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Shroud.MOD_ID);
+            DeferredRegister.create(CREATIVE_MODE_TAB, Shroud.MOD_ID);
 
     /** Main Shroud tab displaying all Sculk wood-set blocks */
-    public static final Supplier<CreativeModeTab> SHROUD_BLOCK_TAB =
-            CREATIVE_MODE_TABS.register("shroud_blocks",
-                    () -> CreativeModeTab.builder()
-                            .icon(() -> new ItemStack(ModBlocks.SCULK_LOG.get()))
+    public static final Supplier<CreativeModeTab> SHROUD_BLOCK_TAB = CREATIVE_MODE_TABS.register("shroud_blocks",
+                    () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.SCULK_LOG.get()))
                             .title(Component.translatable("creativetab.shroud.shroud_blocks"))
                             .displayItems((params, output) -> {
 
@@ -57,6 +57,14 @@ public class ModCreativeModeTabs {
                             })
                             .build()
             );
+
+    public static final Supplier<CreativeModeTab> SHROUD_ITEMS_TAB = CREATIVE_MODE_TABS.register("shroud_items",
+            () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.LIVING_SCULK_SPAWN_EGG.get()))
+                            .withTabsBefore(ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "shroud_blocks"))
+                            .title(Component.translatable("creativetab.shroud.shroud_items"))
+                            .displayItems((params, output) -> {
+                                output.accept(ModItems.LIVING_SCULK_SPAWN_EGG);
+                            }).build());
 
     /** Registers the Creative Mode tabs to the NeoForge mod event bus */
     public static void register(IEventBus eventBus) {

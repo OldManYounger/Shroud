@@ -106,6 +106,12 @@ public class LivingSculkEntity extends Monster implements GeoEntity {
         }));
     }
 
+    @Override
+    public boolean dampensVibrations() {
+        // Living Sculk should not cause sculk sensors / shriekers to trigger
+        return true;
+    }
+
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {

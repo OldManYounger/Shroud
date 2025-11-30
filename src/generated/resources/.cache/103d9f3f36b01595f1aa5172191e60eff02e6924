@@ -1,5 +1,7 @@
-// 1.21.1	2025-11-24T12:42:41.5448393	Registries
-a55df67bb4b86f610ffecd9dcf74df69d8b1be67 data/shroud/worldgen/configured_feature/ore_emerald_block.json
+// 1.21.1	2025-11-30T01:15:14.0367173	Registries
+a7343d1f365de65b3286559b011b7283bbbf6d75 data/shroud/worldgen/configured_feature/ore_netherite_block.json
+06c8831902f59e0117c57fe31d77974e3916818d data/shroud/worldgen/configured_feature/sculk_spike.json
 68868060917896d2256b6c9b040264ede1e7bea7 data/shroud/worldgen/configured_feature/sculk_tree.json
-9ac46843bfc505ce0603e86c8b1d71c70884f52b data/shroud/worldgen/placed_feature/ore_emerald_block_placed.json
+430c54420f71df4e2cc4fe81a5a2576c219f0f39 data/shroud/worldgen/placed_feature/ore_netherite_block_placed.json
+6fcdaf050f2b64219013dab3f3dff57bb042aa7c data/shroud/worldgen/placed_feature/sculk_spike_placed.json
 4d7305fa2ff4fde799a28b0a7824ea918d41e761 data/shroud/worldgen/placed_feature/sculk_tree_placed.json

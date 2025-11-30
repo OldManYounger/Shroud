@@ -6,7 +6,7 @@
     "targets": [
       {
         "state": {
-          "Name": "minecraft:emerald_block"
+          "Name": "minecraft:netherite_block"
         },
         "target": {
           "block": "minecraft:smooth_basalt",
@@ -15,7 +15,7 @@
       },
       {
         "state": {
-          "Name": "minecraft:emerald_block"
+          "Name": "minecraft:netherite_block"
         },
         "target": {
           "predicate_type": "minecraft:tag_match",

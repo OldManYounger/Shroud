@@ -27,9 +27,14 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SCULK_TREE_PLACED =
             registerKey("sculk_tree_placed");
 
-    /** Resource key for the placed emerald block ore feature */
-    public static final ResourceKey<PlacedFeature> ORE_EMERALD_BLOCK_PLACED =
-            registerKey("ore_emerald_block_placed");
+    /** Resource key for the placed netherite block ore feature */
+    public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED =
+            registerKey("ore_netherite_block_placed");
+
+    /** Resource key for the placed SCULK spike feature */
+    public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED =
+            registerKey("sculk_spike_placed");
+
 
     /** Registers all placed features to the bootstrap context */
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
@@ -47,8 +52,8 @@ public class ModPlacedFeatures {
 
         register(
                 context,
-                ORE_EMERALD_BLOCK_PLACED,
-                configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_EMERALD_BLOCK),
+                ORE_NETHERITE_BLOCK_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_NETHERITE_BLOCK),
                 List.of(
                         CountPlacement.of(6),
                         InSquarePlacement.spread(),
@@ -59,6 +64,20 @@ public class ModPlacedFeatures {
                         BiomeFilter.biome()
                 )
         );
+
+        // Sculk spike placed feature – tune frequency/height as needed
+        register(
+                context,
+                SCULK_SPIKE_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SPIKE),
+                List.of(
+                        CountPlacement.of(1),                // how many per chunk
+                        InSquarePlacement.spread(),                // spread across the chunk
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,    // on surface
+                        BiomeFilter.biome()                        // respect biomes
+                )
+        );
+
     }
 
     /** Creates a namespaced ResourceKey for a placed feature */

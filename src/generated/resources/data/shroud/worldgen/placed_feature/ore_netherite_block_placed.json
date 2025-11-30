@@ -1,5 +1,5 @@
 {
-  "feature": "shroud:ore_emerald_block",
+  "feature": "shroud:ore_netherite_block",
   "placement": [
     {
       "type": "minecraft:count",

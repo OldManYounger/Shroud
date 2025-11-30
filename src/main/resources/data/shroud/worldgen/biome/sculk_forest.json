@@ -37,14 +37,19 @@
       "shroud:sculk_patch"
     ],
     [
-      "shroud:ore_emerald_block_placed"
+      "shroud:sculk_spike_placed"
     ],
-    [],
-    [],
+    [
+      "shroud:ore_netherite_block_placed"
+    ],
     [
       "shroud:sculk_tree_placed"
     ],
     [],
+    [],
+    [
+      "minecraft:glow_lichen"
+    ],
     [],
     [],
     [],

@@ -19,6 +19,7 @@ import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
+import net.oldmanyounger.shroud.worldgen.ModFeatures;
 import org.slf4j.Logger;
 
 /** Main entry point for the Shroud mod, responsible for all top-level initialization */
@@ -46,6 +47,8 @@ public class Shroud {
         ModEntities.register(modEventBus);
 
         ModSounds.SOUND_EVENTS.register(modEventBus);
+
+        ModFeatures.FEATURES.register(modEventBus);
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

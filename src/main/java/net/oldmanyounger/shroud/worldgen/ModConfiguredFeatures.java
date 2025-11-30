@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
@@ -31,14 +32,22 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_TREE =
             registerKey("sculk_tree");
 
-    /** Resource key for emerald block ore veins */
-    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_EMERALD_BLOCK =
-            registerKey("ore_emerald_block");
+    /** Resource key for netherite block ore veins */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_NETHERITE_BLOCK =
+            registerKey("ore_netherite_block");
+
+    /** Resource key for the SCULK spike configured feature */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SPIKE =
+            registerKey("sculk_spike");
 
     /** Registers all configured features to the bootstrap context */
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         register(context, SCULK_TREE, Feature.TREE, buildSculkTree());
-        register(context, ORE_EMERALD_BLOCK, Feature.ORE, buildEmeraldBlockOre());
+        register(context, ORE_NETHERITE_BLOCK, Feature.ORE, buildNetheriteBlockOre());
+
+        // Sculk spike – uses custom Feature type and NoneFeatureConfiguration
+        register(context, SCULK_SPIKE, ModFeatures.SCULK_SPIKE.get(), NoneFeatureConfiguration.INSTANCE);
+
     }
 
     /** Builds the SCULK tree configuration used for Shroud tree generation */
@@ -54,15 +63,15 @@ public class ModConfiguredFeatures {
                 .build();
     }
 
-    /** Builds the emerald block ore configuration targeting smooth basalt and deepslate replaceables */
-    private static OreConfiguration buildEmeraldBlockOre() {
-        BlockState emerald = Blocks.EMERALD_BLOCK.defaultBlockState();
+    /** Builds the netherite block ore configuration targeting smooth basalt and deepslate replaceables */
+    private static OreConfiguration buildNetheriteBlockOre() {
+        BlockState netherite = Blocks.NETHERITE_BLOCK.defaultBlockState();
 
         OreConfiguration.TargetBlockState smoothBasaltTarget =
-                OreConfiguration.target(new BlockMatchTest(Blocks.SMOOTH_BASALT), emerald);
+                OreConfiguration.target(new BlockMatchTest(Blocks.SMOOTH_BASALT), netherite);
 
         OreConfiguration.TargetBlockState deepslateTarget =
-                OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), emerald);
+                OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), netherite);
 
         return new OreConfiguration(
                 List.of(smoothBasaltTarget, deepslateTarget),

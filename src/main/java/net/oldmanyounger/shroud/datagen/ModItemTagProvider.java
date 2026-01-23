@@ -8,6 +8,8 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.oldmanyounger.shroud.item.ModItems;
+import net.oldmanyounger.shroud.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +28,37 @@ public class ModItemTagProvider extends ItemTagsProvider {
     /** Registers all item tag entries for the Sculk wood set */
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+
+        tag(ModTags.Items.TRANSFORMABLE_ITEMS)
+                .add(ModItems.EVENTIDE_INGOT.get())
+                .add(ModItems.RAW_EVENTIDE.get());
+
+        // Sword and tool tags
+        tag(ItemTags.SWORDS)
+                .add(ModItems.EVENTIDE_SWORD.get());
+        tag(ItemTags.PICKAXES)
+                .add(ModItems.EVENTIDE_PICKAXE.get());
+        tag(ItemTags.SHOVELS)
+                .add(ModItems.EVENTIDE_SHOVEL.get());
+        tag(ItemTags.AXES)
+                .add(ModItems.EVENTIDE_AXE.get());
+        tag(ItemTags.HOES)
+                .add(ModItems.EVENTIDE_HOE.get());
+
+        // Trimmable armor tags
+        this.tag(ItemTags.TRIMMABLE_ARMOR)
+                .add(ModItems.EVENTIDE_HELMET.get())
+                .add(ModItems.EVENTIDE_CHESTPLATE.get())
+                .add(ModItems.EVENTIDE_LEGGINGS.get())
+                .add(ModItems.EVENTIDE_BOOTS.get());
+
+        // Trim tags
+        this.tag(ItemTags.TRIM_MATERIALS)
+                .add(ModItems.EVENTIDE_INGOT.get());
+
+        this.tag(ItemTags.TRIM_TEMPLATES)
+                .add(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
+
 
         // Registers Sculk log family under burnable-log item tags
         tag(ItemTags.LOGS_THAT_BURN)

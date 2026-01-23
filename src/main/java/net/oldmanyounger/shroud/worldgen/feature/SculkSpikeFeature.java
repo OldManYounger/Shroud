@@ -19,83 +19,107 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
 
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
-        BlockPos blockPos = ctx.origin();
+        BlockPos origin = ctx.origin();
         RandomSource random = ctx.random();
         WorldGenLevel level = ctx.level();
 
-        // Walk downward until we hit the terrain surface
-        while (level.isEmptyBlock(blockPos) && blockPos.getY() > level.getMinBuildHeight() + 2) {
-            blockPos = blockPos.below();
+        // Find the surface
+        BlockPos basePos = origin;
+        while (level.isEmptyBlock(basePos) && basePos.getY() > level.getMinBuildHeight() + 2) {
+            basePos = basePos.below();
         }
 
-        // Require a sculk surface so this only generates in sculk-covered biomes
-        if (!level.getBlockState(blockPos).is(Blocks.SCULK)) {
+        // Only generate on a sculk surface
+        if (!level.getBlockState(basePos).is(Blocks.SCULK)) {
             return false;
         }
 
-        blockPos = blockPos.above(random.nextInt(4));
-        int height = random.nextInt(4) + 7;
-        int radius = height / 4 + random.nextInt(2);
-        if (radius > 1 && random.nextInt(60) == 0) {
-            blockPos = blockPos.above(10 + random.nextInt(30));
-        }
+        // Slight vertical offset for variety at the base
+        basePos = basePos.above(random.nextInt(3)); // 0–2 blocks above the surface
 
+        // Volcano shape parameters
+        int height = 10 + random.nextInt(6);        // 10–15 blocks tall
+        int baseRadius = 6 + random.nextInt(4);     // 6–9 block base radius
+        int rimRadius = Mth.clamp(baseRadius / 2 + random.nextInt(2), 3, baseRadius - 1); // rim tighter than base
+
+        // Crater starts somewhere in the upper half
+        int craterStart = height / 2 + random.nextInt(height / 4 + 1); // between ~H/2 and ~3H/4
+        craterStart = Mth.clamp(craterStart, 2, height - 3);
+
+        int craterRadius = Mth.clamp(rimRadius - 1, 1, rimRadius - 1);
+
+        // Build the volcano mound
         for (int y = 0; y < height; y++) {
-            float fr = (1.0F - (float) y / (float) height) * (float) radius;
-            int r = Mth.ceil(fr);
+            float layerT = (float) y / (float) (height - 1); // 0 at base, 1 at top
 
-            for (int dx = -r; dx <= r; dx++) {
-                float fx = (float) Mth.abs(dx) - 0.25F;
+            // Outer radius tapers from baseRadius at y=0 to rimRadius at y=height-1
+            float idealOuterRadius = Mth.lerp(layerT, (float) baseRadius, (float) rimRadius);
 
-                for (int dz = -r; dz <= r; dz++) {
-                    float fz = (float) Mth.abs(dz) - 0.25F;
-                    if ((dx == 0 && dz == 0 || !(fx * fx + fz * fz > fr * fr))
-                            && (dx != -r && dx != r && dz != -r && dz != r || !(random.nextFloat() > 0.75F))) {
+            // Slight per-layer noise to roughen the silhouette
+            float jitter = (random.nextFloat() - 0.5F) * 0.8F; // -0.4 to +0.4
+            float outerRadius = Mth.clamp(idealOuterRadius + jitter, 1.5F, (float) baseRadius + 1.0F);
 
-                        BlockPos targetPos = blockPos.offset(dx, y, dz);
-                        BlockState state = level.getBlockState(targetPos);
-                        // Allow replacing air, dirt-like blocks, sculk, and sculk veins
-                        if (state.isAir()
-                                || isDirt(state)
-                                || state.is(Blocks.SCULK)
-                                || state.is(Blocks.SCULK_VEIN)) {
-                            setBlock(level, targetPos, Blocks.SCULK.defaultBlockState());
+            int outerIntRadius = Mth.ceil(outerRadius);
+            float outerRadiusSq = outerRadius * outerRadius;
+
+            // Crater: only in the upper part, with roughly constant radius
+            boolean inCraterZone = (y >= craterStart);
+            float craterRadiusF = inCraterZone ? (float) craterRadius : 0.0F;
+            float craterRadiusSq = craterRadiusF * craterRadiusF;
+
+            for (int dx = -outerIntRadius; dx <= outerIntRadius; dx++) {
+                for (int dz = -outerIntRadius; dz <= outerIntRadius; dz++) {
+                    float distSq = (float) (dx * dx + dz * dz);
+
+                    // Must be inside outer radius
+                    if (distSq > outerRadiusSq) {
+                        continue;
+                    }
+
+                    // Inside crater region? Skip to make it hollow
+                    if (inCraterZone && distSq < craterRadiusSq) {
+                        continue;
+                    }
+
+                    // Edge roughness: thin out blocks near outer shell
+                    // If this position is close to the outer rim, randomly remove some blocks
+                    float dist = Mth.sqrt(distSq);
+                    float rimBand = outerRadius - dist;
+                    if (rimBand >= 0.0F && rimBand < 1.0F) {
+                        // Within 1 block of the outer edge
+                        if (random.nextFloat() < 0.20F) { // 20% chance to skip
+                            continue;
                         }
+                    }
 
-                        if (y != 0 && r > 1) {
-                            targetPos = blockPos.offset(dx, -y, dz);
-                            state = level.getBlockState(targetPos);
-                            if (state.isAir()
-                                    || isDirt(state)
-                                    || state.is(Blocks.SCULK)
-                                    || state.is(Blocks.SCULK_VEIN)) {
-                                setBlock(level, targetPos, Blocks.SCULK.defaultBlockState());
-                            }
-                        }
+                    BlockPos targetPos = basePos.offset(dx, y, dz);
+                    BlockState state = level.getBlockState(targetPos);
+
+                    // Replace air / dirt-like / sculk / sculk_vein
+                    if (state.isAir()
+                            || isDirt(state)
+                            || state.is(Blocks.SCULK)
+                            || state.is(Blocks.SCULK_VEIN)) {
+                        setBlock(level, targetPos, Blocks.SCULK.defaultBlockState());
                     }
                 }
             }
         }
 
-        int baseRadius = radius - 1;
-        if (baseRadius < 0) {
-            baseRadius = 0;
-        } else if (baseRadius > 1) {
-            baseRadius = 1;
-        }
-
-        // Generate the downward "root" of the spike
-        for (int dx = -baseRadius; dx <= baseRadius; dx++) {
-            for (int dz = -baseRadius; dz <= baseRadius; dz++) {
-                BlockPos downwardPos = blockPos.offset(dx, -1, dz);
-                int run = 50;
-                if (Math.abs(dx) == 1 && Math.abs(dz) == 1) {
-                    run = random.nextInt(5);
+        // Optionally: short sculk "roots" under the volcano to tie it into the ground
+        int rootRadius = Mth.clamp(baseRadius / 3, 1, 3);
+        for (int dx = -rootRadius; dx <= rootRadius; dx++) {
+            for (int dz = -rootRadius; dz <= rootRadius; dz++) {
+                float distSq = dx * dx + dz * dz;
+                if (distSq > (rootRadius + 0.5F) * (rootRadius + 0.5F)) {
+                    continue;
                 }
 
-                while (downwardPos.getY() > 50) {
+                BlockPos downwardPos = basePos.offset(dx, -1, dz);
+                int maxRootDepth = 4 + random.nextInt(4); // roots 4–7 blocks deep
+
+                for (int depth = 0; depth < maxRootDepth && downwardPos.getY() > level.getMinBuildHeight() + 4; depth++) {
                     BlockState state = level.getBlockState(downwardPos);
-                    // Stop when hitting something solid that is not dirt/sculk/vein
                     if (!state.isAir()
                             && !isDirt(state)
                             && !state.is(Blocks.SCULK)
@@ -103,12 +127,11 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
                         break;
                     }
 
-                    setBlock(level, downwardPos, Blocks.SCULK.defaultBlockState());
-                    downwardPos = downwardPos.below();
-                    if (--run <= 0) {
-                        downwardPos = downwardPos.below(random.nextInt(5) + 1);
-                        run = random.nextInt(5);
+                    if (random.nextFloat() < 0.85F) {
+                        setBlock(level, downwardPos, Blocks.SCULK.defaultBlockState());
                     }
+
+                    downwardPos = downwardPos.below();
                 }
             }
         }

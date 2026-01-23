@@ -1,4 +1,7 @@
-// 1.21.1	2025-11-22T16:22:51.7972857	Block States: shroud
+// 1.21.1	2026-01-21T21:22:04.6414264	Block States: shroud
+f5dd1360ffb959d1df5fd33922282b27b8af222a assets/shroud/blockstates/eventide_block.json
+49475ef5d5031f63c267c324f3266dfecb82c5f8 assets/shroud/blockstates/eventide_deepslate_ore.json
+3457543ab409e2a47ef01b3c381b10c6aff0ed8e assets/shroud/blockstates/eventide_ore.json
 b7e330a29a98c86d22ba0973163645688dd77a89 assets/shroud/blockstates/sculk_button.json
 a5c02338671bd9e143bae8e21470b19f69b71681 assets/shroud/blockstates/sculk_door.json
 0aacb7a12b0c6b64e48e3a6c84cf6fa48d8b2c8e assets/shroud/blockstates/sculk_fence.json
@@ -15,6 +18,9 @@ e9931d865fff2c029759b69cadd7e40aa29ad84a assets/shroud/blockstates/sculk_stairs.
 7251fbb4461dba180c3062d48affc2822e85e73f assets/shroud/blockstates/sculk_wood.json
 f98da694f90f728da4b0bbd542dba0521593b723 assets/shroud/blockstates/stripped_sculk_log.json
 b62d15384f35b8313636de939a79eed56ae787ec assets/shroud/blockstates/stripped_sculk_wood.json
+405d5f39b8aafbdb8257138c3b15cc93b27e7009 assets/shroud/models/block/eventide_block.json
+897a6a5d71ec8a22b4ca5aeeec934138b9f64aa4 assets/shroud/models/block/eventide_deepslate_ore.json
+a0890965d505d839d7790e6e6a34fc775c40a2f4 assets/shroud/models/block/eventide_ore.json
 ad566c0d66cba48662cfc7fcaa017ce26ee623e6 assets/shroud/models/block/sculk_button.json
 5647f413fdd2bcedc5b4d4f9028e2e8d61485d7c assets/shroud/models/block/sculk_button_pressed.json
 8fbbfb0152c65d95a78247aacb4ea0194506e4c7 assets/shroud/models/block/sculk_door_bottom_left.json
@@ -55,6 +61,9 @@ c3446d96b7f83be773e5841bed789b587bd25d17 assets/shroud/models/block/stripped_scu
 cc252d6a70bd9a46828c0b6f08ee6a6d673fde32 assets/shroud/models/block/stripped_sculk_log_horizontal.json
 e7f59251fb87401ab6cfeac07b71f7519565409e assets/shroud/models/block/stripped_sculk_wood.json
 c091607d2662363da2835b65aef602d131dbb524 assets/shroud/models/block/stripped_sculk_wood_horizontal.json
+dfd2f805b7217351ef01ff359508060a16a84348 assets/shroud/models/item/eventide_block.json
+fa107fd277a59cb9ea02a5ac3df416d6f45bd218 assets/shroud/models/item/eventide_deepslate_ore.json
+028ce1c6418e900e13d5a265be5a092fc8b46480 assets/shroud/models/item/eventide_ore.json
 515c0c05eedec58b248398d9da5f6504f533790a assets/shroud/models/item/sculk_fence_gate.json
 f9bba896609e7ae34f31efa8a6ada0c43e62a287 assets/shroud/models/item/sculk_leaves.json
 0a2a88710e8292e3738058cd62b5103830484ee0 assets/shroud/models/item/sculk_log.json

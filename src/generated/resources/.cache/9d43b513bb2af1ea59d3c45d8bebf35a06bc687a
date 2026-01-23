@@ -1,3 +1,12 @@
-// 1.21.1	2025-11-24T13:45:24.6483956	Tags for minecraft:item mod id shroud
+// 1.21.1	2026-01-22T19:24:14.2714119	Tags for minecraft:item mod id shroud
+419452c2dd341b4ad8a1c23d886aa4729d872c5b data/minecraft/tags/item/axes.json
+4dde90978200ce57e7be8ff3216a705f2280b89b data/minecraft/tags/item/hoes.json
 e2abd6329173260b3359ff44ae444aa6853636f7 data/minecraft/tags/item/logs_that_burn.json
+ce0c74815c72c5e7ff30b2b622e6f5c8bd55a2c4 data/minecraft/tags/item/pickaxes.json
 b12780202d763f7fee9f288f16bdd29a64533a9a data/minecraft/tags/item/planks.json
+0a2f8e4d9f08f5f70f88e6dbabbffd7b40ea5afe data/minecraft/tags/item/shovels.json
+3bc6edab19a4023ed279af1dcaf0a0010485f1b4 data/minecraft/tags/item/swords.json
+af6962f8c0a23c5ec87b39c0afc5e81c937e92e5 data/minecraft/tags/item/trimmable_armor.json
+a09505b8d287cd726793297468dfc6bfda7b81f5 data/minecraft/tags/item/trim_materials.json
+187de62f959a8ec29bae5f62c65df5c09e0bdfa2 data/minecraft/tags/item/trim_templates.json
+f38ef0a7ba76adfc52828cc26f69a15d59a1fa4c data/shroud/tags/item/transformable_items.json

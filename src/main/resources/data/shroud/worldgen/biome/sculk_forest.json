@@ -37,9 +37,10 @@
       "shroud:sculk_patch"
     ],
     [
-      "shroud:sculk_spike_placed"
+      "shroud:sculk_arch_placed"
     ],
     [
+      "shroud:ore_eventide_placed",
       "shroud:ore_netherite_block_placed"
     ],
     [

@@ -1,6 +1,8 @@
 package net.oldmanyounger.shroud.datagen;
 
 import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.trim.ModTrimMaterials;
+import net.oldmanyounger.shroud.trim.ModTrimPatterns;
 import net.oldmanyounger.shroud.worldgen.ModConfiguredFeatures;
 import net.oldmanyounger.shroud.worldgen.ModPlacedFeatures;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +19,9 @@ public class ModDatapackProvider extends DatapackBuiltinEntriesProvider {
 
     /** Registry builder that wires configured and placed features into the built-in datapack */
     public static final RegistrySetBuilder BUILDER = new RegistrySetBuilder()
+            .add(Registries.TRIM_MATERIAL, ModTrimMaterials::bootstrap)
+            .add(Registries.TRIM_PATTERN, ModTrimPatterns::bootstrap)
+
             .add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap)
             .add(Registries.PLACED_FEATURE, ModPlacedFeatures::bootstrap);
 

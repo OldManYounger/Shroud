@@ -19,6 +19,7 @@ import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
+import net.oldmanyounger.shroud.util.ModItemProperties;
 import net.oldmanyounger.shroud.worldgen.ModFeatures;
 import org.slf4j.Logger;
 
@@ -49,6 +50,7 @@ public class Shroud {
         ModSounds.SOUND_EVENTS.register(modEventBus);
 
         ModFeatures.FEATURES.register(modEventBus);
+
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -57,6 +59,7 @@ public class Shroud {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
+            ModItemProperties.addCustomItemProperties();
         }
     }
 

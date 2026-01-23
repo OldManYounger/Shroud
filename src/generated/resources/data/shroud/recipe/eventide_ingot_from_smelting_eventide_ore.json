@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.25,
+  "group": "eventide",
+  "ingredient": {
+    "item": "shroud:eventide_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "shroud:eventide_ingot"
+  }
+}

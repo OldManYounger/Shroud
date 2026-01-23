@@ -1,5 +1,7 @@
 package net.oldmanyounger.shroud.datagen;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.minecraft.core.HolderLookup;
@@ -8,6 +10,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.conditions.IConditionBuilder;
+import net.oldmanyounger.shroud.item.ModItems;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,6 +26,115 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     /** Defines all Shroud recipes that should be emitted by datagen */
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
+
+        List<ItemLike> EVENTIDE_SMELTABLES = List.of(
+                ModItems.RAW_EVENTIDE,
+                ModBlocks.EVENTIDE_ORE,
+                ModBlocks.EVENTIDE_DEEPSLATE_ORE);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModBlocks.EVENTIDE_BLOCK.get())
+                .pattern("EEE")
+                .pattern("EEE")
+                .pattern("EEE")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT))
+                .save(recipeOutput);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.EVENTIDE_INGOT.get(), 9)
+                .requires(ModBlocks.EVENTIDE_BLOCK)
+                .unlockedBy("has_eventide_block", has(ModBlocks.EVENTIDE_BLOCK))
+                .save(recipeOutput, "shroud:eventide_ingot_from_eventide_block");
+
+        oreSmelting(recipeOutput, EVENTIDE_SMELTABLES, RecipeCategory.MISC, ModItems.EVENTIDE_INGOT.get(), 0.25f, 200, "eventide");
+        oreBlasting(recipeOutput, EVENTIDE_SMELTABLES, RecipeCategory.MISC, ModItems.EVENTIDE_INGOT.get(), 0.25f, 100, "eventide");
+        trimSmithing(recipeOutput, ModItems.EVENTIDE_SMITHING_TEMPLATE.get(), ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "eventide"));
+
+        // Tools (Eventide)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_SWORD.get())
+                .pattern("E")
+                .pattern("E")
+                .pattern("S")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.EVENTIDE_PICKAXE.get())
+                .pattern("EEE")
+                .pattern(" S ")
+                .pattern(" S ")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.EVENTIDE_SHOVEL.get())
+                .pattern("E")
+                .pattern("S")
+                .pattern("S")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.EVENTIDE_AXE.get())
+                .pattern("EE")
+                .pattern("ES")
+                .pattern(" S")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.EVENTIDE_HOE.get())
+                .pattern("EE")
+                .pattern(" S")
+                .pattern(" S")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STICK)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        // Bow (Eventide)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_BOW.get())
+                .pattern(" ES")
+                .pattern("E S")
+                .pattern(" ES")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .define('S', Items.STRING)
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        // Armor (Eventide)
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_HELMET.get())
+                .pattern("EEE")
+                .pattern("E E")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_CHESTPLATE.get())
+                .pattern("E E")
+                .pattern("EEE")
+                .pattern("EEE")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_LEGGINGS.get())
+                .pattern("EEE")
+                .pattern("E E")
+                .pattern("E E")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_BOOTS.get())
+                .pattern("E E")
+                .pattern("E E")
+                .define('E', ModItems.EVENTIDE_INGOT.get())
+                .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
+                .save(recipeOutput);
 
         // Convenience local variable holding the Sculk planks block
         var sculkPlanks = ModBlocks.SCULK_PLANKS.get();

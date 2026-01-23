@@ -6,6 +6,7 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.oldmanyounger.shroud.block.ModBlocks;
+import net.oldmanyounger.shroud.item.ModItems;
 
 import java.util.Set;
 
@@ -20,6 +21,15 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     /** Defines drop behavior for each registered Shroud block */
     @Override
     protected void generate() {
+
+        // Eventide block drops itself
+        dropSelf(ModBlocks.EVENTIDE_BLOCK.get());
+
+        // Eventide ore drops raw_eventide (with silk touch / fortune behavior via createOreDrop)
+        add(ModBlocks.EVENTIDE_ORE.get(),
+                block -> createOreDrop(ModBlocks.EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
+        add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get(),
+                block -> createOreDrop(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
 
         // Registers simple self-dropping behavior for core Sculk wood blocks and sapling
         this.dropSelf(ModBlocks.SCULK_LOG.get());

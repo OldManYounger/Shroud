@@ -1,0 +1,8 @@
+{
+  "asset_id": "shroud:eventide",
+  "decal": false,
+  "description": {
+    "translate": "trim_pattern.shroud.eventide"
+  },
+  "template_item": "shroud:eventide_armor_trim_smithing_template"
+}

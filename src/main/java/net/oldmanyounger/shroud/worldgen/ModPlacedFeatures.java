@@ -9,12 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.placement.BiomeFilter;
-import net.minecraft.world.level.levelgen.placement.CountPlacement;
-import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
+import net.minecraft.world.level.levelgen.placement.*;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 
@@ -31,9 +26,18 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED =
             registerKey("ore_netherite_block_placed");
 
+    /** Resource key for the placed Eventide ore feature */
+    public static final ResourceKey<PlacedFeature> ORE_EVENTIDE_PLACED =
+            registerKey("ore_eventide_placed");
+
     /** Resource key for the placed SCULK spike feature */
     public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED =
             registerKey("sculk_spike_placed");
+
+    /** Resource key for the placed SCULK arch feature */
+    public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED =
+            registerKey("sculk_arch_placed");
+
 
 
     /** Registers all placed features to the bootstrap context */
@@ -65,18 +69,46 @@ public class ModPlacedFeatures {
                 )
         );
 
+        register(
+                context,
+                ORE_EVENTIDE_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_EVENTIDE),
+                List.of(
+                        CountPlacement.of(10),
+                        InSquarePlacement.spread(),
+                        HeightRangePlacement.triangle(
+                                VerticalAnchor.absolute(-24),
+                                VerticalAnchor.absolute(63)
+                        ),
+                        BiomeFilter.biome()
+                )
+        );
+
         // Sculk spike placed feature – tune frequency/height as needed
         register(
                 context,
-                SCULK_SPIKE_PLACED,
+                ModPlacedFeatures.SCULK_SPIKE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SPIKE),
                 List.of(
-                        CountPlacement.of(1),                // how many per chunk
-                        InSquarePlacement.spread(),                // spread across the chunk
-                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,    // on surface
-                        BiomeFilter.biome()                        // respect biomes
+                        RarityFilter.onAverageOnceEvery(16),      // ~1 in 16 chunks
+                        InSquarePlacement.spread(),
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                        BiomeFilter.biome()
                 )
         );
+
+        register(
+                context,
+                ModPlacedFeatures.SCULK_ARCH_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_ARCH),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(24),      // tune as desired
+                        InSquarePlacement.spread(),
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                        BiomeFilter.biome()
+                )
+        );
+
 
     }
 

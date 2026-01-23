@@ -28,7 +28,7 @@ import java.util.List;
 /** Holds all configured features registered by the Shroud mod */
 public class ModConfiguredFeatures {
 
-    /** Resource key for the SCULK tree feature */
+    /** Resource key for the Sculk tree feature */
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_TREE =
             registerKey("sculk_tree");
 
@@ -36,17 +36,28 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_NETHERITE_BLOCK =
             registerKey("ore_netherite_block");
 
-    /** Resource key for the SCULK spike configured feature */
+    /** Resource key for Eventide ore veins */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_EVENTIDE =
+            registerKey("ore_eventide");
+
+    /** Resource key for the Sculk spike configured feature */
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SPIKE =
             registerKey("sculk_spike");
+
+    /** Resource key for the Sculk arch configured feature */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_ARCH =
+            registerKey("sculk_arch");
+
 
     /** Registers all configured features to the bootstrap context */
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         register(context, SCULK_TREE, Feature.TREE, buildSculkTree());
         register(context, ORE_NETHERITE_BLOCK, Feature.ORE, buildNetheriteBlockOre());
+        register(context, ORE_EVENTIDE, Feature.ORE, buildEventideOre());
 
         // Sculk spike – uses custom Feature type and NoneFeatureConfiguration
         register(context, SCULK_SPIKE, ModFeatures.SCULK_SPIKE.get(), NoneFeatureConfiguration.INSTANCE);
+        register(context, SCULK_ARCH, ModFeatures.SCULK_ARCH.get(), NoneFeatureConfiguration.INSTANCE);
 
     }
 
@@ -76,6 +87,24 @@ public class ModConfiguredFeatures {
         return new OreConfiguration(
                 List.of(smoothBasaltTarget, deepslateTarget),
                 9,
+                0.0F
+        );
+    }
+
+    /** Builds the Eventide ore configuration targeting stone and deepslate replaceables */
+    private static OreConfiguration buildEventideOre() {
+        BlockState eventideOre = ModBlocks.EVENTIDE_ORE.get().defaultBlockState();
+        BlockState deepslateEventideOre = ModBlocks.EVENTIDE_DEEPSLATE_ORE.get().defaultBlockState();
+
+        OreConfiguration.TargetBlockState stoneTarget =
+                OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), eventideOre);
+
+        OreConfiguration.TargetBlockState deepslateTarget =
+                OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), deepslateEventideOre);
+
+        return new OreConfiguration(
+                List.of(stoneTarget, deepslateTarget),
+                8,
                 0.0F
         );
     }

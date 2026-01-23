@@ -27,6 +27,31 @@ public class ModCreativeModeTabs {
                             .title(Component.translatable("creativetab.shroud.shroud_blocks"))
                             .displayItems((params, output) -> {
 
+                                // Eventide ore
+                                output.accept(ModItems.RAW_EVENTIDE.get());
+                                output.accept(ModItems.EVENTIDE_INGOT.get());
+
+                                output.accept(ModBlocks.EVENTIDE_ORE.get());
+                                output.accept(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+                                output.accept(ModBlocks.EVENTIDE_BLOCK.get());
+
+                                // Eventide tools & weapons
+                                output.accept(ModItems.EVENTIDE_SWORD.get());
+                                output.accept(ModItems.EVENTIDE_PICKAXE.get());
+                                output.accept(ModItems.EVENTIDE_SHOVEL.get());
+                                output.accept(ModItems.EVENTIDE_AXE.get());
+                                output.accept(ModItems.EVENTIDE_HOE.get());
+                                output.accept(ModItems.EVENTIDE_BOW.get());
+
+                                // Eventide armor
+                                output.accept(ModItems.EVENTIDE_HELMET.get());
+                                output.accept(ModItems.EVENTIDE_CHESTPLATE.get());
+                                output.accept(ModItems.EVENTIDE_LEGGINGS.get());
+                                output.accept(ModItems.EVENTIDE_BOOTS.get());
+
+                                // Eventide trim
+                                output.accept(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
+
                                 // Sculk logs and wood
                                 output.accept(ModBlocks.SCULK_LOG.get());
                                 output.accept(ModBlocks.SCULK_WOOD.get());

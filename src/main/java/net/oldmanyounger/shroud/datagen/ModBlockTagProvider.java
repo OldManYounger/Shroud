@@ -8,6 +8,7 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
+import net.oldmanyounger.shroud.util.ModTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -25,6 +26,26 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     /** Registers all block tag entries for the Sculk wood set and related blocks */
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+
+        // Eventide ore + block are mineable with pickaxe
+        tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(ModBlocks.EVENTIDE_BLOCK.get())
+                .add(ModBlocks.EVENTIDE_ORE.get())
+                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+
+        // Eventide ore requires an iron-tier tool (adjust later if you add an Eventide tool tier)
+        tag(BlockTags.NEEDS_IRON_TOOL)
+                .add(ModBlocks.EVENTIDE_ORE.get())
+                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+
+        // Optional: if you are using your custom "needs_eventide_tool" tag
+        tag(ModTags.Blocks.NEEDS_EVENTIDE_TOOL)
+                .addTag(BlockTags.NEEDS_IRON_TOOL);
+
+        // Optional: if you are using your custom "incorrect_for_eventide_tool" tag
+        tag(ModTags.Blocks.INCORRECT_FOR_EVENTIDE_TOOL)
+                .addTag(BlockTags.INCORRECT_FOR_IRON_TOOL)
+                .remove(ModTags.Blocks.NEEDS_EVENTIDE_TOOL);
 
         // Registers all Sculk wood-set blocks as axe-mineable wood-like blocks
         wooden(

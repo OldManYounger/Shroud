@@ -1,0 +1,9 @@
+{
+  "asset_name": "eventide",
+  "description": {
+    "color": "#031CFC",
+    "translate": "trim_material.shroud.eventide"
+  },
+  "ingredient": "shroud:eventide_ingot",
+  "item_model_index": 0.5
+}

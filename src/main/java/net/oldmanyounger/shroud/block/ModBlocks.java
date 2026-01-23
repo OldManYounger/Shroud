@@ -2,6 +2,7 @@ package net.oldmanyounger.shroud.block;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
@@ -29,6 +30,17 @@ public class ModBlocks {
     // Central deferred register for all Shroud block instances
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(Shroud.MOD_ID);
+
+    public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4f).requiresCorrectToolForDrops().sound(SoundType.AMETHYST)));
+
+    public static final DeferredBlock<Block> EVENTIDE_ORE = registerBlock("eventide_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 4),
+                    BlockBehaviour.Properties.of().strength(3f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final DeferredBlock<Block> EVENTIDE_DEEPSLATE_ORE = registerBlock("eventide_deepslate_ore",
+            () -> new DropExperienceBlock(UniformInt.of(3, 6),
+                    BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE)));
 
     // Sculk log, wood, stripped variants, and planks with flammability behavior
     public static final DeferredBlock<Block> SCULK_LOG = registerBlock("sculk_log",

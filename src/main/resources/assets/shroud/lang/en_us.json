@@ -1,4 +1,25 @@
 {
+  "block.shroud.eventide_ore": "Eventide Ore",
+  "block.shroud.eventide_deepslate_ore": "Deepslate Eventide Ore",
+  "block.shroud.eventide_block": "Eventide Block",
+
+  "item.shroud.raw_eventide": "Raw Eventide",
+  "item.shroud.eventide_ingot": "Eventide Ingot",
+
+  "item.shroud.eventide_sword": "Eventide Sword",
+  "item.shroud.eventide_pickaxe": "Eventide Pickaxe",
+  "item.shroud.eventide_shovel": "Eventide Shovel",
+  "item.shroud.eventide_axe": "Eventide Axe",
+  "item.shroud.eventide_hoe": "Eventide Hoe",
+  "item.shroud.eventide_bow": "Eventide Bow",
+
+  "item.shroud.eventide_helmet": "Eventide Helmet",
+  "item.shroud.eventide_chestplate": "Eventide Chestplate",
+  "item.shroud.eventide_leggings": "Eventide Leggings",
+  "item.shroud.eventide_boots": "Eventide Boots",
+
+  "item.shroud.eventide_armor_trim_smithing_template": "Eventide Trim Template",
+
   "block.shroud.purp_sapling": "Purp Sapling",
 
   "block.shroud.purp_log": "Purp Log",

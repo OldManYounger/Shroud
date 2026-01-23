@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_eventide_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:eventide_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:eventide_ingot_from_smelting_eventide_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_eventide_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shroud:eventide_ingot_from_smelting_eventide_ore"
+    ]
+  }
+}

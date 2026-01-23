@@ -1,7 +1,13 @@
-// 1.21.1	2025-11-30T01:15:14.0367173	Registries
+// 1.21.1	2026-01-22T19:24:14.2709018	Registries
+98a6ce21912cd3e48513e9adee5a37b6b1d0a64e data/shroud/trim_material/eventide.json
+5bd133a1969de9ef18ee6d02d3a6b8466272d902 data/shroud/trim_pattern/eventide.json
+c3c95c9d9474673297bf119ae631ccda19013f62 data/shroud/worldgen/configured_feature/ore_eventide.json
 a7343d1f365de65b3286559b011b7283bbbf6d75 data/shroud/worldgen/configured_feature/ore_netherite_block.json
+4daebfcb99a7f8f8bedfed16e2937c9854e84b00 data/shroud/worldgen/configured_feature/sculk_arch.json
 06c8831902f59e0117c57fe31d77974e3916818d data/shroud/worldgen/configured_feature/sculk_spike.json
 68868060917896d2256b6c9b040264ede1e7bea7 data/shroud/worldgen/configured_feature/sculk_tree.json
+c2b9e2289564a7a585485264687231271eed9a6c data/shroud/worldgen/placed_feature/ore_eventide_placed.json
 430c54420f71df4e2cc4fe81a5a2576c219f0f39 data/shroud/worldgen/placed_feature/ore_netherite_block_placed.json
-6fcdaf050f2b64219013dab3f3dff57bb042aa7c data/shroud/worldgen/placed_feature/sculk_spike_placed.json
+5b7119b63656a2c845313c2abb02d41516c47bab data/shroud/worldgen/placed_feature/sculk_arch_placed.json
+d996fcf518411a8cbb244d14b9396181f7858b77 data/shroud/worldgen/placed_feature/sculk_spike_placed.json
 4d7305fa2ff4fde799a28b0a7824ea918d41e761 data/shroud/worldgen/placed_feature/sculk_tree_placed.json

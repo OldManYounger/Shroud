@@ -24,6 +24,13 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
 
+        // Eventide storage block (simple cube + matching item model)
+        blockWithItem(ModBlocks.EVENTIDE_BLOCK);
+
+        // Eventide ore blockstate/model (simple cube + matching item model)
+        blockWithItem(ModBlocks.EVENTIDE_ORE);
+        blockWithItem(ModBlocks.EVENTIDE_DEEPSLATE_ORE);
+
         // Registers Sculk log and wood (normal and stripped) with appropriate axis models
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_LOG.get());
         axisBlock((RotatedPillarBlock) ModBlocks.SCULK_WOOD.get(),

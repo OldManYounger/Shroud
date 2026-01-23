@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "E": {
+      "item": "shroud:eventide_ingot"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    " ES",
+    "E S",
+    " ES"
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:eventide_bow"
+  }
+}

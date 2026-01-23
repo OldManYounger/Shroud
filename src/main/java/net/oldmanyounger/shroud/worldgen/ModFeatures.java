@@ -7,6 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.worldgen.feature.SculkArchFeature;
 import net.oldmanyounger.shroud.worldgen.feature.SculkSpikeFeature;
 
 /**
@@ -25,6 +26,12 @@ public final class ModFeatures {
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> SCULK_SPIKE =
             FEATURES.register("sculk_spike",
                     () -> new SculkSpikeFeature(NoneFeatureConfiguration.CODEC));
+
+    /** Feature type for the Sculk arch feature */
+    public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> SCULK_ARCH =
+            FEATURES.register("sculk_arch",
+                    () -> new SculkArchFeature(NoneFeatureConfiguration.CODEC));
+
 
     /** Registers this deferred register with the mod event bus */
     public static void register(IEventBus modEventBus) {

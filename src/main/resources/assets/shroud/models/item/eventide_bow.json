@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "shroud:item/eventide_bow"
+  },
+  "overrides": [
+    {
+      "predicate": { "pulling": 1 },
+      "model": "shroud:item/eventide_bow_pulling_0"
+    },
+    {
+      "predicate": { "pulling": 1, "pull": 0.65 },
+      "model": "shroud:item/eventide_bow_pulling_1"
+    },
+    {
+      "predicate": { "pulling": 1, "pull": 0.9 },
+      "model": "shroud:item/eventide_bow_pulling_2"
+    }
+  ]
+}

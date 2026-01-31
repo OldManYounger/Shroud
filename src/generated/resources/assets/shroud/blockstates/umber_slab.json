@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shroud:block/umber_slab"
+    },
+    "type=double": {
+      "model": "shroud:block/umber_planks"
+    },
+    "type=top": {
+      "model": "shroud:block/umber_slab_top"
+    }
+  }
+}

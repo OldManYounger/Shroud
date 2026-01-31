@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-21T21:22:04.6434306	Loot Tables
+// 1.21.1	2026-01-24T15:08:38.0383383	Loot Tables
 b2c3d12ed9541867cb74c78ac0e6e6d9cb96a436 data/shroud/loot_table/blocks/eventide_block.json
 0502176aa91cf571c033af1d7e58737d523b1567 data/shroud/loot_table/blocks/eventide_deepslate_ore.json
 be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_ore.json
@@ -6,6 +6,7 @@ be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_
 49c67a03130aff09f28c9c76b33b5ef283ecb54a data/shroud/loot_table/blocks/sculk_door.json
 f6575b1189d3c8e6b1c068d7dc4c5bf61ec9cc17 data/shroud/loot_table/blocks/sculk_fence.json
 d1cd4799cbe59f6ec0e6cc71dd26840e9301cbfd data/shroud/loot_table/blocks/sculk_fence_gate.json
+d1573731293911b3904e88c54de4626801ef27f8 data/shroud/loot_table/blocks/sculk_grass.json
 43ee13d9a18adf5034135204d776b95eb5ae5764 data/shroud/loot_table/blocks/sculk_leaves.json
 2961afc5d16b03823df9a7086b90fed501c9f9ea data/shroud/loot_table/blocks/sculk_log.json
 57fb322ef3e58886d292cf3ad49bbb4bd276bbc4 data/shroud/loot_table/blocks/sculk_planks.json
@@ -19,3 +20,19 @@ a8a7a04082ce707caa7ceffa0491f38707294e6f data/shroud/loot_table/blocks/sculk_wal
 8acec48ccbe205e21b077b9466f36639459f25b3 data/shroud/loot_table/blocks/sculk_wood.json
 d6599f98238f7c3a3325a1ebb82f5bcadabe2eef data/shroud/loot_table/blocks/stripped_sculk_log.json
 e5a5f709c4929cb54f3bf2d1c39d87f90dd02c8a data/shroud/loot_table/blocks/stripped_sculk_wood.json
+d5916bec8e4cf0d550fa949ff71bb493b737db9f data/shroud/loot_table/blocks/stripped_umber_log.json
+16d7528951471ccc17a2d69e9478b93c4b8f4e0b data/shroud/loot_table/blocks/stripped_umber_wood.json
+da2b0f5dabed53cb953b36360cce7848703701f8 data/shroud/loot_table/blocks/umber_button.json
+45f6e08a4a62d9f9693bef723c3e5e34f873f601 data/shroud/loot_table/blocks/umber_door.json
+bb206cabb3825888b37a1d8ca2206dea5cef5ca5 data/shroud/loot_table/blocks/umber_fence.json
+5997e299978569b9dfdb67b7e68198d67a2e6420 data/shroud/loot_table/blocks/umber_fence_gate.json
+03039c3aec6ea022ce4217b3180e95aa0fb864e1 data/shroud/loot_table/blocks/umber_leaves.json
+5fb1dae0e84bcd9998d8aeceb733bc2e5d329427 data/shroud/loot_table/blocks/umber_log.json
+1df5538219798016ae3d5da0facf3df6f5d779d8 data/shroud/loot_table/blocks/umber_planks.json
+cb625b364030d4fbbfdf0a485c8f0aa64447cdac data/shroud/loot_table/blocks/umber_pressure_plate.json
+e47865243cfa1b6fc052ff19e0a3ae5aaca168a1 data/shroud/loot_table/blocks/umber_sapling.json
+c5d77281208a51cddb9bdd4805cbf92eea16a480 data/shroud/loot_table/blocks/umber_slab.json
+a7b6f5cc77fb9b1fcc4a8a82bf760e3bdfa564a1 data/shroud/loot_table/blocks/umber_stairs.json
+5d472c5a4a891a9266a10268c5937e4bc8ec5a9e data/shroud/loot_table/blocks/umber_trapdoor.json
+b1097a05f6f336effd892dfaeae4fdc6bdab812b data/shroud/loot_table/blocks/umber_wall.json
+ff45dc698d26b13a18b0e303f627240a0492f924 data/shroud/loot_table/blocks/umber_wood.json

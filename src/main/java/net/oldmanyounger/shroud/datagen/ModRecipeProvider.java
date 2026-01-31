@@ -197,6 +197,69 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         trapdoorBuilder(ModBlocks.SCULK_TRAPDOOR.get(), Ingredient.of(sculkPlanks)).group("sculk")
                 .unlockedBy("has_sculk_planks", has(sculkPlanks))
                 .save(recipeOutput);
+
+        // Convenience local variable holding the Umber planks block
+        var umberPlanks = ModBlocks.UMBER_PLANKS.get();
+
+        // Registers shapeless recipes converting Umber logs and wood (stripped and non-stripped) into Umber planks
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.UMBER_PLANKS.get(), 4)
+                .requires(Ingredient.of(
+                        ModBlocks.UMBER_LOG.get(),
+                        ModBlocks.UMBER_WOOD.get(),
+                        ModBlocks.STRIPPED_UMBER_LOG.get(),
+                        ModBlocks.STRIPPED_UMBER_WOOD.get()
+                ))
+                .unlockedBy("has_umber_log", has(ModBlocks.UMBER_LOG.get()))
+                .unlockedBy("has_umber_wood", has(ModBlocks.UMBER_WOOD.get()))
+                .unlockedBy("has_stripped_umber_log", has(ModBlocks.STRIPPED_UMBER_LOG.get()))
+                .unlockedBy("has_stripped_umber_wood", has(ModBlocks.STRIPPED_UMBER_WOOD.get()))
+                .save(recipeOutput);
+
+        // Registers shaped recipe converting Umber logs into Umber wood
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.UMBER_WOOD.get(), 3)
+                .define('#', ModBlocks.UMBER_LOG.get())
+                .pattern("##")
+                .pattern("##")
+                .unlockedBy("has_umber_log", has(ModBlocks.UMBER_LOG.get()))
+                .save(recipeOutput);
+
+        // Registers shaped recipe converting stripped Umber logs into stripped Umber wood
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STRIPPED_UMBER_WOOD.get(), 3)
+                .define('#', ModBlocks.STRIPPED_UMBER_LOG.get())
+                .pattern("##")
+                .pattern("##")
+                .unlockedBy("has_stripped_umber_log", has(ModBlocks.STRIPPED_UMBER_LOG.get()))
+                .save(recipeOutput);
+
+        // Registers Umber stair and slab recipes based on Umber planks
+        stairBuilder(ModBlocks.UMBER_STAIRS.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.UMBER_SLAB.get(), umberPlanks);
+
+        // Registers Umber button and pressure plate recipes
+        buttonBuilder(ModBlocks.UMBER_BUTTON.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+        pressurePlate(recipeOutput, ModBlocks.UMBER_PRESSURE_PLATE.get(), umberPlanks);
+
+        // Registers Umber fence, fence gate, and wall recipes
+        fenceBuilder(ModBlocks.UMBER_FENCE.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+        fenceGateBuilder(ModBlocks.UMBER_FENCE_GATE.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.UMBER_WALL.get(), umberPlanks);
+
+        // Registers Umber door and trapdoor recipes
+        doorBuilder(ModBlocks.UMBER_DOOR.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+        trapdoorBuilder(ModBlocks.UMBER_TRAPDOOR.get(), Ingredient.of(umberPlanks)).group("umber")
+                .unlockedBy("has_umber_planks", has(umberPlanks))
+                .save(recipeOutput);
+
     }
 
     /** Helper for registering smelting recipes for ore-like inputs */

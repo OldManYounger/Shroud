@@ -16,6 +16,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.custom.ModFlammableRotatedPillarBlock;
+import net.oldmanyounger.shroud.block.custom.ModGrassBlock;
 import net.oldmanyounger.shroud.block.custom.ModLeavesBlock;
 import net.oldmanyounger.shroud.block.custom.ModSaplingBlock;
 import net.oldmanyounger.shroud.item.ModItems;
@@ -30,6 +31,9 @@ public class ModBlocks {
     // Central deferred register for all Shroud block instances
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(Shroud.MOD_ID);
+
+    public static final DeferredBlock<Block> SCULK_GRASS = registerBlock("sculk_grass",
+            () -> new ModGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK)));
 
     public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
             () -> new Block(BlockBehaviour.Properties.of()
@@ -91,10 +95,14 @@ public class ModBlocks {
             });
 
     // Sculk sapling constrained to survive on Sculk blocks
-    public static final DeferredBlock<Block> SCULK_SAPLING = registerBlock("sculk_sapling",
-            () -> new ModSaplingBlock(ModTreeGrowers.SCULK,
+    public static final DeferredBlock<Block> SCULK_SAPLING = registerBlock(
+            "sculk_sapling",
+            () -> new ModSaplingBlock(
+                    ModTreeGrowers.SCULK,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING),
+                    ModBlocks.SCULK_GRASS,
                     () -> Blocks.SCULK));
+
 
     // Sculk stairs and slab variants based on Sculk planks
     public static final DeferredBlock<StairBlock> SCULK_STAIRS = registerBlock("sculk_stairs",
@@ -138,6 +146,110 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
     public static final DeferredBlock<TrapDoorBlock> SCULK_TRAPDOOR = registerBlock("sculk_trapdoor",
+            () -> new TrapDoorBlock(BlockSetType.ACACIA, BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()));
+
+    // Umber log, wood, stripped variants, and planks with flammability behavior
+    public static final DeferredBlock<Block> UMBER_LOG = registerBlock("umber_log",
+            () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
+    public static final DeferredBlock<Block> UMBER_WOOD = registerBlock("umber_wood",
+            () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)));
+    public static final DeferredBlock<Block> STRIPPED_UMBER_LOG = registerBlock("stripped_umber_log",
+            () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG)));
+    public static final DeferredBlock<Block> STRIPPED_UMBER_WOOD = registerBlock("stripped_umber_wood",
+            () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD)));
+
+    // Umber planks with custom flammability and fire spread values
+    public static final DeferredBlock<Block> UMBER_PLANKS = registerBlock("umber_planks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)) {
+                @Override
+                public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return true;
+                }
+
+                @Override
+                public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return 20;
+                }
+
+                @Override
+                public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return 5;
+                }
+            });
+
+    // Umber leaves with overridden flammability profile
+    public static final DeferredBlock<Block> UMBER_LEAVES = registerBlock("umber_leaves",
+            () -> new ModLeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)) {
+                @Override
+                public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return true;
+                }
+
+                @Override
+                public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return 60;
+                }
+
+                @Override
+                public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+                    return 30;
+                }
+            });
+
+    // Umber sapling constrained to survive on Umber blocks
+    public static final DeferredBlock<Block> UMBER_SAPLING = registerBlock(
+            "umber_sapling",
+            () -> new ModSaplingBlock(
+                    ModTreeGrowers.SCULK,
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING),
+                    ModBlocks.SCULK_GRASS,
+                    () -> Blocks.SCULK));
+
+    // Umber stairs and slab variants based on Umber planks
+    public static final DeferredBlock<StairBlock> UMBER_STAIRS = registerBlock("umber_stairs",
+            () -> new StairBlock(ModBlocks.UMBER_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<SlabBlock> UMBER_SLAB = registerBlock("umber_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+
+    // Umber pressure plate and button using iron block set type
+    public static final DeferredBlock<PressurePlateBlock> UMBER_PRESSURE_PLATE = registerBlock("umber_pressure_plate",
+            () -> new PressurePlateBlock(BlockSetType.IRON, BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<ButtonBlock> UMBER_BUTTON = registerBlock("umber_button",
+            () -> new ButtonBlock(BlockSetType.IRON, 20, BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()
+                    .noCollission()));
+
+    // Umber fence, fence gate, and wall for structural variants
+    public static final DeferredBlock<FenceBlock> UMBER_FENCE = registerBlock("umber_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<FenceGateBlock> UMBER_FENCE_GATE = registerBlock("umber_fence_gate",
+            () -> new FenceGateBlock(WoodType.ACACIA, BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+    public static final DeferredBlock<WallBlock> UMBER_WALL = registerBlock("umber_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()));
+
+    // Umber door and trapdoor using Acacia block set type with no occlusion
+    public static final DeferredBlock<DoorBlock> UMBER_DOOR = registerBlock("umber_door",
+            () -> new DoorBlock(BlockSetType.ACACIA, BlockBehaviour.Properties.of()
+                    .strength(2f)
+                    .requiresCorrectToolForDrops()
+                    .noOcclusion()));
+    public static final DeferredBlock<TrapDoorBlock> UMBER_TRAPDOOR = registerBlock("umber_trapdoor",
             () -> new TrapDoorBlock(BlockSetType.ACACIA, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()

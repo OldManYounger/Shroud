@@ -70,5 +70,17 @@ public class ModItemTagProvider extends ItemTagsProvider {
         // Registers Sculk planks under the standard plank item tag
         tag(ItemTags.PLANKS)
                 .add(ModBlocks.SCULK_PLANKS.asItem());
+
+        // Registers Umber log family under burnable-log item tags
+        tag(ItemTags.LOGS_THAT_BURN)
+                .add(ModBlocks.UMBER_LOG.get().asItem())
+                .add(ModBlocks.UMBER_WOOD.get().asItem())
+                .add(ModBlocks.STRIPPED_UMBER_LOG.get().asItem())
+                .add(ModBlocks.STRIPPED_UMBER_WOOD.get().asItem());
+
+        // Registers Umber planks under the standard plank item tag
+        tag(ItemTags.PLANKS)
+                .add(ModBlocks.UMBER_PLANKS.asItem());
+
     }
 }

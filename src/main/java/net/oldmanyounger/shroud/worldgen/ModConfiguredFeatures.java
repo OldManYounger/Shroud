@@ -5,6 +5,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -15,8 +16,11 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.MegaPineFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.treedecorators.AlterGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.GiantTrunkPlacer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
 import net.minecraft.tags.BlockTags;
@@ -31,6 +35,10 @@ public class ModConfiguredFeatures {
     /** Resource key for the Sculk tree feature */
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_TREE =
             registerKey("sculk_tree");
+
+    /** Resource key for the Umber tree feature */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> UMBER_TREE =
+            registerKey("umber_tree");
 
     /** Resource key for netherite block ore veins */
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_NETHERITE_BLOCK =
@@ -52,6 +60,7 @@ public class ModConfiguredFeatures {
     /** Registers all configured features to the bootstrap context */
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         register(context, SCULK_TREE, Feature.TREE, buildSculkTree());
+        register(context, UMBER_TREE, Feature.TREE, buildUmberTree());
         register(context, ORE_NETHERITE_BLOCK, Feature.ORE, buildNetheriteBlockOre());
         register(context, ORE_EVENTIDE, Feature.ORE, buildEventideOre());
 
@@ -73,6 +82,24 @@ public class ModConfiguredFeatures {
                 .dirt(BlockStateProvider.simple(Blocks.SCULK))
                 .build();
     }
+
+    /** Builds the UMBER tree configuration used for Shroud tree generation */
+    private static TreeConfiguration buildUmberTree() {
+        return new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(ModBlocks.UMBER_LOG.get()),
+                new GiantTrunkPlacer(13, 2, 14),
+                BlockStateProvider.simple(ModBlocks.UMBER_LEAVES.get()),
+                new MegaPineFoliagePlacer(
+                        UniformInt.of(0, 2),
+                        ConstantInt.of(0),
+                        UniformInt.of(13, 17)
+                ),
+                new TwoLayersFeatureSize(1, 1, 2)
+        )
+                .dirt(BlockStateProvider.simple(Blocks.SCULK))
+                .build();
+    }
+
 
     /** Builds the netherite block ore configuration targeting smooth basalt and deepslate replaceables */
     private static OreConfiguration buildNetheriteBlockOre() {

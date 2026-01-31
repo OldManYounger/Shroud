@@ -5,6 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.item.ModItems;
 
@@ -21,6 +22,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     /** Defines drop behavior for each registered Shroud block */
     @Override
     protected void generate() {
+
+        add(ModBlocks.SCULK_GRASS.get(),
+                createSingleItemTable(Blocks.SCULK));
 
         // Eventide block drops itself
         dropSelf(ModBlocks.EVENTIDE_BLOCK.get());
@@ -58,9 +62,35 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.SCULK_TRAPDOOR.get());
         add(ModBlocks.SCULK_DOOR.get(), block -> createDoorTable(ModBlocks.SCULK_DOOR.get()));
 
+        // Registers simple self-dropping behavior for core Umber wood blocks and sapling
+        this.dropSelf(ModBlocks.UMBER_LOG.get());
+        this.dropSelf(ModBlocks.UMBER_WOOD.get());
+        this.dropSelf(ModBlocks.STRIPPED_UMBER_LOG.get());
+        this.dropSelf(ModBlocks.STRIPPED_UMBER_WOOD.get());
+        this.dropSelf(ModBlocks.UMBER_PLANKS.get());
+        this.dropSelf(ModBlocks.UMBER_SAPLING.get());
+
+        // Configures Umber leaves to drop saplings and sticks using standard leaf chances
+        this.add(ModBlocks.UMBER_LEAVES.get(),
+                block -> createLeavesDrops(block, ModBlocks.UMBER_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
+
+        // Registers self-dropping behavior and special slab handling for Umber wood variants
+        dropSelf(ModBlocks.UMBER_STAIRS.get());
+        add(ModBlocks.UMBER_SLAB.get(), block -> createSlabItemTable(ModBlocks.UMBER_SLAB.get()));
+
+        dropSelf(ModBlocks.UMBER_BUTTON.get());
+        dropSelf(ModBlocks.UMBER_PRESSURE_PLATE.get());
+
+        dropSelf(ModBlocks.UMBER_FENCE.get());
+        dropSelf(ModBlocks.UMBER_FENCE_GATE.get());
+        dropSelf(ModBlocks.UMBER_WALL.get());
+
+        // Configures Umber trapdoor and door to use appropriate loot tables
+        dropSelf(ModBlocks.UMBER_TRAPDOOR.get());
+        add(ModBlocks.UMBER_DOOR.get(), block -> createDoorTable(ModBlocks.UMBER_DOOR.get()));
+
         // Configures the Sculk portal to drop nothing
         this.add(ModBlocks.SCULK_PORTAL.get(), block -> noDrop());
-
     }
 
     /** Returns all known Shroud blocks to ensure loot tables are generated for each one */

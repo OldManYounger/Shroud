@@ -22,6 +22,10 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SCULK_TREE_PLACED =
             registerKey("sculk_tree_placed");
 
+    /** Resource key for the placed SCULK tree feature */
+    public static final ResourceKey<PlacedFeature> UMBER_TREE_PLACED =
+            registerKey("umber_tree_placed");
+
     /** Resource key for the placed netherite block ore feature */
     public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED =
             registerKey("ore_netherite_block_placed");
@@ -51,6 +55,16 @@ public class ModPlacedFeatures {
                 VegetationPlacements.treePlacement(
                         PlacementUtils.countExtra(3, 0.1f, 2),
                         ModBlocks.SCULK_SAPLING.get()
+                )
+        );
+
+        register(
+                context,
+                UMBER_TREE_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.UMBER_TREE),
+                VegetationPlacements.treePlacement(
+                        PlacementUtils.countExtra(3, 0.1f, 2),
+                        ModBlocks.UMBER_SAPLING.get()
                 )
         );
 

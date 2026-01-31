@@ -27,6 +27,9 @@ public class ModCreativeModeTabs {
                             .title(Component.translatable("creativetab.shroud.shroud_blocks"))
                             .displayItems((params, output) -> {
 
+                                // Sculk grass
+                                output.accept(ModBlocks.SCULK_GRASS.get());
+
                                 // Eventide ore
                                 output.accept(ModItems.RAW_EVENTIDE.get());
                                 output.accept(ModItems.EVENTIDE_INGOT.get());
@@ -79,6 +82,35 @@ public class ModCreativeModeTabs {
                                 // Sculk redstone-interaction blocks
                                 output.accept(ModBlocks.SCULK_PRESSURE_PLATE.get());
                                 output.accept(ModBlocks.SCULK_BUTTON.get());
+
+                                // Umber logs and wood
+                                output.accept(ModBlocks.UMBER_LOG.get());
+                                output.accept(ModBlocks.UMBER_WOOD.get());
+                                output.accept(ModBlocks.STRIPPED_UMBER_LOG.get());
+                                output.accept(ModBlocks.STRIPPED_UMBER_WOOD.get());
+
+                                // Umber planks, leaves and sapling
+                                output.accept(ModBlocks.UMBER_PLANKS.get());
+                                output.accept(ModBlocks.UMBER_LEAVES.get());
+                                output.accept(ModBlocks.UMBER_SAPLING.get());
+
+                                // Umber plank variants
+                                output.accept(ModBlocks.UMBER_STAIRS.get());
+                                output.accept(ModBlocks.UMBER_SLAB.get());
+
+                                // Umber structural blocks
+                                output.accept(ModBlocks.UMBER_FENCE.get());
+                                output.accept(ModBlocks.UMBER_FENCE_GATE.get());
+                                output.accept(ModBlocks.UMBER_WALL.get());
+
+                                // Umber door and trapdoor
+                                output.accept(ModBlocks.UMBER_DOOR.get());
+                                output.accept(ModBlocks.UMBER_TRAPDOOR.get());
+
+                                // Umber redstone-interaction blocks
+                                output.accept(ModBlocks.UMBER_PRESSURE_PLATE.get());
+                                output.accept(ModBlocks.UMBER_BUTTON.get());
+
                             })
                             .build()
             );

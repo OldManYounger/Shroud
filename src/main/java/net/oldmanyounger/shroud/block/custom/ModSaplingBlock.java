@@ -7,23 +7,31 @@ import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
 import java.util.function.Supplier;
 
-/** Custom sapling block enforcing survival only on a specific block type */
+/** Custom sapling block enforcing survival only on specific block types */
 public class ModSaplingBlock extends SaplingBlock {
 
-    /** Holds the block that this sapling must be placed on to survive */
-    private final Supplier<Block> blockToSurviveOn;
+    /** Blocks that this sapling may survive on */
+    private final List<Supplier<? extends Block>> validGroundBlocks;
 
-    /** Creates a sapling block with a restricted survival block */
-    public ModSaplingBlock(TreeGrower treeGrower, Properties properties, Supplier<Block> block) {
+    @SafeVarargs
+    public ModSaplingBlock(TreeGrower treeGrower,
+                           Properties properties,
+                           Supplier<? extends Block>... validGroundBlocks) {
         super(treeGrower, properties);
-        this.blockToSurviveOn = block;
+        this.validGroundBlocks = List.of(validGroundBlocks);
     }
 
-    /** Ensures the sapling only survives on the designated block */
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter level, BlockPos pos) {
-        return blockToSurviveOn.get() == state.getBlock();
+        Block ground = state.getBlock();
+        for (Supplier<? extends Block> supplier : validGroundBlocks) {
+            if (supplier.get() == ground) {
+                return true;
+            }
+        }
+        return false;
     }
 }

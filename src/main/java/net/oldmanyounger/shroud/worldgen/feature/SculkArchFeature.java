@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.oldmanyounger.shroud.block.ModBlocks;
 
 /**
  * Generates a large sculk arch between two ground-anchored endpoints
@@ -33,8 +34,8 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
             basePos = basePos.below();
         }
 
-        // Only generate on sculk surface
-        if (!level.getBlockState(basePos).is(Blocks.SCULK)) {
+        // Only generate on sculk-like surface (vanilla sculk OR sculk grass)
+        if (!isSculkSurface(level.getBlockState(basePos))) {
             return false;
         }
 
@@ -82,8 +83,8 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        // Require sculk at both footings
-        if (!level.getBlockState(groundA).is(Blocks.SCULK) || !level.getBlockState(groundB).is(Blocks.SCULK)) {
+        // Require sculk-like surface at both footings
+        if (!isSculkSurface(level.getBlockState(groundA)) || !isSculkSurface(level.getBlockState(groundB))) {
             return false;
         }
 
@@ -126,6 +127,10 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         return true;
     }
 
+    private static boolean isSculkSurface(BlockState state) {
+        return state.is(Blocks.SCULK) || state.is(ModBlocks.SCULK_GRASS.get());
+    }
+
     /**
      * Finds the first non-air block at or below start by scanning down
      * Returns that block position (the ground block), or null if not found
@@ -155,7 +160,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         int depth = 3 + random.nextInt(4); // 3–6
         for (int i = 0; i < depth && p.getY() > level.getMinBuildHeight() + 4; i++) {
             BlockState state = level.getBlockState(p);
-            if (!state.isAir() && !isDirt(state) && !state.is(Blocks.SCULK) && !state.is(Blocks.SCULK_VEIN)) {
+            if (!state.isAir() && !isDirt(state) && !isSculkFillable(state) && !state.is(Blocks.SCULK_VEIN)) {
                 break;
             }
             setBlock(level, p, Blocks.SCULK.defaultBlockState());
@@ -163,8 +168,12 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         }
     }
 
+    private static boolean isSculkFillable(BlockState state) {
+        return state.is(Blocks.SCULK) || state.is(ModBlocks.SCULK_GRASS.get());
+    }
+
     /**
-     * Places a roughly spherical blob of sculk, replacing air/dirt-like/sculk/veins
+     * Places a roughly spherical blob of sculk, replacing air/dirt-like/sculk grass/sculk/veins
      */
     private void placeBlob(WorldGenLevel level, RandomSource random, BlockPos center, int radius) {
         int r = Mth.clamp(radius, 1, 4);
@@ -184,7 +193,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
 
                     if (state.isAir()
                             || isDirt(state)
-                            || state.is(Blocks.SCULK)
+                            || isSculkFillable(state)
                             || state.is(Blocks.SCULK_VEIN)) {
                         setBlock(level, p, Blocks.SCULK.defaultBlockState());
                     }

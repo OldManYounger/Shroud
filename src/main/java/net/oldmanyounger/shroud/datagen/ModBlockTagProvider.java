@@ -27,6 +27,16 @@ public class ModBlockTagProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
 
+        // Sculk grass tags
+        tag(BlockTags.MINEABLE_WITH_SHOVEL)
+                .add(ModBlocks.SCULK_GRASS.get());
+        tag(BlockTags.DIRT)
+                .add(ModBlocks.SCULK_GRASS.get());
+        tag(BlockTags.REPLACEABLE_BY_TREES)
+                .add(ModBlocks.SCULK_GRASS.get());
+        tag(BlockTags.VALID_SPAWN)
+                .add(ModBlocks.SCULK_GRASS.get());
+
         // Eventide ore + block are mineable with pickaxe
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.EVENTIDE_BLOCK.get())
@@ -102,6 +112,63 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
         button(ModBlocks.SCULK_BUTTON.get());
         pressurePlate(ModBlocks.SCULK_PRESSURE_PLATE.get());
+
+        // Registers all Umber wood-set blocks as axe-mineable wood-like blocks
+        wooden(
+                ModBlocks.UMBER_LOG.get(),
+                ModBlocks.UMBER_WOOD.get(),
+                ModBlocks.STRIPPED_UMBER_LOG.get(),
+                ModBlocks.STRIPPED_UMBER_WOOD.get(),
+                ModBlocks.UMBER_PLANKS.get(),
+                ModBlocks.UMBER_STAIRS.get(),
+                ModBlocks.UMBER_SLAB.get(),
+                ModBlocks.UMBER_FENCE.get(),
+                ModBlocks.UMBER_FENCE_GATE.get(),
+                ModBlocks.UMBER_WALL.get(),
+                ModBlocks.UMBER_DOOR.get(),
+                ModBlocks.UMBER_TRAPDOOR.get(),
+                ModBlocks.UMBER_BUTTON.get(),
+                ModBlocks.UMBER_PRESSURE_PLATE.get()
+        );
+
+        // Defines the Umber log + wood family under standard log tags
+        tag(BlockTags.LOGS)
+                .add(ModBlocks.UMBER_LOG.get())
+                .add(ModBlocks.UMBER_WOOD.get())
+                .add(ModBlocks.STRIPPED_UMBER_LOG.get())
+                .add(ModBlocks.STRIPPED_UMBER_WOOD.get());
+
+        tag(BlockTags.LOGS_THAT_BURN)
+                .add(ModBlocks.UMBER_LOG.get())
+                .add(ModBlocks.UMBER_WOOD.get())
+                .add(ModBlocks.STRIPPED_UMBER_LOG.get())
+                .add(ModBlocks.STRIPPED_UMBER_WOOD.get());
+
+        // Registers Umber planks to vanilla plank tags
+        tag(BlockTags.PLANKS)
+                .add(ModBlocks.UMBER_PLANKS.get());
+
+        // Registers Umber foliage and sapling
+        tag(BlockTags.LEAVES)
+                .add(ModBlocks.UMBER_LEAVES.get());
+
+        tag(BlockTags.SAPLINGS)
+                .add(ModBlocks.UMBER_SAPLING.get());
+
+        // Registers Umber wood-set shapes such as stairs, slabs, fences, etc.
+        stairs(ModBlocks.UMBER_STAIRS.get());
+        slab(ModBlocks.UMBER_SLAB.get());
+
+        fence(ModBlocks.UMBER_FENCE.get());
+        fenceGate(ModBlocks.UMBER_FENCE_GATE.get());
+        wall(ModBlocks.UMBER_WALL.get());
+
+        door(ModBlocks.UMBER_DOOR.get());
+        trapdoor(ModBlocks.UMBER_TRAPDOOR.get());
+
+        button(ModBlocks.UMBER_BUTTON.get());
+        pressurePlate(ModBlocks.UMBER_PRESSURE_PLATE.get());
+
     }
 
     /** Adds all provided blocks to the mineable-with-axe tag */

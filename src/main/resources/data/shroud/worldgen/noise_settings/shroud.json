@@ -1,5 +1,5 @@
 {
-  "aquifers_enabled": false,
+  "aquifers_enabled": true,
   "default_block": {
     "Name": "minecraft:deepslate"
   },
@@ -14,8 +14,8 @@
   "noise": {
     "height": 384,
     "min_y": -64,
-    "size_horizontal": 2,
-    "size_vertical": 4
+    "size_horizontal": 1,
+    "size_vertical": 2
   },
   "noise_router": {
     "barrier": {
@@ -331,8 +331,8 @@
       }
     }
   },
-  "ore_veins_enabled": false,
-  "sea_level": -50,
+  "ore_veins_enabled": true,
+  "sea_level": 63,
   "spawn_target": [
     {
       "continentalness": [
@@ -505,7 +505,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:grass_block",
+                                    "Name": "shroud:sculk_grass",
                                     "Properties": {
                                       "snowy": "false"
                                     }
@@ -515,7 +515,7 @@
                               {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:dirt"
+                                  "Name": "minecraft:sculk"
                                 }
                               }
                             ]
@@ -818,7 +818,7 @@
                               "then_run": {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:blackstone"
+                                  "Name": "minecraft:deepslate"
                                 }
                               }
                             },
@@ -1081,7 +1081,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -1146,7 +1146,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -1253,7 +1253,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:blackstone"
+                                      "Name": "minecraft:deepslate"
                                     }
                                   }
                                 ]
@@ -1293,7 +1293,7 @@
                                           "then_run": {
                                             "type": "minecraft:block",
                                             "result_state": {
-                                              "Name": "minecraft:blackstone"
+                                              "Name": "minecraft:deepslate"
                                             }
                                           }
                                         },
@@ -1309,7 +1309,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:blackstone"
+                                      "Name": "minecraft:deepslate"
                                     }
                                   }
                                 ]
@@ -1334,7 +1334,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               }
@@ -1346,7 +1346,44 @@
                                 "biome_is": [
                                   "minecraft:warm_ocean",
                                   "minecraft:beach",
-                                  "minecraft:snowy_beach"
+                                  "minecraft:snowy_beach",
+                                  "shroud:sculk_beach"
+                                ]
+                              },
+                              "then_run": {
+                                "type": "minecraft:sequence",
+                                "sequence": [
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 0,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "ceiling"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:block",
+                                      "result_state": {
+                                        "Name": "minecraft:sculk"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "minecraft:block",
+                                    "result_state": {
+                                      "Name": "minecraft:sculk"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "minecraft:condition",
+                              "if_true": {
+                                "type": "minecraft:biome",
+                                "biome_is": [
+                                  "minecraft:desert"
                                 ]
                               },
                               "then_run": {
@@ -1382,49 +1419,13 @@
                               "if_true": {
                                 "type": "minecraft:biome",
                                 "biome_is": [
-                                  "shroud:sculk_forest"
-                                ]
-                              },
-                              "then_run": {
-                                "type": "minecraft:sequence",
-                                "sequence": [
-                                  {
-                                    "type": "minecraft:condition",
-                                    "if_true": {
-                                      "type": "minecraft:stone_depth",
-                                      "add_surface_depth": false,
-                                      "offset": 0,
-                                      "secondary_depth_range": 0,
-                                      "surface_type": "ceiling"
-                                    },
-                                    "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "minecraft:deepslate"
-                                      }
-                                    }
-                                  },
-                                  {
-                                    "type": "minecraft:block",
-                                    "result_state": {
-                                      "Name": "minecraft:sculk"
-                                    }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              "type": "minecraft:condition",
-                              "if_true": {
-                                "type": "minecraft:biome",
-                                "biome_is": [
                                   "minecraft:dripstone_caves"
                                 ]
                               },
                               "then_run": {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:blackstone"
+                                  "Name": "minecraft:deepslate"
                                 }
                               }
                             }
@@ -1452,7 +1453,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -1508,7 +1509,7 @@
                                       "then_run": {
                                         "type": "minecraft:block",
                                         "result_state": {
-                                          "Name": "minecraft:blackstone"
+                                          "Name": "minecraft:deepslate"
                                         }
                                       }
                                     },
@@ -1532,7 +1533,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -1558,7 +1559,7 @@
                                       "then_run": {
                                         "type": "minecraft:block",
                                         "result_state": {
-                                          "Name": "minecraft:grass_block",
+                                          "Name": "shroud:sculk_grass",
                                           "Properties": {
                                             "snowy": "false"
                                           }
@@ -1568,7 +1569,7 @@
                                     {
                                       "type": "minecraft:block",
                                       "result_state": {
-                                        "Name": "minecraft:dirt"
+                                        "Name": "minecraft:sculk"
                                       }
                                     }
                                   ]
@@ -1589,7 +1590,7 @@
                                     "then_run": {
                                       "type": "minecraft:block",
                                       "result_state": {
-                                        "Name": "minecraft:blackstone"
+                                        "Name": "minecraft:deepslate"
                                       }
                                     }
                                   },
@@ -1723,7 +1724,7 @@
                               "then_run": {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:grass_block",
+                                  "Name": "shroud:sculk_grass",
                                   "Properties": {
                                     "snowy": "false"
                                   }
@@ -1733,7 +1734,7 @@
                             {
                               "type": "minecraft:block",
                               "result_state": {
-                                "Name": "minecraft:dirt"
+                                "Name": "minecraft:sculk"
                               }
                             }
                           ]
@@ -1892,7 +1893,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -1949,7 +1950,7 @@
                           "then_run": {
                             "type": "minecraft:block",
                             "result_state": {
-                              "Name": "minecraft:blackstone"
+                              "Name": "minecraft:deepslate"
                             }
                           }
                         },
@@ -1991,7 +1992,7 @@
                               {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:dirt"
+                                  "Name": "minecraft:sculk"
                                 }
                               }
                             ]
@@ -2029,7 +2030,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:blackstone"
+                                      "Name": "minecraft:deepslate"
                                     }
                                   }
                                 ]
@@ -2069,7 +2070,7 @@
                                           "then_run": {
                                             "type": "minecraft:block",
                                             "result_state": {
-                                              "Name": "minecraft:blackstone"
+                                              "Name": "minecraft:deepslate"
                                             }
                                           }
                                         },
@@ -2085,7 +2086,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:blackstone"
+                                      "Name": "minecraft:deepslate"
                                     }
                                   }
                                 ]
@@ -2110,7 +2111,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               }
@@ -2122,7 +2123,44 @@
                                 "biome_is": [
                                   "minecraft:warm_ocean",
                                   "minecraft:beach",
-                                  "minecraft:snowy_beach"
+                                  "minecraft:snowy_beach",
+                                  "shroud:sculk_beach"
+                                ]
+                              },
+                              "then_run": {
+                                "type": "minecraft:sequence",
+                                "sequence": [
+                                  {
+                                    "type": "minecraft:condition",
+                                    "if_true": {
+                                      "type": "minecraft:stone_depth",
+                                      "add_surface_depth": false,
+                                      "offset": 0,
+                                      "secondary_depth_range": 0,
+                                      "surface_type": "ceiling"
+                                    },
+                                    "then_run": {
+                                      "type": "minecraft:block",
+                                      "result_state": {
+                                        "Name": "minecraft:sculk"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "type": "minecraft:block",
+                                    "result_state": {
+                                      "Name": "minecraft:sculk"
+                                    }
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "minecraft:condition",
+                              "if_true": {
+                                "type": "minecraft:biome",
+                                "biome_is": [
+                                  "minecraft:desert"
                                 ]
                               },
                               "then_run": {
@@ -2158,49 +2196,13 @@
                               "if_true": {
                                 "type": "minecraft:biome",
                                 "biome_is": [
-                                  "shroud:sculk_forest"
-                                ]
-                              },
-                              "then_run": {
-                                "type": "minecraft:sequence",
-                                "sequence": [
-                                  {
-                                    "type": "minecraft:condition",
-                                    "if_true": {
-                                      "type": "minecraft:stone_depth",
-                                      "add_surface_depth": false,
-                                      "offset": 0,
-                                      "secondary_depth_range": 0,
-                                      "surface_type": "ceiling"
-                                    },
-                                    "then_run": {
-                                      "type": "minecraft:block",
-                                      "result_state": {
-                                        "Name": "minecraft:deepslate"
-                                      }
-                                    }
-                                  },
-                                  {
-                                    "type": "minecraft:block",
-                                    "result_state": {
-                                      "Name": "minecraft:sculk"
-                                    }
-                                  }
-                                ]
-                              }
-                            },
-                            {
-                              "type": "minecraft:condition",
-                              "if_true": {
-                                "type": "minecraft:biome",
-                                "biome_is": [
                                   "minecraft:dripstone_caves"
                                 ]
                               },
                               "then_run": {
                                 "type": "minecraft:block",
                                 "result_state": {
-                                  "Name": "minecraft:blackstone"
+                                  "Name": "minecraft:deepslate"
                                 }
                               }
                             }
@@ -2225,7 +2227,7 @@
                             "then_run": {
                               "type": "minecraft:block",
                               "result_state": {
-                                "Name": "minecraft:blackstone"
+                                "Name": "minecraft:deepslate"
                               }
                             }
                           }
@@ -2264,7 +2266,7 @@
                                       "then_run": {
                                         "type": "minecraft:block",
                                         "result_state": {
-                                          "Name": "minecraft:blackstone"
+                                          "Name": "minecraft:deepslate"
                                         }
                                       }
                                     },
@@ -2288,7 +2290,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:blackstone"
+                                    "Name": "minecraft:deepslate"
                                   }
                                 }
                               },
@@ -2303,7 +2305,7 @@
                                 "then_run": {
                                   "type": "minecraft:block",
                                   "result_state": {
-                                    "Name": "minecraft:dirt"
+                                    "Name": "minecraft:sculk"
                                   }
                                 }
                               },
@@ -2322,7 +2324,7 @@
                                     "then_run": {
                                       "type": "minecraft:block",
                                       "result_state": {
-                                        "Name": "minecraft:blackstone"
+                                        "Name": "minecraft:deepslate"
                                       }
                                     }
                                   },
@@ -2355,7 +2357,7 @@
                         {
                           "type": "minecraft:block",
                           "result_state": {
-                            "Name": "minecraft:dirt"
+                            "Name": "minecraft:sculk"
                           }
                         }
                       ]
@@ -2368,7 +2370,8 @@
                       "biome_is": [
                         "minecraft:warm_ocean",
                         "minecraft:beach",
-                        "minecraft:snowy_beach"
+                        "minecraft:snowy_beach",
+                        "shroud:sculk_beach"
                       ]
                     },
                     "then_run": {
@@ -2383,7 +2386,7 @@
                       "then_run": {
                         "type": "minecraft:block",
                         "result_state": {
-                          "Name": "minecraft:sandstone"
+                          "Name": "minecraft:deepslate"
                         }
                       }
                     }
@@ -2393,7 +2396,7 @@
                     "if_true": {
                       "type": "minecraft:biome",
                       "biome_is": [
-                        "shroud:sculk_forest"
+                        "minecraft:desert"
                       ]
                     },
                     "then_run": {
@@ -2402,13 +2405,13 @@
                         "type": "minecraft:stone_depth",
                         "add_surface_depth": true,
                         "offset": 0,
-                        "secondary_depth_range": 8,
+                        "secondary_depth_range": 30,
                         "surface_type": "floor"
                       },
                       "then_run": {
                         "type": "minecraft:block",
                         "result_state": {
-                          "Name": "minecraft:deepslate"
+                          "Name": "minecraft:sandstone"
                         }
                       }
                     }
@@ -2440,7 +2443,7 @@
                     "then_run": {
                       "type": "minecraft:block",
                       "result_state": {
-                        "Name": "minecraft:blackstone"
+                        "Name": "minecraft:deepslate"
                       }
                     }
                   },
@@ -2497,7 +2500,7 @@
                         "then_run": {
                           "type": "minecraft:block",
                           "result_state": {
-                            "Name": "minecraft:blackstone"
+                            "Name": "minecraft:deepslate"
                           }
                         }
                       },

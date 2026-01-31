@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stripped_umber_log": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:stripped_umber_log"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_stripped_umber_wood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:stripped_umber_wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:umber_planks"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_umber_log": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:umber_log"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_umber_wood": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:umber_wood"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_umber_log",
+      "has_umber_wood",
+      "has_stripped_umber_log",
+      "has_stripped_umber_wood"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shroud:umber_planks"
+    ]
+  }
+}

@@ -60,6 +60,18 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Registers standard generated item model for the Sculk door item
         basicItem(ModBlocks.SCULK_DOOR.asItem());
 
+        // Registers the Umber sapling item texture using item/generated
+        saplingItem(ModBlocks.UMBER_SAPLING);
+
+        // Registers inventory models for Umber button, fence, and wall
+        buttonItem(ModBlocks.UMBER_BUTTON, ModBlocks.UMBER_PLANKS);
+        fenceItem(ModBlocks.UMBER_FENCE, ModBlocks.UMBER_PLANKS);
+        wallItem(ModBlocks.UMBER_WALL, ModBlocks.UMBER_PLANKS);
+
+        // Registers standard generated item model for the Umber door item
+        basicItem(ModBlocks.UMBER_DOOR.asItem());
+
+
         // Registers item model for entity spawn egg(s)
         withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }

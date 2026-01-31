@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "umber",
+  "ingredients": [
+    {
+      "item": "shroud:umber_planks"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:umber_button"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    [
+      {
+        "item": "shroud:umber_log"
+      },
+      {
+        "item": "shroud:umber_wood"
+      },
+      {
+        "item": "shroud:stripped_umber_log"
+      },
+      {
+        "item": "shroud:stripped_umber_wood"
+      }
+    ]
+  ],
+  "result": {
+    "count": 4,
+    "id": "shroud:umber_planks"
+  }
+}

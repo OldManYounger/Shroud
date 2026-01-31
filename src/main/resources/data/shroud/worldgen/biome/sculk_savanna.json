@@ -1,0 +1,81 @@
+{
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground",
+      "minecraft:canyon"
+    ]
+  },
+  "downfall": 0.0,
+  "effects": {
+    "sky_color": 0,
+    "fog_color": 0,
+    "foliage_color": 18,
+    "grass_color": 338482,
+    "water_color": 65535,
+    "water_fog_color": 2056,
+    "mood_sound": {
+      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    }
+  },
+  "features": [
+    [
+      "minecraft:lake_lava_underground",
+      "minecraft:lake_lava_surface"
+    ],
+    [
+      "shroud:sculk_patch"
+    ],
+    [],
+    [
+      "shroud:ore_eventide_placed",
+      "shroud:ore_netherite_block_placed"
+    ],
+    [
+      "shroud:sculk_tree_placed"
+    ],
+    [
+      "shroud:sculk_arch_placed"
+    ],
+    [
+      "shroud:patch_grass",
+      "shroud:patch_tall_grass"
+    ],
+    [
+      "minecraft:glow_lichen"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "monster": [
+      {
+        "type": "shroud:living_sculk",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 3
+      }
+    ],
+    "creature": [],
+    "ambient": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "underground_water_creature": []
+  },
+  "temperature": 0.4
+}

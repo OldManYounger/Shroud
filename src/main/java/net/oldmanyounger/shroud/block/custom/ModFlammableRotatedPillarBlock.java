@@ -55,6 +55,20 @@ public class ModFlammableRotatedPillarBlock extends RotatedPillarBlock {
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }
+
+            // Converts Umber log to its stripped variant
+            if (state.is(ModBlocks.UMBER_LOG)) {
+                return ModBlocks.STRIPPED_UMBER_LOG.get()
+                        .defaultBlockState()
+                        .setValue(AXIS, state.getValue(AXIS));
+            }
+
+            // Converts Umber wood to its stripped variant
+            if (state.is(ModBlocks.UMBER_WOOD)) {
+                return ModBlocks.STRIPPED_UMBER_WOOD.get()
+                        .defaultBlockState()
+                        .setValue(AXIS, state.getValue(AXIS));
+            }
         }
 
         return super.getToolModifiedState(state, context, itemAbility, simulate);

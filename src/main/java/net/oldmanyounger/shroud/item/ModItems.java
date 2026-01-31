@@ -78,7 +78,6 @@ public class ModItems {
             )
     );
 
-
     // Spawn eggs
     public static final DeferredItem<Item> LIVING_SCULK_SPAWN_EGG = ITEMS.register("living_sculk_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,

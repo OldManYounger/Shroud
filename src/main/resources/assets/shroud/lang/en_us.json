@@ -20,6 +20,8 @@
 
   "item.shroud.eventide_armor_trim_smithing_template": "Eventide Trim Template",
 
+  "block.shroud.sculk_grass": "Sculk Grass",
+
   "block.shroud.purp_sapling": "Purp Sapling",
 
   "block.shroud.purp_log": "Purp Log",
@@ -50,6 +52,28 @@
 
   "block.shroud.sculk_door": "Sculk Door",
   "block.shroud.sculk_trapdoor": "Sculk Trapdoor",
+
+  "block.shroud.umber_sapling": "Umber Sapling",
+
+  "block.shroud.umber_log": "Umber Log",
+  "block.shroud.umber_wood": "Umber Wood",
+  "block.shroud.umber_planks": "Umber Planks",
+  "block.shroud.stripped_umber_log": "Stripped Umber Log",
+  "block.shroud.stripped_umber_wood": "Stripped Umber Wood",
+  "block.shroud.umber_leaves": "Umber Leaves",
+
+  "block.shroud.umber_stairs": "Umber Stairs",
+  "block.shroud.umber_slab": "Umber Slab",
+
+  "block.shroud.umber_button": "Umber Button",
+  "block.shroud.umber_pressure_plate": "Umber Pressure Plate",
+
+  "block.shroud.umber_fence": "Umber Fence",
+  "block.shroud.umber_fence_gate": "Umber Fence Gate",
+  "block.shroud.umber_wall": "Umber Wall",
+
+  "block.shroud.umber_door": "Umber Door",
+  "block.shroud.umber_trapdoor": "Umber Trapdoor",
 
   "block.shroud.sculk_portal": "Sculk Portal",
 

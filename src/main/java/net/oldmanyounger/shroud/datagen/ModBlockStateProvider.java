@@ -24,6 +24,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
 
+        grassBlockWithItem(ModBlocks.SCULK_GRASS);
+
         // Eventide storage block (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);
 
@@ -85,6 +87,62 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.SCULK_PRESSURE_PLATE);
         blockItem(ModBlocks.SCULK_FENCE_GATE);
         blockItem(ModBlocks.SCULK_TRAPDOOR, "_bottom");
+
+        // Registers Umber log and wood (normal and stripped) with appropriate axis models
+        logBlock((RotatedPillarBlock) ModBlocks.UMBER_LOG.get());
+        axisBlock((RotatedPillarBlock) ModBlocks.UMBER_WOOD.get(),
+                blockTexture(ModBlocks.UMBER_LOG.get()),
+                blockTexture(ModBlocks.UMBER_LOG.get()));
+        logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_UMBER_LOG.get());
+        axisBlock((RotatedPillarBlock) ModBlocks.STRIPPED_UMBER_WOOD.get(),
+                blockTexture(ModBlocks.STRIPPED_UMBER_LOG.get()),
+                blockTexture(ModBlocks.STRIPPED_UMBER_LOG.get()));
+
+        // Registers block items for log and wood variants
+        blockItem(ModBlocks.UMBER_LOG);
+        blockItem(ModBlocks.UMBER_WOOD);
+        blockItem(ModBlocks.STRIPPED_UMBER_LOG);
+        blockItem(ModBlocks.STRIPPED_UMBER_WOOD);
+
+        // Registers Umber planks with a standard cube-all block + item model
+        blockWithItem(ModBlocks.UMBER_PLANKS);
+
+        // Registers Umber leaves and sapling models using cutout rendering
+        leavesBlock(ModBlocks.UMBER_LEAVES);
+        saplingBlock(ModBlocks.UMBER_SAPLING);
+
+        // Registers Umber stairs and slab variants
+        stairsBlock(ModBlocks.UMBER_STAIRS.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+        slabBlock(ModBlocks.UMBER_SLAB.get(),
+                blockTexture(ModBlocks.UMBER_PLANKS.get()),
+                blockTexture(ModBlocks.UMBER_PLANKS.get()));
+
+        // Registers Umber redstone-interactable blocks
+        buttonBlock(ModBlocks.UMBER_BUTTON.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+        pressurePlateBlock(ModBlocks.UMBER_PRESSURE_PLATE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+
+        // Registers Umber fence, gate, and wall models
+        fenceBlock(ModBlocks.UMBER_FENCE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+        fenceGateBlock(ModBlocks.UMBER_FENCE_GATE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+        wallBlock(ModBlocks.UMBER_WALL.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+
+        // Registers Umber door and trapdoor models using cutout rendering
+        doorBlockWithRenderType(ModBlocks.UMBER_DOOR.get(),
+                modLoc("block/umber_door_bottom"),
+                modLoc("block/umber_door_top"),
+                "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.UMBER_TRAPDOOR.get(),
+                modLoc("block/umber_trapdoor"),
+                true,
+                "cutout");
+
+        // Registers item models for stairs, slab, pressure plate, fence gate, and trapdoor
+        blockItem(ModBlocks.UMBER_STAIRS);
+        blockItem(ModBlocks.UMBER_SLAB);
+        blockItem(ModBlocks.UMBER_PRESSURE_PLATE);
+        blockItem(ModBlocks.UMBER_FENCE_GATE);
+        blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
+
     }
 
     /** Creates a sapling model using a cross texture with cutout rendering */
@@ -110,6 +168,50 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 ).renderType("cutout")
         );
     }
+
+    private void grassBlockWithItem(DeferredBlock<Block> blockRegistryObject) {
+        String path = blockRegistryObject.getId().getPath();
+
+        // Base model: bottom/top/side + particle, with TOP tinted (tintindex 0)
+        var baseModel = models().withExistingParent(path, mcLoc("block/block"))
+                .texture("particle", mcLoc("block/sculk"))
+                .texture("bottom", mcLoc("block/sculk"))
+                .texture("top", modLoc("block/" + path + "_top"))
+                .texture("side", modLoc("block/" + path + "_side"));
+
+        baseModel.element()
+                .from(0, 0, 0).to(16, 16, 16)
+                .face(net.minecraft.core.Direction.DOWN).uvs(0, 0, 16, 16).texture("#bottom").cullface(net.minecraft.core.Direction.DOWN).end()
+                .face(net.minecraft.core.Direction.UP).uvs(0, 0, 16, 16).texture("#top").cullface(net.minecraft.core.Direction.UP).tintindex(0).end()
+                .face(net.minecraft.core.Direction.NORTH).uvs(0, 0, 16, 16).texture("#side").cullface(net.minecraft.core.Direction.NORTH).end()
+                .face(net.minecraft.core.Direction.SOUTH).uvs(0, 0, 16, 16).texture("#side").cullface(net.minecraft.core.Direction.SOUTH).end()
+                .face(net.minecraft.core.Direction.WEST).uvs(0, 0, 16, 16).texture("#side").cullface(net.minecraft.core.Direction.WEST).end()
+                .face(net.minecraft.core.Direction.EAST).uvs(0, 0, 16, 16).texture("#side").cullface(net.minecraft.core.Direction.EAST).end()
+                .end();
+
+        // Overlay model: side overlay only, tinted (tintindex 0), like vanilla grass_block_side_overlay
+        // Texture file: assets/shroud/textures/block/<path>_side_overlay.png
+        var overlayModel = models().withExistingParent(path + "_overlay", mcLoc("block/block"))
+                .texture("particle", modLoc("block/" + path + "_side_overlay"))
+                .texture("overlay", modLoc("block/" + path + "_side_overlay"));
+
+        overlayModel.element()
+                .from(0, 0, 0).to(16, 16, 16)
+                .face(net.minecraft.core.Direction.NORTH).uvs(0, 0, 16, 16).texture("#overlay").cullface(net.minecraft.core.Direction.NORTH).tintindex(0).end()
+                .face(net.minecraft.core.Direction.SOUTH).uvs(0, 0, 16, 16).texture("#overlay").cullface(net.minecraft.core.Direction.SOUTH).tintindex(0).end()
+                .face(net.minecraft.core.Direction.WEST).uvs(0, 0, 16, 16).texture("#overlay").cullface(net.minecraft.core.Direction.WEST).tintindex(0).end()
+                .face(net.minecraft.core.Direction.EAST).uvs(0, 0, 16, 16).texture("#overlay").cullface(net.minecraft.core.Direction.EAST).tintindex(0).end()
+                .end();
+
+        // Multipart: render base + overlay together (identical concept to vanilla)
+        getMultipartBuilder(blockRegistryObject.get())
+                .part().modelFile(baseModel).addModel().end()
+                .part().modelFile(overlayModel).addModel().end();
+
+        // Item should use ONLY the base model (vanilla behavior)
+        simpleBlockItem(blockRegistryObject.get(), baseModel);
+    }
+
 
     /** Registers a block and its item model using a generated cube-all template */
     private void blockWithItem(DeferredBlock<?> deferredBlock) {

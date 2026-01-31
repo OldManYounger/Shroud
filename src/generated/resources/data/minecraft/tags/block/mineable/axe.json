@@ -13,6 +13,20 @@
     "shroud:sculk_door",
     "shroud:sculk_trapdoor",
     "shroud:sculk_button",
-    "shroud:sculk_pressure_plate"
+    "shroud:sculk_pressure_plate",
+    "shroud:umber_log",
+    "shroud:umber_wood",
+    "shroud:stripped_umber_log",
+    "shroud:stripped_umber_wood",
+    "shroud:umber_planks",
+    "shroud:umber_stairs",
+    "shroud:umber_slab",
+    "shroud:umber_fence",
+    "shroud:umber_fence_gate",
+    "shroud:umber_wall",
+    "shroud:umber_door",
+    "shroud:umber_trapdoor",
+    "shroud:umber_button",
+    "shroud:umber_pressure_plate"
   ]
 }

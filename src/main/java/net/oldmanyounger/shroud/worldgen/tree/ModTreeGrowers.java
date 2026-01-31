@@ -13,4 +13,10 @@ public class ModTreeGrowers {
     public static final TreeGrower SCULK =
             new TreeGrower(Shroud.MOD_ID + ":sculk", Optional.empty(),
                     Optional.of(ModConfiguredFeatures.SCULK_TREE), Optional.empty());
+
+    /** TreeGrower for the Umber tree, linking it to the UMBER_TREE configured feature */
+    public static final TreeGrower UMBER =
+            new TreeGrower(Shroud.MOD_ID + ":umber", Optional.empty(),
+                    Optional.of(ModConfiguredFeatures.UMBER_TREE), Optional.empty());
+
 }

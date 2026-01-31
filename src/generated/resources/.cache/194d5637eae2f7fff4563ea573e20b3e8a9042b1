@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-22T19:24:14.2724165	Item Models: shroud
+// 1.21.1	2026-01-23T19:18:33.4318733	Item Models: shroud
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
 533d0598dcf9dfd8e7909252ea429f38b1822e3c assets/shroud/models/item/eventide_axe.json
 c4383c1f1bc3ba1cfde1e1808f9174218c218927 assets/shroud/models/item/eventide_boots.json
@@ -57,3 +57,8 @@ d3b32371209215eb137d65284464f64eec5748da assets/shroud/models/item/sculk_button.
 0c3c88aa75a8532a3577f693f258d1a6107a3e68 assets/shroud/models/item/sculk_fence.json
 e8164247f838273aa2c2415954311ceab2717ee7 assets/shroud/models/item/sculk_sapling.json
 9b30015f9f2cf4463af11e73aa7d4868520af0f6 assets/shroud/models/item/sculk_wall.json
+4f5c5f7433962a797a67bba4bb41748b4a990460 assets/shroud/models/item/umber_button.json
+21a4c1bf3e8eaa34892fc6202396619770e1657b assets/shroud/models/item/umber_door.json
+d406781091d9d93d0948efe4e217f6cd1b3d21b5 assets/shroud/models/item/umber_fence.json
+3ef9d14f2388b8a7bf733b2ab9a152b95b89a685 assets/shroud/models/item/umber_sapling.json
+bda378973f433d6b80afcb342efabcae4f78834c assets/shroud/models/item/umber_wall.json

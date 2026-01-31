@@ -19,6 +19,7 @@ public class ModClientSetup {
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.SCULK_PORTAL.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SCULK_GRASS.get(), RenderType.cutoutMipped());
         });
     }
 }

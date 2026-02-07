@@ -49,10 +49,8 @@ public class VibrationGoal extends Goal {
     // Determines whether the goal can start based on the presence of a vibration location
     @Override
     public boolean canUse() {
-        if (mob instanceof VibrationListener listener) {
-            return listener.getVibrationLocation() != null;
-        }
-        return false;
+        return mob instanceof VibrationListener listener
+                && listener.getVibrationLocation() != null;
     }
 
     // Determines whether the goal should continue running while pathing toward the vibration

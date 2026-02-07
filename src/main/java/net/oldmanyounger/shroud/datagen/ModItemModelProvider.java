@@ -74,6 +74,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         // Registers item model for entity spawn egg(s)
         withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.UMBRAL_HOWLER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }
 
     /** Creates the model for a Sculk sapling using item/generated */

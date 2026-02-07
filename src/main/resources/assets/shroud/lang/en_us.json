@@ -78,8 +78,10 @@
   "block.shroud.sculk_portal": "Sculk Portal",
 
   "item.shroud.living_sculk_spawn_egg": "Living Sculk Spawn Egg",
+  "item.shroud.umbral_howler_spawn_egg": "Umbral Howler Spawn Egg",
 
   "entity.shroud.living_sculk": "Living Sculk",
+  "entity.shroud.umbral_howler": "Umbral Howler",
 
   "creativetab.shroud.shroud_blocks": "Shroud Blocks",
   "creativetab.shroud.shroud_items": "Shroud Items"

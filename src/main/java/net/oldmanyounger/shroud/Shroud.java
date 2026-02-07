@@ -16,6 +16,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
+import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
@@ -59,6 +60,7 @@ public class Shroud {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
+            EntityRenderers.register(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerRenderer::new);
             ModItemProperties.addCustomItemProperties();
         }
     }

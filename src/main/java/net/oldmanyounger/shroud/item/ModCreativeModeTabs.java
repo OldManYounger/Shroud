@@ -121,6 +121,7 @@ public class ModCreativeModeTabs {
                             .title(Component.translatable("creativetab.shroud.shroud_items"))
                             .displayItems((params, output) -> {
                                 output.accept(ModItems.LIVING_SCULK_SPAWN_EGG);
+                                output.accept(ModItems.UMBRAL_HOWLER_SPAWN_EGG);
                             }).build());
 
     /** Registers the Creative Mode tabs to the NeoForge mod event bus */

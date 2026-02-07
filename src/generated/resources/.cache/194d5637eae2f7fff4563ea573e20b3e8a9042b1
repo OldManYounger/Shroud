@@ -1,4 +1,4 @@
-// 1.21.1	2026-01-23T19:18:33.4318733	Item Models: shroud
+// 1.21.1	2026-02-03T20:55:00.6055879	Item Models: shroud
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
 533d0598dcf9dfd8e7909252ea429f38b1822e3c assets/shroud/models/item/eventide_axe.json
 c4383c1f1bc3ba1cfde1e1808f9174218c218927 assets/shroud/models/item/eventide_boots.json
@@ -62,3 +62,4 @@ e8164247f838273aa2c2415954311ceab2717ee7 assets/shroud/models/item/sculk_sapling
 d406781091d9d93d0948efe4e217f6cd1b3d21b5 assets/shroud/models/item/umber_fence.json
 3ef9d14f2388b8a7bf733b2ab9a152b95b89a685 assets/shroud/models/item/umber_sapling.json
 bda378973f433d6b80afcb342efabcae4f78834c assets/shroud/models/item/umber_wall.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/umbral_howler_spawn_egg.json

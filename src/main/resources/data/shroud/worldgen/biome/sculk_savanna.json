@@ -11,7 +11,7 @@
     "sky_color": 0,
     "fog_color": 0,
     "foliage_color": 18,
-    "grass_color": 338482,
+    "grass_color": 340021,
     "water_color": 65535,
     "water_fog_color": 2056,
     "mood_sound": {
@@ -23,13 +23,16 @@
   },
   "features": [
     [
-      "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface"
+      "shroud:lake_lava_underground",
+      "shroud:lake_lava_surface"
+    ],
+    [
+      "minecraft:monster_room",
+      "minecraft:monster_room_deep"
     ],
     [
       "shroud:sculk_patch"
     ],
-    [],
     [
       "shroud:ore_eventide_placed",
       "shroud:ore_netherite_block_placed"
@@ -46,19 +49,7 @@
     ],
     [
       "minecraft:glow_lichen"
-    ],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
+    ]
   ],
   "has_precipitation": false,
   "spawn_costs": {},

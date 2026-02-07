@@ -1,6 +1,7 @@
 package net.oldmanyounger.shroud.entity.goal;
 
 import net.minecraft.core.BlockPos;
+import javax.annotation.Nullable;
 
 /**
  * Simple contract for entities that can react to vibration-based events
@@ -24,6 +25,7 @@ import net.minecraft.core.BlockPos;
  * detection from pathfinding logic.
  */
 public interface VibrationListener {
+    @Nullable
     BlockPos getVibrationLocation();
-    void setVibrationLocation(BlockPos pos);
+    void setVibrationLocation(@Nullable BlockPos pos);
 }

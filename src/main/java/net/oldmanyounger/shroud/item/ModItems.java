@@ -83,6 +83,11 @@ public class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,
                     new Item.Properties()));
 
+    public static final DeferredItem<Item> UMBRAL_HOWLER_SPAWN_EGG = ITEMS.register("umbral_howler_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 0x0A0A0A, 0x6A0DAD,
+                    new Item.Properties()));
+
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

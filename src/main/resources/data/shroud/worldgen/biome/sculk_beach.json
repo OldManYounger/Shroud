@@ -22,27 +22,20 @@
     }
   },
   "features": [
-    [],
     [
-      "minecraft:lake_lava_underground",
-      "minecraft:lake_lava_surface"
+      "shroud:lake_lava_underground",
+      "shroud:lake_lava_surface"
     ],
-    [],
     [
       "minecraft:monster_room",
       "minecraft:monster_room_deep"
     ],
     [
+      "shroud:sculk_patch"
+    ],
+    [
       "shroud:ore_eventide_placed",
       "shroud:ore_netherite_block_placed"
-    ],
-    [],
-    [],
-    [],
-    [],
-    [
-      "minecraft:spring_water",
-      "minecraft:spring_lava"
     ],
     [
       "minecraft:glow_lichen"

@@ -6,6 +6,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
+import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 
 @EventBusSubscriber(modid = Shroud.MOD_ID)
 public class ModEventBusEvents {
@@ -14,5 +15,6 @@ public class ModEventBusEvents {
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         // Ensure LivingSculkEntity has a static createAttributes() returning AttributeSupplier.Builder
         event.put(ModEntities.LIVING_SCULK.get(), LivingSculkEntity.createAttributes().build());
+        event.put(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerEntity.createAttributes().build());
     }
 }

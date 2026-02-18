@@ -74,6 +74,12 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     // Cooldown in ticks before reacting to another vibration (20 ticks = 1 second)
     private static final int VIBRATION_COOLDOWN_TICKS = 60;
 
+    // Passive detection (no vibration): only aggro if the player is extremely close
+    private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
+
+    // Vibration-triggered acquire range (must be within this range when the vibration is processed)
+    private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
+
     // Entity event id used to sync an attack animation to clients
     private static final byte EVENT_ATTACK_ANIM = 60;
 
@@ -124,7 +130,7 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                 .add(Attributes.MAX_HEALTH, 45.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.30D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D)
-                .add(Attributes.FOLLOW_RANGE, 10.0D)
+                .add(Attributes.FOLLOW_RANGE, 15.0D)
                 .add(Attributes.ARMOR, 4.0D);
     }
 
@@ -151,7 +157,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
 
         // Targeting behavior for retaliation and attacking nearby players
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false,
+                player -> this.distanceToSqr(player) <= (PASSIVE_PLAYER_DETECT_RANGE * PASSIVE_PLAYER_DETECT_RANGE)
+        ));
+
     }
 
     // ============================================================
@@ -442,6 +451,23 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
 
             // React to this vibration by storing the position for the AI goal to pursue
             UmbralHowlerEntity.this.setVibrationLocation(pos);
+
+            // If the vibration was caused by a player (or a player-owned projectile), acquire that player as the target,
+            // but only if they're within the acquire range when the vibration is processed.
+            Player playerToTarget = null;
+
+            if (sourceEntity instanceof Player p) {
+                playerToTarget = p;
+            } else if (projectileOwner instanceof Player p) {
+                playerToTarget = p;
+            }
+
+            if (playerToTarget != null) {
+                double maxDistSqr = VIBRATION_PLAYER_ACQUIRE_RANGE * VIBRATION_PLAYER_ACQUIRE_RANGE;
+                if (UmbralHowlerEntity.this.distanceToSqr(playerToTarget) <= maxDistSqr) {
+                    UmbralHowlerEntity.this.setTarget(playerToTarget);
+                }
+            }
 
             // Broadcast a vibration reaction event so clients can play the reaction animation
             UmbralHowlerEntity.this.level().broadcastEntityEvent(

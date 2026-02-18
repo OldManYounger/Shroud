@@ -39,7 +39,7 @@ public class ModItems {
     // Eventide axe
     public static final DeferredItem<AxeItem> EVENTIDE_AXE = ITEMS.register("eventide_axe",
             () -> new AxeItem(ModToolTiers.EVENTIDE, new Item.Properties()
-                    .attributes(AxeItem.createAttributes(ModToolTiers.EVENTIDE, 6.0F, -3.2f))));
+                    .attributes(AxeItem.createAttributes(ModToolTiers.EVENTIDE, 6.0F, -3.0f))));
 
     // Eventide hoe
     public static final DeferredItem<HoeItem> EVENTIDE_HOE = ITEMS.register("eventide_hoe",

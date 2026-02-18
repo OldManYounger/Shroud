@@ -26,6 +26,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.SCULK_GRASS.get(),
                 createSingleItemTable(Blocks.SCULK));
 
+        add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
+
         // Eventide block drops itself
         dropSelf(ModBlocks.EVENTIDE_BLOCK.get());
 

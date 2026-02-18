@@ -30,6 +30,9 @@ public class ModCreativeModeTabs {
                                 // Sculk grass
                                 output.accept(ModBlocks.SCULK_GRASS.get());
 
+                                // Sculk bulb
+                                output.accept(ModBlocks.SCULK_BULB.get());
+
                                 // Eventide ore & blocks
                                 output.accept(ModBlocks.EVENTIDE_ORE.get());
                                 output.accept(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());

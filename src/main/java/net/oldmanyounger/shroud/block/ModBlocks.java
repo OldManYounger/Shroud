@@ -15,10 +15,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.block.custom.ModFlammableRotatedPillarBlock;
-import net.oldmanyounger.shroud.block.custom.ModGrassBlock;
-import net.oldmanyounger.shroud.block.custom.ModLeavesBlock;
-import net.oldmanyounger.shroud.block.custom.ModSaplingBlock;
+import net.oldmanyounger.shroud.block.custom.*;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.worldgen.tree.ModTreeGrowers;
 import net.oldmanyounger.shroud.portal.ShroudPortalBlock;
@@ -34,6 +31,13 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> SCULK_GRASS = registerBlock("sculk_grass",
             () -> new ModGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK)));
+    public static final DeferredBlock<Block> SCULK_BULB = registerBlock("sculk_bulb",
+            () -> new ModSculkBulbBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .instabreak()
+                    .sound(SoundType.GRASS)
+                    .offsetType(BlockBehaviour.OffsetType.XZ)
+                    .lightLevel(state -> 6)));
 
     public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
             () -> new Block(BlockBehaviour.Properties.of()

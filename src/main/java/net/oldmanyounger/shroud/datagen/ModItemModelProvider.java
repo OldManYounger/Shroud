@@ -50,6 +50,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
 
         // Registers the Sculk sapling item texture using item/generated
+        saplingItem(ModBlocks.SCULK_BULB);
         saplingItem(ModBlocks.SCULK_SAPLING);
 
         // Registers inventory models for Sculk button, fence, and wall

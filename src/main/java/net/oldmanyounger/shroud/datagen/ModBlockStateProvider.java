@@ -24,7 +24,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
 
+        // Sculk grass and plants
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
+        saplingBlock(ModBlocks.SCULK_BULB);
 
         // Eventide storage block (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);

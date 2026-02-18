@@ -42,7 +42,8 @@
     ],
     [
       "shroud:patch_grass",
-      "shroud:patch_tall_grass"
+      "shroud:patch_tall_grass",
+      "shroud:patch_sculk_bulb"
     ],
     [
       "minecraft:glow_lichen"

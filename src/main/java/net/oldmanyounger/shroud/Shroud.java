@@ -70,8 +70,11 @@ public class Shroud {
 
     }
 
+    // Spawn placements for custom entities
     private void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
         event.register(ModEntities.LIVING_SCULK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        event.register(ModEntities.UMBRAL_HOWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
    }
 }

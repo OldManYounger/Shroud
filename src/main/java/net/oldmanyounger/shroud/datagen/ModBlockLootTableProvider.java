@@ -24,7 +24,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
 
         add(ModBlocks.SCULK_GRASS.get(),
-                createSingleItemTable(Blocks.SCULK));
+                block -> createSingleItemTableWithSilkTouch(block, Blocks.SCULK));
 
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
 

@@ -1,12 +1,16 @@
 package net.oldmanyounger.shroud.block.custom;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.lighting.LightEngine;
 
 public class ModGrassBlock extends GrassBlock {
     public ModGrassBlock(Properties properties) {
@@ -15,28 +19,46 @@ public class ModGrassBlock extends GrassBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // If it can't survive, revert to sculk
-        if (!canBeGrass(level, pos)) {
+        // Mimic vanilla SpreadingSnowyDirtBlock logic, but using SCULK <-> SCULK_GRASS instead of DIRT <-> GRASS.
+
+        if (!canBeGrass(state, level, pos)) {
+            if (!level.isAreaLoaded(pos, 1)) return; // prevent loading unloaded chunks
             level.setBlockAndUpdate(pos, Blocks.SCULK.defaultBlockState());
-            return;
-        }
+        } else {
+            if (!level.isAreaLoaded(pos, 3)) return; // prevent loading unloaded chunks
+            if (level.getMaxLocalRawBrightness(pos.above()) >= 8) {
+                BlockState blockstate = this.defaultBlockState();
 
-        // Vanilla spread behavior
-        super.randomTick(state, level, pos, random);
+                for (int i = 0; i < 4; i++) {
+                    BlockPos blockpos = pos.offset(random.nextInt(3) - 1, random.nextInt(5) - 3, random.nextInt(3) - 1);
+                    if (level.getBlockState(blockpos).is(Blocks.SCULK) && canPropagate(blockstate, level, blockpos)) {
+                        level.setBlockAndUpdate(
+                                blockpos,
+                                blockstate.setValue(SNOWY, level.getBlockState(blockpos.above()).is(Blocks.SNOW))
+                        );
+                    }
+                }
+            }
+        }
     }
 
-    private boolean canBeGrass(LevelReader level, BlockPos pos) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-
-        // Dies if submerged under a full water source block
-        if (aboveState.getFluidState().isSource()) {
+    private static boolean canBeGrass(BlockState state, LevelReader levelReader, BlockPos pos) {
+        BlockPos blockpos = pos.above();
+        BlockState blockstate = levelReader.getBlockState(blockpos);
+        if (blockstate.is(Blocks.SNOW) && blockstate.getValue(SnowLayerBlock.LAYERS) == 1) {
+            return true;
+        } else if (blockstate.getFluidState().getAmount() == 8) {
             return false;
+        } else {
+            int i = LightEngine.getLightBlockInto(
+                    levelReader, state, pos, blockstate, blockpos, Direction.UP, blockstate.getLightBlock(levelReader, blockpos)
+            );
+            return i < levelReader.getMaxLightLevel();
         }
-
-        // Dies if covered by something that blocks light (i.e., a "block placed on it")
-        // This also catches most solid blocks, slabs depending on shape, etc.
-        return aboveState.getLightBlock(level, abovePos) == 0;
     }
 
+    private static boolean canPropagate(BlockState state, LevelReader level, BlockPos pos) {
+        BlockPos blockpos = pos.above();
+        return canBeGrass(state, level, pos) && !level.getFluidState(blockpos).is(FluidTags.WATER);
+    }
 }

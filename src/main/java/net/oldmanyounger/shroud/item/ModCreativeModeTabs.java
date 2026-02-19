@@ -103,6 +103,9 @@ public class ModCreativeModeTabs {
                             .withTabsBefore(ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "shroud_blocks"))
                             .title(Component.translatable("creativetab.shroud.shroud_items"))
                             .displayItems((params, output) -> {
+                                // Sculk pearl
+                                output.accept(ModItems.SCULK_PEARL.get());
+
                                 // Eventide ore
                                 output.accept(ModItems.RAW_EVENTIDE.get());
                                 output.accept(ModItems.EVENTIDE_INGOT.get());

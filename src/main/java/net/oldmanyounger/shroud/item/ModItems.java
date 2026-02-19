@@ -16,6 +16,9 @@ import java.util.List;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Shroud.MOD_ID);
 
+    public static final DeferredItem<Item> SCULK_PEARL = ITEMS.register("sculk_pearl",
+            () -> new Item(new Item.Properties()));
+
     public static final DeferredItem<Item> EVENTIDE_INGOT = ITEMS.register("eventide_ingot",
             () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> RAW_EVENTIDE = ITEMS.register("raw_eventide",

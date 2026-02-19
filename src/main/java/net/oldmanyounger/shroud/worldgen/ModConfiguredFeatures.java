@@ -17,6 +17,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.MegaPineFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.AlterGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
@@ -90,16 +91,16 @@ public class ModConfiguredFeatures {
                 new GiantTrunkPlacer(13, 2, 14),
                 BlockStateProvider.simple(ModBlocks.UMBER_LEAVES.get()),
                 new MegaPineFoliagePlacer(
-                        UniformInt.of(0, 2),
+                        ConstantInt.of(0),
                         ConstantInt.of(0),
                         UniformInt.of(13, 17)
                 ),
                 new TwoLayersFeatureSize(1, 1, 2)
         )
                 .dirt(BlockStateProvider.simple(Blocks.SCULK))
+                .ignoreVines()
                 .build();
     }
-
 
     /** Builds the netherite block ore configuration targeting smooth basalt and deepslate replaceables */
     private static OreConfiguration buildNetheriteBlockOre() {

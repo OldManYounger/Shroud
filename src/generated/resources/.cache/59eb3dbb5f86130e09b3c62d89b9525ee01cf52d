@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-18T00:47:50.6305327	Loot Tables
+// 1.21.1	2026-02-18T20:01:47.1347283	Loot Tables
 b2c3d12ed9541867cb74c78ac0e6e6d9cb96a436 data/shroud/loot_table/blocks/eventide_block.json
 0502176aa91cf571c033af1d7e58737d523b1567 data/shroud/loot_table/blocks/eventide_deepslate_ore.json
 be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_ore.json
@@ -7,7 +7,7 @@ be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_
 49c67a03130aff09f28c9c76b33b5ef283ecb54a data/shroud/loot_table/blocks/sculk_door.json
 f6575b1189d3c8e6b1c068d7dc4c5bf61ec9cc17 data/shroud/loot_table/blocks/sculk_fence.json
 d1cd4799cbe59f6ec0e6cc71dd26840e9301cbfd data/shroud/loot_table/blocks/sculk_fence_gate.json
-d1573731293911b3904e88c54de4626801ef27f8 data/shroud/loot_table/blocks/sculk_grass.json
+875363027fac201eb2686a04d9907646052a303d data/shroud/loot_table/blocks/sculk_grass.json
 43ee13d9a18adf5034135204d776b95eb5ae5764 data/shroud/loot_table/blocks/sculk_leaves.json
 2961afc5d16b03823df9a7086b90fed501c9f9ea data/shroud/loot_table/blocks/sculk_log.json
 57fb322ef3e58886d292cf3ad49bbb4bd276bbc4 data/shroud/loot_table/blocks/sculk_planks.json

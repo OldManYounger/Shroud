@@ -31,6 +31,8 @@ public class ModItemModelProvider extends ItemModelProvider {
     /** Registers item models for all standalone Shroud items */
     @Override
     protected void registerModels() {
+        // Registers the Sculk pearl
+        basicItem(ModItems.SCULK_PEARL.get());
 
         // Registers the Eventide ingot and raw ore texture using item/generated
         basicItem(ModItems.RAW_EVENTIDE.get());

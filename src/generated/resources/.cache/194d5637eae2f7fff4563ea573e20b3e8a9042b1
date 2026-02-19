@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-18T00:47:50.6315328	Item Models: shroud
+// 1.21.1	2026-02-19T00:03:50.1711615	Item Models: shroud
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
 533d0598dcf9dfd8e7909252ea429f38b1822e3c assets/shroud/models/item/eventide_axe.json
 c4383c1f1bc3ba1cfde1e1808f9174218c218927 assets/shroud/models/item/eventide_boots.json
@@ -56,6 +56,7 @@ be53bec61602838abcbb9b55ac91e8b24535eb0f assets/shroud/models/item/sculk_bulb.js
 d3b32371209215eb137d65284464f64eec5748da assets/shroud/models/item/sculk_button.json
 479bb72092be073e6dbe2987b81157e1c96522f8 assets/shroud/models/item/sculk_door.json
 0c3c88aa75a8532a3577f693f258d1a6107a3e68 assets/shroud/models/item/sculk_fence.json
+2f2a454aeb930166344c99d1840142f4f192c0a9 assets/shroud/models/item/sculk_pearl.json
 e8164247f838273aa2c2415954311ceab2717ee7 assets/shroud/models/item/sculk_sapling.json
 9b30015f9f2cf4463af11e73aa7d4868520af0f6 assets/shroud/models/item/sculk_wall.json
 4f5c5f7433962a797a67bba4bb41748b4a990460 assets/shroud/models/item/umber_button.json

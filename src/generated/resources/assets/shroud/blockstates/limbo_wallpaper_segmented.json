@@ -1,16 +1,10 @@
 {
   "variants": {
-    "axis=x": {
-      "model": "shroud:block/limbo_wallpaper_segmented_horizontal",
-      "x": 90,
-      "y": 90
-    },
-    "axis=y": {
+    "stacked=false": {
       "model": "shroud:block/limbo_wallpaper_segmented"
     },
-    "axis=z": {
-      "model": "shroud:block/limbo_wallpaper_segmented_horizontal",
-      "x": 90
+    "stacked=true": {
+      "model": "shroud:block/limbo_wallpaper_segmented_stacked"
     }
   }
 }

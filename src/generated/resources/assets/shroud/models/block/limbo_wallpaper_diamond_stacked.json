@@ -2,7 +2,7 @@
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
     "bottom": "shroud:block/limbo_ceiling_tile",
-    "side": "shroud:block/limbo_wallpaper_segmented",
+    "side": "shroud:block/limbo_wallpaper_diamond_stacked",
     "top": "shroud:block/limbo_carpet"
   }
 }

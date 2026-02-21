@@ -260,18 +260,29 @@ public class ModBlocks {
                     .noOcclusion()));
 
     // Limbo decorative blocks
-    public static final DeferredBlock<Block> LIMBO_WALLPAPER_DIAMOND = registerBlock("limbo_wallpaper_diamond",
-            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+    public static final DeferredBlock<ModStackingBlock> LIMBO_WALLPAPER_DIAMOND = registerBlock("limbo_wallpaper_diamond",
+            () -> new ModStackingBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 3600000.0F)
                     .sound(SoundType.DEEPSLATE_BRICKS)
                     .noLootTable()));
-    public static final DeferredBlock<Block> LIMBO_WALLPAPER_SEGMENTED = registerBlock("limbo_wallpaper_segmented",
-            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+    public static final DeferredBlock<ModStackingBlock> LIMBO_WALLPAPER_SEGMENTED = registerBlock("limbo_wallpaper_segmented",
+            () -> new ModStackingBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 3600000.0F)
                     .sound(SoundType.DEEPSLATE_BRICKS)
                     .noLootTable()));
     public static final DeferredBlock<Block> LIMBO_CARPET = registerBlock("limbo_carpet",
             () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(-1.0f, 3600000.0F)
+                    .sound(SoundType.WOOL)
+                    .noLootTable()));
+    public static final DeferredBlock<StairBlock> LIMBO_CARPET_STAIRS = registerBlock("limbo_carpet_stairs",
+            () -> new StairBlock(ModBlocks.LIMBO_CARPET.get().defaultBlockState(), BlockBehaviour.Properties.of()
+                    .strength(-1.0f, 3600000.0F)
+                    .sound(SoundType.WOOL)
+                    .noLootTable()));
+
+    public static final DeferredBlock<SlabBlock> LIMBO_CARPET_SLAB = registerBlock("limbo_carpet_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0f, 3600000.0F)
                     .sound(SoundType.WOOL)
                     .noLootTable()));

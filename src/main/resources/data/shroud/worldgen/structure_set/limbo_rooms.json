@@ -1,6 +1,6 @@
 {
   "structures": [
-    { "structure": "shroud:limbo_room_b", "weight": 1}
+    { "structure": "shroud:limbo_room_generic_1", "weight": 1}
   ],
   "placement": {
     "type": "shroud:grid",

@@ -4,7 +4,7 @@
   "step": "surface_structures",
   "terrain_adaptation": "none",
   "spawn_overrides": {},
-  "template": "shroud:limbo_room_b",
+  "template": "shroud:limbo_room_generic_1",
   "y": -56,
   "random_rotation": true
 }

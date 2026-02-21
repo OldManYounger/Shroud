@@ -1,0 +1,7 @@
+- Version 0.2.1
+    - Added stair and slab variant of Limbo carpet
+    - Added Limbo fluorescent light to creative mode tab
+    - Added variants of two existing wallpapers with trim texture on bottom
+    - Added custom 'stacking block' logic to allow trim on bottom block of wallpapers when stacked
+    - Removed rotation logic on wallpaper block due to being unnecessary
+    - Added first room (limbo_room_generic_1) for Limbo dimension generation

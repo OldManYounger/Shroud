@@ -97,8 +97,13 @@ public class ModCreativeModeTabs {
                                 // Limbo blocks
                                 output.accept(ModBlocks.LIMBO_WALLPAPER_DIAMOND.get());
                                 output.accept(ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get());
+
                                 output.accept(ModBlocks.LIMBO_CARPET.get());
+                                output.accept(ModBlocks.LIMBO_CARPET_STAIRS.get());
+                                output.accept(ModBlocks.LIMBO_CARPET_SLAB.get());
+
                                 output.accept(ModBlocks.LIMBO_CEILING_TILE.get());
+                                output.accept(ModBlocks.LIMBO_FLUORESCENT_LIGHT.get());
                             })
                             .build()
             );

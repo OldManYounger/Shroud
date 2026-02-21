@@ -11,6 +11,9 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.oldmanyounger.shroud.block.custom.ModStackingBlock;
 
 /** Generates all blockstates and block models for Shroud blocks */
 public class ModBlockStateProvider extends BlockStateProvider {
@@ -146,16 +149,30 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
 
         // Limbo blocks and entities
-        axisBlock((RotatedPillarBlock) ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),
+        stackingWallpaperBlock(ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),
                 modLoc("block/limbo_wallpaper_diamond"),
-                modLoc("block/limbo_wallpaper_top"));
-        axisBlock((RotatedPillarBlock) ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get(),
+                modLoc("block/limbo_wallpaper_diamond_stacked"),
+                modLoc("block/limbo_carpet"),
+                modLoc("block/limbo_ceiling_tile"));
+
+        stackingWallpaperBlock(ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get(),
                 modLoc("block/limbo_wallpaper_segmented"),
-                modLoc("block/limbo_wallpaper_top"));
+                modLoc("block/limbo_wallpaper_segmented_stacked"),
+                modLoc("block/limbo_carpet"),
+                modLoc("block/limbo_ceiling_tile"));
 
         blockItem(ModBlocks.LIMBO_WALLPAPER_DIAMOND);
         blockItem(ModBlocks.LIMBO_WALLPAPER_SEGMENTED);
         simpleBlockWithItem(ModBlocks.LIMBO_CARPET.get(), cubeAll(ModBlocks.LIMBO_CARPET.get()));
+
+        stairsBlock(ModBlocks.LIMBO_CARPET_STAIRS.get(), blockTexture(ModBlocks.LIMBO_CARPET.get()));
+        slabBlock(ModBlocks.LIMBO_CARPET_SLAB.get(),
+                blockTexture(ModBlocks.LIMBO_CARPET.get()),
+                blockTexture(ModBlocks.LIMBO_CARPET.get()));
+
+        blockItem(ModBlocks.LIMBO_CARPET_STAIRS);
+        blockItem(ModBlocks.LIMBO_CARPET_SLAB);
+
         simpleBlockWithItem(ModBlocks.LIMBO_CEILING_TILE.get(), cubeAll(ModBlocks.LIMBO_CEILING_TILE.get()));
 
         simpleBlockWithItem(
@@ -230,6 +247,36 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         // Item should use ONLY the base model (vanilla behavior)
         simpleBlockItem(blockRegistryObject.get(), baseModel);
+    }
+
+    private void stackingWallpaperBlock(ModStackingBlock block,
+                                        ResourceLocation normalSide,
+                                        ResourceLocation stackedSide,
+                                        ResourceLocation topTexture,
+                                        ResourceLocation bottomTexture) {
+
+        String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+
+        // Not stacked
+        ModelFile normalModel = models().cubeBottomTop(name,
+                normalSide,
+                bottomTexture,
+                topTexture
+        );
+
+        // Stacked
+        ModelFile stackedModel = models().cubeBottomTop(name + "_stacked",
+                stackedSide,
+                bottomTexture,
+                topTexture
+        );
+
+        getVariantBuilder(block).forAllStates(state -> {
+            boolean stacked = state.getValue(ModStackingBlock.STACKED);
+            return ConfiguredModel.builder()
+                    .modelFile(stacked ? stackedModel : normalModel)
+                    .build();
+        });
     }
 
 

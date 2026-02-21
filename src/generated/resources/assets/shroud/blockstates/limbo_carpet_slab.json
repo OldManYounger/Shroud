@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shroud:block/limbo_carpet_slab"
+    },
+    "type=double": {
+      "model": "shroud:block/limbo_carpet"
+    },
+    "type=top": {
+      "model": "shroud:block/limbo_carpet_slab_top"
+    }
+  }
+}

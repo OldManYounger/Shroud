@@ -145,6 +145,24 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.UMBER_FENCE_GATE);
         blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
 
+        // Limbo blocks and entities
+        axisBlock((RotatedPillarBlock) ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),
+                modLoc("block/limbo_wallpaper_diamond"),
+                modLoc("block/limbo_wallpaper_top"));
+        axisBlock((RotatedPillarBlock) ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get(),
+                modLoc("block/limbo_wallpaper_segmented"),
+                modLoc("block/limbo_wallpaper_top"));
+
+        blockItem(ModBlocks.LIMBO_WALLPAPER_DIAMOND);
+        blockItem(ModBlocks.LIMBO_WALLPAPER_SEGMENTED);
+        simpleBlockWithItem(ModBlocks.LIMBO_CARPET.get(), cubeAll(ModBlocks.LIMBO_CARPET.get()));
+        simpleBlockWithItem(ModBlocks.LIMBO_CEILING_TILE.get(), cubeAll(ModBlocks.LIMBO_CEILING_TILE.get()));
+
+        simpleBlockWithItem(
+                ModBlocks.LIMBO_FLUORESCENT_LIGHT.get(),
+                cubeAll(ModBlocks.LIMBO_FLUORESCENT_LIGHT.get())
+        );
+
     }
 
     /** Creates a sapling model using a cross texture with cutout rendering */

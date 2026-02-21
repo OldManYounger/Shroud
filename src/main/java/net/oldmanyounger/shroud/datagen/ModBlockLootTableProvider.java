@@ -93,6 +93,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
         // Configures the Sculk portal to drop nothing
         this.add(ModBlocks.SCULK_PORTAL.get(), block -> noDrop());
+
+        // Configures the projected light source to drop nothing
+        this.add(ModBlocks.PROJECTED_LIGHT.get(), noDrop());
     }
 
     /** Returns all known Shroud blocks to ensure loot tables are generated for each one */

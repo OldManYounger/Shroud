@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "shroud:block/limbo_wallpaper_top",
+    "side": "shroud:block/limbo_wallpaper_diamond"
+  }
+}

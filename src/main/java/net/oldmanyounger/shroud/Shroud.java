@@ -14,6 +14,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
+import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
@@ -22,6 +23,9 @@ import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
 import net.oldmanyounger.shroud.util.ModItemProperties;
 import net.oldmanyounger.shroud.worldgen.ModFeatures;
+import net.oldmanyounger.shroud.worldgen.structure.ModStructurePieces;
+import net.oldmanyounger.shroud.worldgen.structure.ModStructurePlacements;
+import net.oldmanyounger.shroud.worldgen.structure.ModStructures;
 import org.slf4j.Logger;
 
 /** Main entry point for the Shroud mod, responsible for all top-level initialization */
@@ -51,6 +55,12 @@ public class Shroud {
         ModSounds.SOUND_EVENTS.register(modEventBus);
 
         ModFeatures.FEATURES.register(modEventBus);
+
+        ModStructures.STRUCTURES.register(modEventBus);
+        ModStructurePieces.STRUCTURE_PIECES.register(modEventBus);
+        ModStructurePlacements.STRUCTURE_PLACEMENTS.register(modEventBus);
+
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 
     }
 

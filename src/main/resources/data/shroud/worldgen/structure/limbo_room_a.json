@@ -1,0 +1,10 @@
+{
+  "type": "shroud:limbo_template",
+  "biomes": "#shroud:has_limbo_structures",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "template": "shroud:limbo_room_a",
+  "y": -56,
+  "random_rotation": true
+}

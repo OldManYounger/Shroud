@@ -1,7 +1,8 @@
-// 1.21.1	2026-02-18T20:01:47.1347283	Loot Tables
+// 1.21.1	2026-02-20T20:32:34.8426993	Loot Tables
 b2c3d12ed9541867cb74c78ac0e6e6d9cb96a436 data/shroud/loot_table/blocks/eventide_block.json
 0502176aa91cf571c033af1d7e58737d523b1567 data/shroud/loot_table/blocks/eventide_deepslate_ore.json
 be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_ore.json
+eb86cfb454b5a01fe7787c7d1ea644a7cd6bbb35 data/shroud/loot_table/blocks/projected_light.json
 609c53d051318361c5c558ce294398e1249766f2 data/shroud/loot_table/blocks/sculk_bulb.json
 47e451f7946e3d804b085855d2b8c079b9e475f0 data/shroud/loot_table/blocks/sculk_button.json
 49c67a03130aff09f28c9c76b33b5ef283ecb54a data/shroud/loot_table/blocks/sculk_door.json

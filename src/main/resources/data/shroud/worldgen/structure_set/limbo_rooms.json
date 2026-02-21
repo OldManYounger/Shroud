@@ -1,0 +1,16 @@
+{
+  "structures": [
+    { "structure": "shroud:limbo_room_b", "weight": 1}
+  ],
+  "placement": {
+    "type": "shroud:grid",
+    "spacing": 3,
+    "offset": 1,
+
+    "salt": 123456789,
+    "frequency": 1.0,
+    "frequency_reduction_method": "default",
+    "locate_offset": [0, 0, 0],
+    "exclusion_zone": null
+  }
+}

@@ -38,6 +38,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.SCULK_GRASS.get());
 
         // Sculk bulb tags
+        tag(BlockTags.AIR)
+                .add(ModBlocks.PROJECTED_LIGHT.get());
 
         // Eventide ore + block are mineable with pickaxe
         tag(BlockTags.MINEABLE_WITH_PICKAXE)

@@ -78,6 +78,11 @@
   "block.shroud.umber_door": "Umber Door",
   "block.shroud.umber_trapdoor": "Umber Trapdoor",
 
+  "block.shroud.limbo_wallpaper_diamond": "Limbo Wallpaper Diamond",
+  "block.shroud.limbo_wallpaper_segmented": "Limbo Wallpaper Segmented",
+  "block.shroud.limbo_carpet": "Limbo Carpet",
+  "block.shroud.limbo_ceiling_tile": "Limbo Ceiling Tile",
+
   "block.shroud.sculk_portal": "Sculk Portal",
 
   "item.shroud.living_sculk_spawn_egg": "Living Sculk Spawn Egg",

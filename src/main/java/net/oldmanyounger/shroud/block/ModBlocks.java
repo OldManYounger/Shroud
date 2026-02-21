@@ -259,6 +259,39 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
+    // Limbo decorative blocks
+    public static final DeferredBlock<Block> LIMBO_WALLPAPER_DIAMOND = registerBlock("limbo_wallpaper_diamond",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.DEEPSLATE_BRICKS)
+                    .noLootTable()));
+    public static final DeferredBlock<Block> LIMBO_WALLPAPER_SEGMENTED = registerBlock("limbo_wallpaper_segmented",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
+                    .strength(-1.0F, 3600000.0F)
+                    .sound(SoundType.DEEPSLATE_BRICKS)
+                    .noLootTable()));
+    public static final DeferredBlock<Block> LIMBO_CARPET = registerBlock("limbo_carpet",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(-1.0f, 3600000.0F)
+                    .sound(SoundType.WOOL)
+                    .noLootTable()));
+    public static final DeferredBlock<Block> LIMBO_CEILING_TILE = registerBlock("limbo_ceiling_tile",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(-1.0f, 3600000.0F)
+                    .sound(SoundType.WOOD)
+                    .noLootTable()));
+
+    // Visible source block (has texture + item)
+    public static final DeferredBlock<Block> LIMBO_FLUORESCENT_LIGHT = registerBlock("limbo_fluorescent_light",
+            () -> new ModProjectingLightBlock(BlockBehaviour.Properties.of()
+                    .strength(1.0F)
+                    .sound(SoundType.GLASS)
+                    .lightLevel(state -> 15)
+                    .noLootTable()));
+    // Invisible helper block used for projected lighting (air-like, no item)
+    public static final DeferredBlock<Block> PROJECTED_LIGHT = registerBlockWithoutItem("projected_light",
+            () -> new ModAirLightBlock(15));
+
     // Sculk portal block using Nether portal-like behaviour and rendering
     public static final DeferredBlock<Block> SCULK_PORTAL = registerBlockWithoutItem("sculk_portal",
             () -> new ShroudPortalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL)));

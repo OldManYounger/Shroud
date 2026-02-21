@@ -94,6 +94,11 @@ public class ModCreativeModeTabs {
                                 output.accept(ModBlocks.UMBER_PRESSURE_PLATE.get());
                                 output.accept(ModBlocks.UMBER_BUTTON.get());
 
+                                // Limbo blocks
+                                output.accept(ModBlocks.LIMBO_WALLPAPER_DIAMOND.get());
+                                output.accept(ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get());
+                                output.accept(ModBlocks.LIMBO_CARPET.get());
+                                output.accept(ModBlocks.LIMBO_CEILING_TILE.get());
                             })
                             .build()
             );

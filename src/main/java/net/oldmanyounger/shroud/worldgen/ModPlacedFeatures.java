@@ -63,7 +63,7 @@ public class ModPlacedFeatures {
                 UMBER_TREE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.UMBER_TREE),
                 VegetationPlacements.treePlacement(
-                        PlacementUtils.countExtra(3, 0.1f, 2),
+                        PlacementUtils.countExtra(4, 0.1f, 2),
                         ModBlocks.UMBER_SAPLING.get()
                 )
         );

@@ -23,6 +23,94 @@ public final class ModSounds {
                     )
             );
 
+    // ============================================================
+    //  LIVING SCULK
+    // ============================================================
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_AMBIENT =
+            SOUND_EVENTS.register(
+                    "entity.living_sculk.ambient",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.living_sculk.ambient")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_HURT =
+            SOUND_EVENTS.register(
+                    "entity.living_sculk.hurt",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.living_sculk.hurt")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_DEATH =
+            SOUND_EVENTS.register(
+                    "entity.living_sculk.death",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.living_sculk.death")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_STEP =
+            SOUND_EVENTS.register(
+                    "entity.living_sculk.step",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.living_sculk.step")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_VIBRATION_REACT =
+            SOUND_EVENTS.register(
+                    "entity.living_sculk.vibration_react",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.living_sculk.vibration_react")
+                    )
+            );
+
+    // ============================================================
+    //  UMBRAL HOWLER
+    // ============================================================
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_AMBIENT =
+            SOUND_EVENTS.register(
+                    "entity.umbral_howler.ambient",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.umbral_howler.ambient")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_HURT =
+            SOUND_EVENTS.register(
+                    "entity.umbral_howler.hurt",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.umbral_howler.hurt")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_DEATH =
+            SOUND_EVENTS.register(
+                    "entity.umbral_howler.death",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.umbral_howler.death")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_STEP =
+            SOUND_EVENTS.register(
+                    "entity.umbral_howler.step",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.umbral_howler.step")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_VIBRATION_REACT =
+            SOUND_EVENTS.register(
+                    "entity.umbral_howler.vibration_react",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.umbral_howler.vibration_react")
+                    )
+            );
+
     /** Private constructor to prevent instantiation of the registry holder class */
     private ModSounds() {
     }

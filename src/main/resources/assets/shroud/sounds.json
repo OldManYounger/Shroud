@@ -3,5 +3,74 @@
     "sounds": [
       { "name": "shroud:sculk_portal_activate" }
     ]
+  },
+
+  "entity.living_sculk.ambient": {
+    "sounds": [
+      { "name": "shroud:entity/living_sculk/idle1" },
+      { "name": "shroud:entity/living_sculk/idle2" },
+      { "name": "shroud:entity/living_sculk/idle3" }
+    ]
+  },
+  "entity.living_sculk.hurt": {
+    "sounds": [
+      { "name": "shroud:entity/living_sculk/hurt1" },
+      { "name": "shroud:entity/living_sculk/hurt2" }
+    ]
+  },
+  "entity.living_sculk.death": {
+    "sounds": [
+      { "name": "shroud:entity/living_sculk/death1" }
+    ]
+  },
+  "entity.living_sculk.step": {
+    "sounds": [
+      { "name": "shroud:entity/living_sculk/step1" },
+      { "name": "shroud:entity/living_sculk/step2" },
+      { "name": "shroud:entity/living_sculk/step3" },
+      { "name": "shroud:entity/living_sculk/step4" },
+      { "name": "shroud:entity/living_sculk/step5" }
+    ]
+  },
+  "entity.living_sculk.vibration_react": {
+    "sounds": [
+      { "name": "shroud:entity/living_sculk/tendril_click1" },
+      { "name": "shroud:entity/living_sculk/tendril_click2" },
+      { "name": "shroud:entity/living_sculk/tendril_click3" }
+    ]
+  },
+  "entity.umbral_howler.ambient": {
+    "sounds": [
+      { "name": "shroud:entity/umbral_howler/idle1" },
+      { "name": "shroud:entity/umbral_howler/idle2" },
+      { "name": "shroud:entity/umbral_howler/idle3" }
+    ]
+  },
+  "entity.umbral_howler.hurt": {
+    "sounds": [
+      { "name": "shroud:entity/umbral_howler/hurt1" },
+      { "name": "shroud:entity/umbral_howler/hurt2" }
+    ]
+  },
+  "entity.umbral_howler.death": {
+    "sounds": [
+      { "name": "shroud:entity/umbral_howler/death1" }
+    ]
+  },
+  "entity.umbral_howler.step": {
+    "sounds": [
+      { "name": "shroud:entity/umbral_howler/step1" },
+      { "name": "shroud:entity/umbral_howler/step2" },
+      { "name": "shroud:entity/umbral_howler/step3" },
+      { "name": "shroud:entity/umbral_howler/step4" },
+      { "name": "shroud:entity/umbral_howler/step5" }
+    ]
+  },
+  "entity.umbral_howler.vibration_react": {
+    "sounds": [
+      { "name": "shroud:entity/umbral_howler/tendril_click1" },
+      { "name": "shroud:entity/umbral_howler/tendril_click2" },
+      { "name": "shroud:entity/umbral_howler/tendril_click3" }
+    ]
   }
 }

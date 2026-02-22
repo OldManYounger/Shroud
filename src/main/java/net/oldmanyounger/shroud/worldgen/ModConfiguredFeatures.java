@@ -20,6 +20,7 @@ import net.minecraft.world.level.levelgen.feature.foliageplacers.MegaPineFoliage
 import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.AlterGroundDecorator;
+import net.minecraft.world.level.levelgen.feature.treedecorators.LeaveVineDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.GiantTrunkPlacer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
@@ -99,6 +100,8 @@ public class ModConfiguredFeatures {
         )
                 .dirt(BlockStateProvider.simple(Blocks.SCULK))
                 .ignoreVines()
+                // vines attached to leaf edges; probability is per candidate side
+                .decorators(List.of(new LeaveVineDecorator(0.75F)))
                 .build();
     }
 

@@ -10,15 +10,21 @@
   "effects": {
     "sky_color": 0,
     "fog_color": 0,
-    "foliage_color": 18,
+    "foliage_color": 747648,
     "grass_color": 338482,
-    "water_color": 65535,
+    "water_color": 13751990,
     "water_fog_color": 2056,
     "mood_sound": {
-      "sound": "minecraft:ambient.soul_sand_valley.mood",
+      "sound": "minecraft:ambient.cave",
       "tick_delay": 6000,
       "block_search_extent": 8,
       "offset": 2.0
+    },
+    "music": {
+      "sound": "minecraft:music.overworld.deep_dark",
+      "min_delay": 12000,
+      "max_delay": 24000,
+      "replace_current_music": false
     }
   },
   "features": [

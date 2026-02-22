@@ -10,21 +10,21 @@
   "effects": {
     "sky_color": 0,
     "fog_color": 0,
-    "foliage_color": 18,
+    "foliage_color": 741475,
     "grass_color": 338482,
-    "water_color": 65535,
+    "water_color": 13751990,
     "water_fog_color": 2056,
     "mood_sound": {
-      "block_search_extent": 8,
-      "offset": 2.0,
       "sound": "minecraft:ambient.cave",
-      "tick_delay": 6000
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
     },
     "music": {
-      "max_delay": 24000,
+      "sound": "minecraft:music.overworld.deep_dark",
       "min_delay": 12000,
-      "replace_current_music": false,
-      "sound": "minecraft:music.overworld.deep_dark"
+      "max_delay": 24000,
+      "replace_current_music": false
     }
   },
   "features": [
@@ -52,14 +52,19 @@
   "has_precipitation": true,
   "spawn_costs": {},
   "spawners": {
-    "ambient": [],
-    "axolotls": [],
+    "monster": [
+      {
+        "type": "shroud:living_sculk",
+        "weight": 20,
+        "minCount": 2,
+        "maxCount": 4
+      }
+    ],
     "creature": [],
-    "misc": [],
-    "monster": [],
-    "underground_water_creature": [],
+    "ambient": [],
+    "water_creature": [],
     "water_ambient": [],
-    "water_creature": []
+    "underground_water_creature": []
   },
   "temperature": 0.8
 }

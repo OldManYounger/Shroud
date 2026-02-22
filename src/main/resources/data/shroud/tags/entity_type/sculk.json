@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "shroud:living_sculk"
+    "shroud:living_sculk",
+    "shroud:umber_howler"
   ]
 }

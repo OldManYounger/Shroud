@@ -1,3 +1,12 @@
+- Version 0.2.2
+    - Added deep dark sounds and music to all relevant biomes within Shroud
+    - Added relevant spawns to all current biomes within Shroud, notably the Sculk beach and deep dark
+    - Added vine generations on Umber trees, and updated foliage color
+    - Added all relevant sounds to the Living Sculk mob
+    - Added some sounds to the Umbral Howler mob, more to come later
+    - Added functionality to Living Sculk to allow it to transform all zombie-tagged entities into Living Sculk upon said mob's death
+    - Updated animations for both Living Sculk and Umbral Howler
+
 - Version 0.2.1
     - Added stair and slab variant of Limbo carpet
     - Added Limbo fluorescent light to creative mode tab

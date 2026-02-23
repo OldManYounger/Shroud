@@ -72,5 +72,10 @@
       { "name": "shroud:entity/umbral_howler/tendril_click2" },
       { "name": "shroud:entity/umbral_howler/tendril_click3" }
     ]
+  },
+  "block.sculk_emitter.spew": {
+    "sounds": [
+      { "name": "shroud:block/sculk_emitter/spew1" }
+    ]
   }
 }

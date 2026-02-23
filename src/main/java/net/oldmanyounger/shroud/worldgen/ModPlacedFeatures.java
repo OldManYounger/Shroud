@@ -7,6 +7,7 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.*;
@@ -22,7 +23,7 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SCULK_TREE_PLACED =
             registerKey("sculk_tree_placed");
 
-    /** Resource key for the placed SCULK tree feature */
+    /** Resource key for the placed UMBER tree feature */
     public static final ResourceKey<PlacedFeature> UMBER_TREE_PLACED =
             registerKey("umber_tree_placed");
 
@@ -42,7 +43,9 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED =
             registerKey("sculk_arch_placed");
 
-
+    /** Resource key for the placed single-block Sculk Emitter feature */
+    public static final ResourceKey<PlacedFeature> SCULK_EMITTER_PLACED =
+            registerKey("sculk_emitter_placed");
 
     /** Registers all placed features to the bootstrap context */
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
@@ -98,13 +101,12 @@ public class ModPlacedFeatures {
                 )
         );
 
-        // Sculk spike placed feature – tune frequency/height as needed
         register(
                 context,
-                ModPlacedFeatures.SCULK_SPIKE_PLACED,
+                SCULK_SPIKE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SPIKE),
                 List.of(
-                        RarityFilter.onAverageOnceEvery(16),      // ~1 in 16 chunks
+                        RarityFilter.onAverageOnceEvery(16),
                         InSquarePlacement.spread(),
                         PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
                         BiomeFilter.biome()
@@ -113,15 +115,30 @@ public class ModPlacedFeatures {
 
         register(
                 context,
-                ModPlacedFeatures.SCULK_ARCH_PLACED,
+                SCULK_ARCH_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_ARCH),
                 List.of(
-                        RarityFilter.onAverageOnceEvery(24),      // tune as desired
+                        RarityFilter.onAverageOnceEvery(24),
                         InSquarePlacement.spread(),
                         PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
                         BiomeFilter.biome()
                 )
         );
+
+        // New placed feature for single sculk emitter blocks
+        register(
+                context,
+                SCULK_EMITTER_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_EMITTER),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(12),
+                        InSquarePlacement.spread(),
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                        RandomOffsetPlacement.vertical(ConstantInt.of(-1)), // key fix: flush with ground
+                        BiomeFilter.biome()
+                )
+        );
+
 
 
     }

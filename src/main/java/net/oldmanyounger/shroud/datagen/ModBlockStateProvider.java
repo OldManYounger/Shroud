@@ -31,6 +31,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
         saplingBlock(ModBlocks.SCULK_BULB);
 
+        logBlock((RotatedPillarBlock) ModBlocks.SCULK_EMITTER.get());
+        blockItem(ModBlocks.SCULK_EMITTER);
+
         // Eventide storage block (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);
 

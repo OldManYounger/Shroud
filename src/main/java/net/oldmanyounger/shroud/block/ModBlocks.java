@@ -31,6 +31,13 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> SCULK_GRASS = registerBlock("sculk_grass",
             () -> new ModGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK)));
+
+    public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
+            () -> new ModUpwardParticlePillarBlock(BlockBehaviour.Properties.of()
+                    .strength(1.5F)
+                    .sound(SoundType.SCULK)
+                    .lightLevel(state -> 7)));
+
     public static final DeferredBlock<Block> SCULK_BULB = registerBlock("sculk_bulb",
             () -> new ModSculkBulbBlock(BlockBehaviour.Properties.of()
                     .noCollission()

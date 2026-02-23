@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-21T12:50:58.1166727	Block States: shroud
+// 1.21.1	2026-02-22T21:36:21.1559312	Block States: shroud
 f5dd1360ffb959d1df5fd33922282b27b8af222a assets/shroud/blockstates/eventide_block.json
 49475ef5d5031f63c267c324f3266dfecb82c5f8 assets/shroud/blockstates/eventide_deepslate_ore.json
 3457543ab409e2a47ef01b3c381b10c6aff0ed8e assets/shroud/blockstates/eventide_ore.json
@@ -12,6 +12,7 @@ a78f489986a93f70ead08c301b1c9b5ea686d9b4 assets/shroud/blockstates/limbo_wallpap
 89dc8ba02a6e89ae018373218af4865e21675eb6 assets/shroud/blockstates/sculk_bulb.json
 b7e330a29a98c86d22ba0973163645688dd77a89 assets/shroud/blockstates/sculk_button.json
 a5c02338671bd9e143bae8e21470b19f69b71681 assets/shroud/blockstates/sculk_door.json
+6a3632e490daa6b462bb073f4a277eb0e1fbad8d assets/shroud/blockstates/sculk_emitter.json
 0aacb7a12b0c6b64e48e3a6c84cf6fa48d8b2c8e assets/shroud/blockstates/sculk_fence.json
 52c38ec69b959ae72d3d223d9ce8efc6ea01e0bf assets/shroud/blockstates/sculk_fence_gate.json
 55d2643395d4fa20073da00625665c45c39f8eed assets/shroud/blockstates/sculk_grass.json
@@ -69,6 +70,8 @@ b1c5463ac918d15cee3e1ea36356fa02d91153f3 assets/shroud/models/block/sculk_door_t
 0e5e3ab2c1e73911083f1d206b1c1c72597e459a assets/shroud/models/block/sculk_door_top_left_open.json
 78b55355d12629360b420a5626de1fee060947d1 assets/shroud/models/block/sculk_door_top_right.json
 9e2c53ffa7a8f7e027f854a475d7064c868d7cde assets/shroud/models/block/sculk_door_top_right_open.json
+95257d9049dc5a597474bd60fe7fbdc2d748789b assets/shroud/models/block/sculk_emitter.json
+8bc317a660859335921ab3a51d1cfa800ba8b613 assets/shroud/models/block/sculk_emitter_horizontal.json
 e7cf189475c816b57f3abbf7c259f92748918214 assets/shroud/models/block/sculk_fence_gate.json
 b292e45e7fdc52221dc36a80a7ad138552d6d79c assets/shroud/models/block/sculk_fence_gate_open.json
 8f82dc4a6a6f040a23535001e670e48c01a95d57 assets/shroud/models/block/sculk_fence_gate_wall.json
@@ -151,6 +154,7 @@ ccdb6c627bf1c3c083eb061bfe5ee649299ebf44 assets/shroud/models/item/limbo_ceiling
 bac33eb561646a34abe72fc57017213b1da6cf51 assets/shroud/models/item/limbo_fluorescent_light.json
 edf9d9e0bd9e48c14c482445a0df084518e57ef8 assets/shroud/models/item/limbo_wallpaper_diamond.json
 63fc461a1b44484409112c1924be9b8ce554e17c assets/shroud/models/item/limbo_wallpaper_segmented.json
+9119f557d4b3244a93411259147644e8511c8557 assets/shroud/models/item/sculk_emitter.json
 515c0c05eedec58b248398d9da5f6504f533790a assets/shroud/models/item/sculk_fence_gate.json
 a71f414f8d0f17ab26446e48ef579afcc52d0e5a assets/shroud/models/item/sculk_grass.json
 f9bba896609e7ae34f31efa8a6ada0c43e62a287 assets/shroud/models/item/sculk_leaves.json

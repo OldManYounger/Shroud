@@ -2,6 +2,7 @@
   "values": [
     "shroud:eventide_block",
     "shroud:eventide_ore",
-    "shroud:eventide_deepslate_ore"
+    "shroud:eventide_deepslate_ore",
+    "shroud:sculk_emitter"
   ]
 }

@@ -111,6 +111,14 @@ public final class ModSounds {
                     )
             );
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_SCULK_EMITTER_SPEW =
+            SOUND_EVENTS.register(
+                    "block.sculk_emitter.spew",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block.sculk_emitter.spew")
+                    )
+            );
+
     /** Private constructor to prevent instantiation of the registry holder class */
     private ModSounds() {
     }

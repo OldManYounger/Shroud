@@ -45,7 +45,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.EVENTIDE_BLOCK.get())
                 .add(ModBlocks.EVENTIDE_ORE.get())
-                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
+                .add(ModBlocks.SCULK_EMITTER.get());
 
         // Eventide ore requires an iron-tier tool (adjust later if you add an Eventide tool tier)
         tag(BlockTags.NEEDS_IRON_TOOL)

@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-20T20:32:34.8386954	Tags for minecraft:block mod id shroud
+// 1.21.1	2026-02-22T21:36:21.1539303	Tags for minecraft:block mod id shroud
 5665328f17f217fd8bd9813b1a8453cbec6ab042 data/minecraft/tags/block/air.json
 92682a66c45095ecd232ee46f47382cdaf0fb0d6 data/minecraft/tags/block/buttons.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/dirt.json
@@ -9,7 +9,7 @@ bc4e1eafc0afc900db5be498300cd8039a88aae8 data/minecraft/tags/block/fences.json
 3d7ae58a3c5fe39a35eb9873ecb9f7c1f9fa0781 data/minecraft/tags/block/logs.json
 3d7ae58a3c5fe39a35eb9873ecb9f7c1f9fa0781 data/minecraft/tags/block/logs_that_burn.json
 bc70ea671946ab62a24c709e91d081ca37ebfd3a data/minecraft/tags/block/mineable/axe.json
-eeb16eda3cf41d6f88d2249a45bc34d205ff2a4e data/minecraft/tags/block/mineable/pickaxe.json
+95af2fd8ff8a75c87d5f654a2bcdd63830d8bef1 data/minecraft/tags/block/mineable/pickaxe.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/mineable/shovel.json
 6c73fc32282db34a3fdea0955bd0ab216f8418f5 data/minecraft/tags/block/needs_iron_tool.json
 4474463b211a2b9bb87b89db36df956136608d91 data/minecraft/tags/block/planks.json

@@ -33,6 +33,8 @@ public class ModCreativeModeTabs {
                                 // Sculk bulb
                                 output.accept(ModBlocks.SCULK_BULB.get());
 
+                                output.accept(ModBlocks.SCULK_EMITTER.get());
+
                                 // Eventide ore & blocks
                                 output.accept(ModBlocks.EVENTIDE_ORE.get());
                                 output.accept(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());

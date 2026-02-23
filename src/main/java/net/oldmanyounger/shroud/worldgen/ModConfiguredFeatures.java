@@ -1,31 +1,32 @@
 package net.oldmanyounger.shroud.worldgen;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.MegaPineFoliagePlacer;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.feature.treedecorators.AlterGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.LeaveVineDecorator;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.GiantTrunkPlacer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockMatchTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.TagMatchTest;
-import net.minecraft.tags.BlockTags;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 
@@ -58,6 +59,10 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_ARCH =
             registerKey("sculk_arch");
 
+    /** Resource key for single-block Sculk Emitter placement */
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_EMITTER =
+            registerKey("sculk_emitter");
+
 
     /** Registers all configured features to the bootstrap context */
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
@@ -66,10 +71,12 @@ public class ModConfiguredFeatures {
         register(context, ORE_NETHERITE_BLOCK, Feature.ORE, buildNetheriteBlockOre());
         register(context, ORE_EVENTIDE, Feature.ORE, buildEventideOre());
 
-        // Sculk spike – uses custom Feature type and NoneFeatureConfiguration
+        // Sculk spike / arch custom features
         register(context, SCULK_SPIKE, ModFeatures.SCULK_SPIKE.get(), NoneFeatureConfiguration.INSTANCE);
         register(context, SCULK_ARCH, ModFeatures.SCULK_ARCH.get(), NoneFeatureConfiguration.INSTANCE);
 
+        // Single-block configured feature: always place emitter with vertical axis (face-up)
+        register(context, SCULK_EMITTER, ModFeatures.SCULK_EMITTER.get(), NoneFeatureConfiguration.INSTANCE);
     }
 
     /** Builds the SCULK tree configuration used for Shroud tree generation */
@@ -100,7 +107,6 @@ public class ModConfiguredFeatures {
         )
                 .dirt(BlockStateProvider.simple(Blocks.SCULK))
                 .ignoreVines()
-                // vines attached to leaf edges; probability is per candidate side
                 .decorators(List.of(new LeaveVineDecorator(0.75F)))
                 .build();
     }

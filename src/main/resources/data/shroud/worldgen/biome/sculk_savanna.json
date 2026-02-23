@@ -55,7 +55,8 @@
       "shroud:patch_sculk_bulb"
     ],
     [
-      "minecraft:glow_lichen"
+      "minecraft:glow_lichen",
+      "shroud:sculk_emitter_placed"
     ]
   ],
   "has_precipitation": false,

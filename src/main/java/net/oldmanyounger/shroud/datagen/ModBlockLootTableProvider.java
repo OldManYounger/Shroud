@@ -4,12 +4,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.item.ModItems;
 
 import java.util.Set;
+import java.util.function.Supplier;
 
 /** Generates block loot tables for all Shroud blocks */
 public class ModBlockLootTableProvider extends BlockLootSubProvider {
@@ -19,6 +22,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
     }
 
+    // Change this later to your custom item, e.g. () -> ModItems.MY_ITEM.get()
+    private static final Supplier<ItemLike> SCULK_GRAVEL_DROP_ITEM = () -> Items.FLINT;
+
     /** Defines drop behavior for each registered Shroud block */
     @Override
     protected void generate() {
@@ -26,7 +32,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.SCULK_GRASS.get(),
                 block -> createSingleItemTableWithSilkTouch(block, Blocks.SCULK));
 
+        add(ModBlocks.SCULK_GRAVEL.get(),
+                block -> createSingleItemTable(SCULK_GRAVEL_DROP_ITEM.get()));
         dropSelf(ModBlocks.SCULK_STONE.get());
+        dropSelf(ModBlocks.SCULK_DEEPSLATE.get());
 
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
 
@@ -40,6 +49,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 block -> createOreDrop(ModBlocks.EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
         add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get(),
                 block -> createOreDrop(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
+        add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get(),
+                block -> createOreDrop(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
+        add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get(),
+                block -> createOreDrop(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
 
         // Registers simple self-dropping behavior for core Sculk wood blocks and sapling
         this.dropSelf(ModBlocks.SCULK_LOG.get());
@@ -101,6 +114,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         // Configures the projected light source to drop nothing
         this.add(ModBlocks.PROJECTED_LIGHT.get(), noDrop());
     }
+
 
     /** Returns all known Shroud blocks to ensure loot tables are generated for each one */
     @Override

@@ -3,7 +3,7 @@
     "shroud:eventide_block",
     "shroud:eventide_ore",
     "shroud:eventide_deepslate_ore",
-    "shroud:sculk_emitter",
-    "shroud:sculk_stone"
+    "shroud:sculk_stone_eventide_ore",
+    "shroud:sculk_deepslate_eventide_ore"
   ]
 }

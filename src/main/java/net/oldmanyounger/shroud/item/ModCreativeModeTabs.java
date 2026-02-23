@@ -29,7 +29,9 @@ public class ModCreativeModeTabs {
 
                                 // Sculk grass
                                 output.accept(ModBlocks.SCULK_GRASS.get());
+                                output.accept(ModBlocks.SCULK_GRAVEL.get());
                                 output.accept(ModBlocks.SCULK_STONE.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE.get());
 
                                 // Sculk bulb
                                 output.accept(ModBlocks.SCULK_BULB.get());
@@ -39,6 +41,8 @@ public class ModCreativeModeTabs {
                                 // Eventide ore & blocks
                                 output.accept(ModBlocks.EVENTIDE_ORE.get());
                                 output.accept(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+                                output.accept(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get());
                                 output.accept(ModBlocks.EVENTIDE_BLOCK.get());
 
                                 // Sculk logs and wood

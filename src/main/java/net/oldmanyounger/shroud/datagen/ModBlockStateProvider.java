@@ -29,7 +29,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         // Sculk grass and plants
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
+        blockWithItem(ModBlocks.SCULK_GRAVEL);
         blockWithItem(ModBlocks.SCULK_STONE);
+        blockWithItem(ModBlocks.SCULK_DEEPSLATE);
         saplingBlock(ModBlocks.SCULK_BULB);
 
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_EMITTER.get());
@@ -41,6 +43,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Eventide ore blockstate/model (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_ORE);
         blockWithItem(ModBlocks.EVENTIDE_DEEPSLATE_ORE);
+        blockWithItem(ModBlocks.SCULK_STONE_EVENTIDE_ORE);
+        blockWithItem(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE);
 
         // Registers Sculk log and wood (normal and stripped) with appropriate axis models
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_LOG.get());

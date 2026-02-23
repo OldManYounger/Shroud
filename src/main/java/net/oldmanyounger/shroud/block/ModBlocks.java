@@ -35,6 +35,12 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SCULK_STONE = registerBlock("sculk_stone",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
 
+    public static final DeferredBlock<Block> SCULK_DEEPSLATE = registerBlock("sculk_deepslate",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)));
+
+    public static final DeferredBlock<Block> SCULK_GRAVEL = registerBlock("sculk_gravel",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
+
     public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
             () -> new ModUpwardParticlePillarBlock(BlockBehaviour.Properties.of()
                     .strength(1.5F)
@@ -59,6 +65,13 @@ public class ModBlocks {
     public static final DeferredBlock<Block> EVENTIDE_DEEPSLATE_ORE = registerBlock("eventide_deepslate_ore",
             () -> new DropExperienceBlock(UniformInt.of(3, 6),
                     BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE)));
+    public static final DeferredBlock<Block> SCULK_STONE_EVENTIDE_ORE = registerBlock("sculk_stone_eventide_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 4),
+                    BlockBehaviour.Properties.of().strength(3f).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final DeferredBlock<Block> SCULK_DEEPSLATE_EVENTIDE_ORE = registerBlock("sculk_deepslate_eventide_ore",
+            () -> new DropExperienceBlock(UniformInt.of(3, 6),
+                    BlockBehaviour.Properties.of().strength(4f).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE)));
+
 
     // Sculk log, wood, stripped variants, and planks with flammability behavior
     public static final DeferredBlock<Block> SCULK_LOG = registerBlock("sculk_log",

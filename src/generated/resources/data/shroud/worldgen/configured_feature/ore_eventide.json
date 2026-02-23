@@ -6,6 +6,24 @@
     "targets": [
       {
         "state": {
+          "Name": "shroud:sculk_stone_eventide_ore"
+        },
+        "target": {
+          "block": "shroud:sculk_stone",
+          "predicate_type": "minecraft:block_match"
+        }
+      },
+      {
+        "state": {
+          "Name": "shroud:sculk_deepslate_eventide_ore"
+        },
+        "target": {
+          "block": "shroud:sculk_deepslate",
+          "predicate_type": "minecraft:block_match"
+        }
+      },
+      {
+        "state": {
           "Name": "shroud:eventide_ore"
         },
         "target": {

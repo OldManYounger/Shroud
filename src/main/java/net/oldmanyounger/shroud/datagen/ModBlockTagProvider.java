@@ -46,8 +46,17 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.EVENTIDE_BLOCK.get())
                 .add(ModBlocks.EVENTIDE_ORE.get())
                 .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
-                .add(ModBlocks.SCULK_EMITTER.get())
-                .add(ModBlocks.SCULK_STONE.get());
+                .add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get());
+
+        tag(BlockTags.MINEABLE_WITH_SHOVEL)
+                .add(ModBlocks.SCULK_GRAVEL.get());
+
+        tag(BlockTags.NEEDS_IRON_TOOL)
+                .add(ModBlocks.EVENTIDE_ORE.get())
+                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
+                .add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get());
 
         tag(BlockTags.NEEDS_STONE_TOOL)
                 .add(ModBlocks.SCULK_STONE.get());
@@ -58,10 +67,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.STONE_ORE_REPLACEABLES)
                 .add(ModBlocks.SCULK_STONE.get());
 
-        // Eventide ore requires an iron-tier tool (adjust later if you add an Eventide tool tier)
-        tag(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.EVENTIDE_ORE.get())
-                .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get());
+        tag(BlockTags.DEEPSLATE_ORE_REPLACEABLES)
+                .add(ModBlocks.SCULK_DEEPSLATE.get());
 
         // Optional: if you are using your custom "needs_eventide_tool" tag
         tag(ModTags.Blocks.NEEDS_EVENTIDE_TOOL)

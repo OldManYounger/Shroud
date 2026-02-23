@@ -1,8 +1,16 @@
 {
   "item.shroud.sculk_pearl": "Sculk Pearl",
 
+  "block.shroud.sculk_grass": "Sculk Grass",
+  "block.shroud.sculk_gravel": "Sculk Gravel",
+  "block.shroud.sculk_stone": "Sculk Stone",
+  "block.shroud.sculk_bulb": "Sculk Bulb",
+  "block.shroud.sculk_emitter": "Sculk Emitter",
+
   "block.shroud.eventide_ore": "Eventide Ore",
   "block.shroud.eventide_deepslate_ore": "Deepslate Eventide Ore",
+  "block.shroud.sculk_stone_eventide_ore": "Sculk Stone Eventide Ore",
+  "block.shroud.sculk_deepslate_eventide_ore": "Sculk Deepslate Eventide Ore",
   "block.shroud.eventide_block": "Eventide Block",
 
   "item.shroud.raw_eventide": "Raw Eventide",
@@ -21,20 +29,6 @@
   "item.shroud.eventide_boots": "Eventide Boots",
 
   "item.shroud.eventide_armor_trim_smithing_template": "Eventide Trim Template",
-
-  "block.shroud.sculk_grass": "Sculk Grass",
-  "block.shroud.sculk_stone": "Sculk Stone",
-  "block.shroud.sculk_bulb": "Sculk Bulb",
-  "block.shroud.sculk_emitter": "Sculk Emitter",
-
-  "block.shroud.purp_sapling": "Purp Sapling",
-
-  "block.shroud.purp_log": "Purp Log",
-  "block.shroud.purp_planks": "Purp Planks",
-  "block.shroud.purp_wood": "Purp Wood",
-  "block.shroud.stripped_purp_log": "Stripped Purp Log",
-  "block.shroud.stripped_purp_wood": "Stripped Purp Wood",
-  "block.shroud.purp_leaves": "Purp Leaves",
 
   "block.shroud.sculk_sapling": "Sculk Sapling",
 

@@ -1,3 +1,12 @@
+- Version 0.2.3
+    - Added sculk_stone, sculk_deepslate, and sculk_gravel
+        - Variants and decorative versions coming soon
+    - Added eventide ore textures for sculk_stone and sculk_deepslate
+    - Added sculk ocean biome, will be filled out with plant life in a future patch
+    - Added sculk spewer block/feature which spews sculk soul particles and makes an eerie noise
+    - Increased the light level of the sculk bulb plant to make navigation more feasible
+    - Updated some biome colors
+
 - Version 0.2.2
     - Added deep dark sounds and music to all relevant biomes within Shroud
     - Added relevant spawns to all current biomes within Shroud, notably the Sculk beach and deep dark

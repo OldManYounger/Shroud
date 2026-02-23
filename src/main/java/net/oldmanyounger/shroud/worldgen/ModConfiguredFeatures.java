@@ -133,14 +133,25 @@ public class ModConfiguredFeatures {
         BlockState eventideOre = ModBlocks.EVENTIDE_ORE.get().defaultBlockState();
         BlockState deepslateEventideOre = ModBlocks.EVENTIDE_DEEPSLATE_ORE.get().defaultBlockState();
 
+        // New custom-texture outputs
+        BlockState sculkStoneEventideOre = ModBlocks.SCULK_STONE_EVENTIDE_ORE.get().defaultBlockState();
+        BlockState sculkDeepslateEventideOre = ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get().defaultBlockState();
+
         OreConfiguration.TargetBlockState stoneTarget =
                 OreConfiguration.target(new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES), eventideOre);
 
         OreConfiguration.TargetBlockState deepslateTarget =
                 OreConfiguration.target(new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES), deepslateEventideOre);
 
+        // New: map your specific host blocks to your specific ore textures
+        OreConfiguration.TargetBlockState sculkStoneTarget =
+                OreConfiguration.target(new BlockMatchTest(ModBlocks.SCULK_STONE.get()), sculkStoneEventideOre);
+
+        OreConfiguration.TargetBlockState sculkDeepslateTarget =
+                OreConfiguration.target(new BlockMatchTest(ModBlocks.SCULK_DEEPSLATE.get()), sculkDeepslateEventideOre);
+
         return new OreConfiguration(
-                List.of(stoneTarget, deepslateTarget),
+                List.of(sculkStoneTarget, sculkDeepslateTarget, stoneTarget, deepslateTarget),
                 8,
                 0.0F
         );

@@ -29,6 +29,7 @@ public class ModCreativeModeTabs {
 
                                 // Sculk grass
                                 output.accept(ModBlocks.SCULK_GRASS.get());
+                                output.accept(ModBlocks.SCULK_STONE.get());
 
                                 // Sculk bulb
                                 output.accept(ModBlocks.SCULK_BULB.get());

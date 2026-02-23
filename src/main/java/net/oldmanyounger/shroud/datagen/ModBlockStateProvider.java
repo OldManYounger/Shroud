@@ -29,6 +29,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         // Sculk grass and plants
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
+        blockWithItem(ModBlocks.SCULK_STONE);
         saplingBlock(ModBlocks.SCULK_BULB);
 
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_EMITTER.get());

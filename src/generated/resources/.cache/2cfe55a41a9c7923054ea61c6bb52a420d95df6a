@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-22T21:36:21.1559312	Block States: shroud
+// 1.21.1	2026-02-22T23:28:49.4563822	Block States: shroud
 f5dd1360ffb959d1df5fd33922282b27b8af222a assets/shroud/blockstates/eventide_block.json
 49475ef5d5031f63c267c324f3266dfecb82c5f8 assets/shroud/blockstates/eventide_deepslate_ore.json
 3457543ab409e2a47ef01b3c381b10c6aff0ed8e assets/shroud/blockstates/eventide_ore.json
@@ -23,6 +23,7 @@ a5c02338671bd9e143bae8e21470b19f69b71681 assets/shroud/blockstates/sculk_door.js
 2edfedd7a437c0273cdb7348fd8dbeea29480e07 assets/shroud/blockstates/sculk_sapling.json
 4e5a8f7588e981ed3a872fcf00a00e9fe431ff55 assets/shroud/blockstates/sculk_slab.json
 e9931d865fff2c029759b69cadd7e40aa29ad84a assets/shroud/blockstates/sculk_stairs.json
+ab4da3a6c6cab34c22f4dc5d925442d0ad5c981b assets/shroud/blockstates/sculk_stone.json
 6a84e5f1b41c503daa91f6f5cbab9cad3b457503 assets/shroud/blockstates/sculk_trapdoor.json
 6e63d3be160249c3fa46a8654f507e22359f8f1f assets/shroud/blockstates/sculk_wall.json
 7251fbb4461dba180c3062d48affc2822e85e73f assets/shroud/blockstates/sculk_wood.json
@@ -92,6 +93,7 @@ d096e0823d1cfa33abb77815531c86f73f5424bf assets/shroud/models/block/sculk_pressu
 2714e2098c1fc14ef8629bedfeef6a0158676bd4 assets/shroud/models/block/sculk_stairs.json
 7625f2f2cef2b25a23c7a9de4ce09c69b288ced3 assets/shroud/models/block/sculk_stairs_inner.json
 25bbade39165a54cd755f09a3cc04f14034da1f6 assets/shroud/models/block/sculk_stairs_outer.json
+2a069dff8047398681f9d418bada379c4c48ded7 assets/shroud/models/block/sculk_stone.json
 41be1f5ac8450b0057df01e5f824a81b5424d3e2 assets/shroud/models/block/sculk_trapdoor_bottom.json
 fba900806b5d8d861ed60dd1337be647c236f7dd assets/shroud/models/block/sculk_trapdoor_open.json
 8a29fd4a0ed5c33a089eca56cabddd31872674ec assets/shroud/models/block/sculk_trapdoor_top.json
@@ -163,6 +165,7 @@ fa85ae1fee8930e043bb940d870b031e6957d868 assets/shroud/models/item/sculk_planks.
 676989526513e8b02a9c8c595d95cd0a7e9baa57 assets/shroud/models/item/sculk_pressure_plate.json
 53de349c897e431b6b714396455b9818fdd0e35a assets/shroud/models/item/sculk_slab.json
 04985b7a7b43a7c8ee1e64aa62baf252bd270b9a assets/shroud/models/item/sculk_stairs.json
+5485e6e366481bcc5f2295bd9b61e19cf7abb5ee assets/shroud/models/item/sculk_stone.json
 b4887d42299376d1d3e1ba0e456d2b2db76e6a6b assets/shroud/models/item/sculk_trapdoor.json
 ba6626ba185203abfe90583286f6377b9052b0db assets/shroud/models/item/sculk_wood.json
 c74530ca6bf5954b4e2804a965b885e412ce81b7 assets/shroud/models/item/stripped_sculk_log.json

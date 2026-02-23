@@ -21,6 +21,13 @@ public class ModBlockEntities {
                             ModBlocks.LIMBO_FLUORESCENT_LIGHT.get()
                     ).build(null));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SculkEmitterBlockEntity>> SCULK_EMITTER =
+            BLOCK_ENTITIES.register("sculk_emitter",
+                    () -> BlockEntityType.Builder.of(
+                            SculkEmitterBlockEntity::new,
+                            ModBlocks.SCULK_EMITTER.get()
+                    ).build(null));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

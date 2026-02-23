@@ -1,5 +1,6 @@
-// 1.21.1	2026-02-22T21:36:21.1539303	Tags for minecraft:block mod id shroud
+// 1.21.1	2026-02-22T23:28:49.4543818	Tags for minecraft:block mod id shroud
 5665328f17f217fd8bd9813b1a8453cbec6ab042 data/minecraft/tags/block/air.json
+c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/base_stone_overworld.json
 92682a66c45095ecd232ee46f47382cdaf0fb0d6 data/minecraft/tags/block/buttons.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/dirt.json
 39637057c681686b7d81a8e2d84b38039009a417 data/minecraft/tags/block/doors.json
@@ -9,15 +10,17 @@ bc4e1eafc0afc900db5be498300cd8039a88aae8 data/minecraft/tags/block/fences.json
 3d7ae58a3c5fe39a35eb9873ecb9f7c1f9fa0781 data/minecraft/tags/block/logs.json
 3d7ae58a3c5fe39a35eb9873ecb9f7c1f9fa0781 data/minecraft/tags/block/logs_that_burn.json
 bc70ea671946ab62a24c709e91d081ca37ebfd3a data/minecraft/tags/block/mineable/axe.json
-95af2fd8ff8a75c87d5f654a2bcdd63830d8bef1 data/minecraft/tags/block/mineable/pickaxe.json
+089a116f1c850a10e54e20a5e0bd9305cd061a1d data/minecraft/tags/block/mineable/pickaxe.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/mineable/shovel.json
 6c73fc32282db34a3fdea0955bd0ab216f8418f5 data/minecraft/tags/block/needs_iron_tool.json
+c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/needs_stone_tool.json
 4474463b211a2b9bb87b89db36df956136608d91 data/minecraft/tags/block/planks.json
 aa2d42a5a464834d55b256a0438ce6b03caf2009 data/minecraft/tags/block/pressure_plates.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/replaceable_by_trees.json
 870f7b204d11bf5ffcb14e874dd95cf4f9af910d data/minecraft/tags/block/saplings.json
 dc81c07b23dbd549a65c13c3d01ebabf785d1285 data/minecraft/tags/block/slabs.json
 b57e36e8640b82518a404a7c383c85a5e763e1a4 data/minecraft/tags/block/stairs.json
+c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/stone_ore_replaceables.json
 f978c78d89aaf42b1a96995f0c88315c3c9a5d66 data/minecraft/tags/block/trapdoors.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/valid_spawn.json
 0ada4a773af46104f0707ac49b9f0a36b3d854b2 data/minecraft/tags/block/walls.json

@@ -53,7 +53,20 @@
             "depth": [0.9, 1.1],
             "offset": 0.0
           }
+        },
+        {
+          "biome": "shroud:sculk_ocean",
+          "parameters": {
+            "temperature": [0.35, 0.9],
+            "humidity": [-1.0, 1.0],
+            "continentalness": [-1.0, -0.19],
+            "erosion": [-0.2225, 1.0],
+            "weirdness": [-0.4, 0.4],
+            "depth": 0.0,
+            "offset": 0.0
+          }
         }
+
       ]
     },
     "settings": "shroud:shroud"

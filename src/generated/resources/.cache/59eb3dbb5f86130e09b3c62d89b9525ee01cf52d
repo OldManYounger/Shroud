@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-22T21:36:21.1589318	Loot Tables
+// 1.21.1	2026-02-22T23:28:49.4584115	Loot Tables
 b2c3d12ed9541867cb74c78ac0e6e6d9cb96a436 data/shroud/loot_table/blocks/eventide_block.json
 0502176aa91cf571c033af1d7e58737d523b1567 data/shroud/loot_table/blocks/eventide_deepslate_ore.json
 be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_ore.json
@@ -18,6 +18,7 @@ bdc056021428fda680eaf78e6afd70453b752d39 data/shroud/loot_table/blocks/sculk_pre
 16b4efaf8dc8e0cc43c93c8b30a20dba456d95e6 data/shroud/loot_table/blocks/sculk_sapling.json
 cfa358bfa3b8229bad50d8cfcc312770132bac2a data/shroud/loot_table/blocks/sculk_slab.json
 abcd0c7345cf619a168327999d62b805aec3b74f data/shroud/loot_table/blocks/sculk_stairs.json
+027eed9bcb8dc6b53db547eae888c050b8c8bbaf data/shroud/loot_table/blocks/sculk_stone.json
 bc81813d7452418a2838dcddfeab90c66d8906d6 data/shroud/loot_table/blocks/sculk_trapdoor.json
 a8a7a04082ce707caa7ceffa0491f38707294e6f data/shroud/loot_table/blocks/sculk_wall.json
 8acec48ccbe205e21b077b9466f36639459f25b3 data/shroud/loot_table/blocks/sculk_wood.json

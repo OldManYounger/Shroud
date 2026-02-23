@@ -32,6 +32,9 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SCULK_GRASS = registerBlock("sculk_grass",
             () -> new ModGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK)));
 
+    public static final DeferredBlock<Block> SCULK_STONE = registerBlock("sculk_stone",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
+
     public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
             () -> new ModUpwardParticlePillarBlock(BlockBehaviour.Properties.of()
                     .strength(1.5F)
@@ -44,7 +47,7 @@ public class ModBlocks {
                     .instabreak()
                     .sound(SoundType.GRASS)
                     .offsetType(BlockBehaviour.OffsetType.XZ)
-                    .lightLevel(state -> 6)));
+                    .lightLevel(state -> 14)));
 
     public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
             () -> new Block(BlockBehaviour.Properties.of()

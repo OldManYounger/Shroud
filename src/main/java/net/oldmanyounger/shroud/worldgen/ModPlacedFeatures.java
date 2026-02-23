@@ -131,7 +131,7 @@ public class ModPlacedFeatures {
                 SCULK_EMITTER_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_EMITTER),
                 List.of(
-                        RarityFilter.onAverageOnceEvery(12),
+                        RarityFilter.onAverageOnceEvery(3),
                         InSquarePlacement.spread(),
                         PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
                         RandomOffsetPlacement.vertical(ConstantInt.of(-1)), // key fix: flush with ground

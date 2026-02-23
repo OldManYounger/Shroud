@@ -46,7 +46,17 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.EVENTIDE_BLOCK.get())
                 .add(ModBlocks.EVENTIDE_ORE.get())
                 .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
-                .add(ModBlocks.SCULK_EMITTER.get());
+                .add(ModBlocks.SCULK_EMITTER.get())
+                .add(ModBlocks.SCULK_STONE.get());
+
+        tag(BlockTags.NEEDS_STONE_TOOL)
+                .add(ModBlocks.SCULK_STONE.get());
+
+        tag(BlockTags.BASE_STONE_OVERWORLD)
+                .add(ModBlocks.SCULK_STONE.get());
+
+        tag(BlockTags.STONE_ORE_REPLACEABLES)
+                .add(ModBlocks.SCULK_STONE.get());
 
         // Eventide ore requires an iron-tier tool (adjust later if you add an Eventide tool tier)
         tag(BlockTags.NEEDS_IRON_TOOL)

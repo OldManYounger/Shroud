@@ -90,7 +90,6 @@ public class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 0x0A0A0A, 0x6A0DAD,
                     new Item.Properties()));
 
-
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

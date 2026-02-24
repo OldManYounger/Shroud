@@ -119,6 +119,14 @@ public final class ModSounds {
                     )
             );
 
+    public static final DeferredHolder<SoundEvent, SoundEvent> LIMBO_AMBIENT_LOOP =
+            SOUND_EVENTS.register(
+                    "limbo.ambient_loop",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "limbo.ambient_loop")
+                    )
+            );
+
     /** Private constructor to prevent instantiation of the registry holder class */
     private ModSounds() {
     }

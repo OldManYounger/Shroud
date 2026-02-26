@@ -85,10 +85,16 @@ public class ModItems {
     public static final DeferredItem<Item> LIVING_SCULK_SPAWN_EGG = ITEMS.register("living_sculk_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,
                     new Item.Properties()));
-
     public static final DeferredItem<Item> UMBRAL_HOWLER_SPAWN_EGG = ITEMS.register("umbral_howler_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 0x0A0A0A, 0x6A0DAD,
                     new Item.Properties()));
+    public static final DeferredItem<Item> RESONANT_HULK_SPAWN_EGG = ITEMS.register("resonant_hulk_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.RESONANT_HULK, 0x1F2E2E, 0x8A6BFF,
+                    new Item.Properties()));
+    public static final DeferredItem<Item> BLIGHTED_SHADE_SPAWN_EGG = ITEMS.register("blighted_shade_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.BLIGHTED_SHADE, 0x1B1B2E, 0x7B2CBF,
+                    new Item.Properties()));
+
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

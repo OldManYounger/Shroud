@@ -10,11 +10,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
+import net.oldmanyounger.shroud.entity.custom.ResonantHulkEntity;
+import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 
 @EventBusSubscriber(modid = Shroud.MOD_ID)
-public class ModEntityTeamEvents {
+public final class ModEntityTeamEvents {
 
     private static final String TEAM_NAME = "sculk_allies";
+
+    private ModEntityTeamEvents() {}
 
     @SubscribeEvent
     public static void onEntityJoin(EntityJoinLevelEvent event) {
@@ -24,21 +28,24 @@ public class ModEntityTeamEvents {
 
         Entity entity = event.getEntity();
 
-        // Only Wardens and Living Sculk
-        if (!(entity instanceof Warden) && !(entity instanceof LivingSculkEntity)) {
+        if (!(entity instanceof Warden)
+                && !(entity instanceof LivingSculkEntity)
+                && !(entity instanceof UmbralHowlerEntity)
+                && !(entity instanceof ResonantHulkEntity)) {
             return;
         }
 
         Scoreboard scoreboard = serverLevel.getScoreboard();
-
-        // Create team on first use
         PlayerTeam team = scoreboard.getPlayerTeam(TEAM_NAME);
+
         if (team == null) {
             team = scoreboard.addPlayerTeam(TEAM_NAME);
-            team.setAllowFriendlyFire(false); // being on the same team makes them "allied"
+            team.setAllowFriendlyFire(false);
         }
 
-        // Add this entity to the team
-        scoreboard.addPlayerToTeam(entity.getScoreboardName(), team);
+        String key = entity.getScoreboardName();
+        if (scoreboard.getPlayersTeam(key) != team) {
+            scoreboard.addPlayerToTeam(key, team);
+        }
     }
 }

@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "shroud:living_sculk",
-    "shroud:umber_howler"
+    "shroud:umbral_howler",
+    "shroud:resonant_hulk"
   ]
 }

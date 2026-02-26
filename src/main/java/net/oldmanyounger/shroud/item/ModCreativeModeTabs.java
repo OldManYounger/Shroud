@@ -147,6 +147,8 @@ public class ModCreativeModeTabs {
                                 // Spawn eggs
                                 output.accept(ModItems.LIVING_SCULK_SPAWN_EGG);
                                 output.accept(ModItems.UMBRAL_HOWLER_SPAWN_EGG);
+                                output.accept(ModItems.RESONANT_HULK_SPAWN_EGG);
+                                output.accept(ModItems.BLIGHTED_SHADE_SPAWN_EGG);
                             }).build());
 
     /** Registers the Creative Mode tabs to the NeoForge mod event bus */

@@ -4,21 +4,20 @@ import software.bernie.geckolib.animation.RawAnimation;
 
 public final class BlightedShadeAnimations {
 
-    // IMPORTANT: replace these names with the exact animation names from your Blockbench export
     public static final RawAnimation IDLE =
-            RawAnimation.begin().thenLoop("animation.blighted_shade.idle");
+            RawAnimation.begin().thenLoop("idle");
 
     public static final RawAnimation IDLE_ALTERNATE =
-            RawAnimation.begin().thenLoop("animation.blighted_shade.idle_alternate");
+            RawAnimation.begin().thenLoop("idle_alternate");
 
     public static final RawAnimation WALKING =
-            RawAnimation.begin().thenLoop("animation.blighted_shade.walking");
+            RawAnimation.begin().thenLoop("walking");
 
     public static final RawAnimation ATTACK =
-            RawAnimation.begin().thenPlay("animation.blighted_shade.attack");
+            RawAnimation.begin().thenPlay("attack");
 
     public static final RawAnimation VIBRATION_REACT =
-            RawAnimation.begin().thenPlay("animation.blighted_shade.vibration_react");
+            RawAnimation.begin().thenPlay("vibration_react");
 
     private BlightedShadeAnimations() {}
 }

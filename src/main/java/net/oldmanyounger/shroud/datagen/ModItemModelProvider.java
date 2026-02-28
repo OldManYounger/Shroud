@@ -74,11 +74,17 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Registers standard generated item model for the Umber door item
         basicItem(ModBlocks.UMBER_DOOR.asItem());
 
+        registerSpawnEggModels();
+    }
 
-        // Registers item model for entity spawn egg(s)
+    /** Registers all custom spawn egg item models */
+    private void registerSpawnEggModels() {
         withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.UMBRAL_HOWLER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.RESONANT_HULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.BLIGHTED_SHADE_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }
+
 
     /** Creates the model for a Sculk sapling using item/generated */
     private ItemModelBuilder saplingItem(DeferredBlock<Block> item) {

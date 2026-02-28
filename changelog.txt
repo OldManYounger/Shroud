@@ -1,3 +1,7 @@
+- Version 0.2.4
+    - Added new entity: Blighted Shade (custom functionality to come later)
+    - Added sound effects for Umbral Howler and Blighted Shade
+
 - Version 0.2.3
     - Added sculk_stone, sculk_deepslate, and sculk_gravel
         - Variants and decorative versions coming soon

@@ -73,6 +73,40 @@
       { "name": "shroud:entity/umbral_howler/tendril_click3" }
     ]
   },
+  "entity.blighted_shade.ambient": {
+    "sounds": [
+      { "name": "shroud:entity/blighted_shade/idle1" },
+      { "name": "shroud:entity/blighted_shade/idle2" },
+      { "name": "shroud:entity/blighted_shade/idle3" }
+    ]
+  },
+  "entity.blighted_shade.hurt": {
+    "sounds": [
+      { "name": "shroud:entity/blighted_shade/hurt1" },
+      { "name": "shroud:entity/blighted_shade/hurt2" }
+    ]
+  },
+  "entity.blighted_shade.death": {
+    "sounds": [
+      { "name": "shroud:entity/blighted_shade/death1" }
+    ]
+  },
+  "entity.blighted_shade.step": {
+    "sounds": [
+      { "name": "shroud:entity/blighted_shade/step1" },
+      { "name": "shroud:entity/blighted_shade/step2" },
+      { "name": "shroud:entity/blighted_shade/step3" },
+      { "name": "shroud:entity/blighted_shade/step4" },
+      { "name": "shroud:entity/blighted_shade/step5" }
+    ]
+  },
+  "entity.blighted_shade.vibration_react": {
+    "sounds": [
+      { "name": "shroud:entity/blighted_shade/tendril_click1" },
+      { "name": "shroud:entity/blighted_shade/tendril_click2" },
+      { "name": "shroud:entity/blighted_shade/tendril_click3" }
+    ]
+  },
   "block.sculk_emitter.spew": {
     "sounds": [
       { "name": "shroud:block/sculk_emitter/spew1" }

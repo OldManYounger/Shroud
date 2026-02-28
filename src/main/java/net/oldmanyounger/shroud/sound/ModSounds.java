@@ -111,6 +111,55 @@ public final class ModSounds {
                     )
             );
 
+
+    // ============================================================
+    //  BLIGHTED SHADE
+    // ============================================================
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_AMBIENT =
+            SOUND_EVENTS.register(
+                    "entity.blighted_shade.ambient",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.blighted_shade.ambient")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_HURT =
+            SOUND_EVENTS.register(
+                    "entity.blighted_shade.hurt",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.blighted_shade.hurt")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_DEATH =
+            SOUND_EVENTS.register(
+                    "entity.blighted_shade.death",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.blighted_shade.death")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_STEP =
+            SOUND_EVENTS.register(
+                    "entity.blighted_shade.step",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.blighted_shade.step")
+                    )
+            );
+
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_VIBRATION_REACT =
+            SOUND_EVENTS.register(
+                    "entity.blighted_shade.vibration_react",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.blighted_shade.vibration_react")
+                    )
+            );
+
+    // ============================================================
+    //  OTHER SOUNDS
+    // ============================================================
+
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_SCULK_EMITTER_SPEW =
             SOUND_EVENTS.register(
                     "block.sculk_emitter.spew",

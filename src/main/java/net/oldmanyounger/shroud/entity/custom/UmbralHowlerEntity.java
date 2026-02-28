@@ -66,19 +66,11 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  CONSTANTS
     // ============================================================
 
-    // Cooldown in ticks before reacting to another vibration (20 ticks = 1 second)
     private static final int VIBRATION_COOLDOWN_TICKS = 80;
-
-    // Passive detection (no vibration): only aggro if the player is extremely close
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
-
-    // Vibration-triggered acquire range (must be within this range when the vibration is processed)
     private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
 
-    // Entity event id used to sync an attack animation to clients
     private static final byte EVENT_ATTACK_ANIM = 60;
-
-    // Entity event id used to sync a vibration reaction animation to clients
     private static final byte EVENT_VIBRATION_REACT_ANIM = 61;
 
     private static final String CTRL_LOCOMOTION = "umbral_howler_locomotion_controller";
@@ -92,22 +84,14 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  FIELDS
     // ============================================================
 
-    // Cache for GeckoLib animation instance data associated with this entity
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    // Vibration data used by the underlying vibration system implementation
     private final VibrationSystem.Data vibrationData = new VibrationSystem.Data();
-
-    // Vibration user describing how this entity listens to and filters vibrations
     private final VibrationSystem.User vibrationUser;
-
-    // Dynamic game event listener that subscribes this entity to vibration events at runtime
     private final DynamicGameEventListener<VibrationSystem.Listener> dynamicGameEventListener;
 
-    // Next game time tick when another vibration can be processed
     private long nextVibrationGameTime = 0L;
 
-    // Stores the most recently detected vibration location for AI goals to use
     @Nullable
     private BlockPos vibrationLocation;
 
@@ -115,9 +99,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  CONSTRUCTOR
     // ============================================================
 
-    // Constructs a new Umbral Howler entity and initializes vibration handling
     public UmbralHowlerEntity(EntityType<? extends UmbralHowlerEntity> type, Level level) {
         super(type, level);
+
+        // Vibration system wiring
         this.vibrationUser = new UmbralHowlerVibrationUser();
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
     }
@@ -126,7 +111,6 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  ATTRIBUTES
     // ============================================================
 
-    // Builds the attribute set used when this entity type is registered
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 40.0D)
@@ -140,15 +124,11 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  AI GOALS
     // ============================================================
 
-    // Registers movement, combat, and vibration-based AI goals
     @Override
     protected void registerGoals() {
         // Movement and combat
         this.goalSelector.addGoal(0, new FloatGoal(this));
-
-        // Lunge must have higher priority than melee, or it won't reliably start
         this.goalSelector.addGoal(1, new LeapAtTargetGoal(this, 0.4F));
-
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, true));
         this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 1.2D, 25));
 
@@ -179,7 +159,6 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  TICKING / LIFECYCLE
     // ============================================================
 
-    // Per-tick update hook for this entity
     @Override
     public void tick() {
         // Advance vibration system state only on the server side
@@ -190,7 +169,6 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
         super.tick();
     }
 
-    // Handles custom death behavior including particles, sculk spread, and loot
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
@@ -203,9 +181,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
         ServerLevel serverLevel = (ServerLevel) this.level();
         BlockPos pos = this.blockPosition();
 
+        // Sculk spread charge based on XP reward
         this.spreadSculkOnDeath(serverLevel, pos, damageSource);
 
-        // Spawn soul-like sculk particles at the death position
+        // Soul-like sculk particles at the death position
         serverLevel.sendParticles(
                 ParticleTypes.SCULK_SOUL,
                 this.getX(),
@@ -218,11 +197,12 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                 0.02
         );
 
-        // Drop an echo shard as a thematic reward
+        // Thematic drop
         this.spawnAtLocation(Items.ECHO_SHARD);
     }
 
     private void spreadSculkOnDeath(ServerLevel level, BlockPos pos, DamageSource damageSource) {
+        // Convert XP reward into sculk spread charge
         Entity attacker = damageSource.getEntity();
         int charge = this.getExperienceReward(level, attacker);
 
@@ -243,19 +223,19 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     public void swing(InteractionHand hand, boolean updateSelf) {
         super.swing(hand, updateSelf);
 
+        // Sync attack animation to clients when main-hand swinging on server
         if (!this.level().isClientSide() && hand == InteractionHand.MAIN_HAND) {
             this.level().broadcastEntityEvent(this, EVENT_ATTACK_ANIM);
         }
     }
 
-    // Handles melee attack logic and plays the associated attack sound
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean result = super.doHurtTarget(target);
 
+        // Impact sound on successful hit
         if (result) {
             Level level = this.level();
-
             level.playSound(
                     null,
                     this.getX(),
@@ -271,9 +251,9 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
         return result;
     }
 
-    // Handles entity events and routes them to the appropriate GeckoLib animations
     @Override
     public void handleEntityEvent(byte id) {
+        // GeckoLib triggers are routed through entity events
         if (id == EVENT_ATTACK_ANIM) {
             this.triggerAnim(CTRL_ATTACK, TRIG_ATTACK);
             return;
@@ -320,43 +300,37 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  VIBRATION SYSTEM IMPLEMENTATION
     // ============================================================
 
-    // Exposes the vibration data used by this entity
     @Override
     public VibrationSystem.Data getVibrationData() {
         return this.vibrationData;
     }
 
-    // Exposes the vibration user that controls how this entity listens to vibrations
     @Override
     public VibrationSystem.User getVibrationUser() {
         return this.vibrationUser;
     }
 
-    // Registers or unregisters the dynamic game event listener with the current server level
     @Override
     public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> listenerConsumer) {
+        // Register or unregister the dynamic game event listener on the server level
         if (this.level() instanceof ServerLevel level) {
             listenerConsumer.accept(this.dynamicGameEventListener, level);
         }
     }
 
-    // Retrieves the current vibration target location for the vibration goal
     @Override
     @Nullable
     public BlockPos getVibrationLocation() {
         return this.vibrationLocation;
     }
 
-    // Updates the vibration target location when a new vibration is processed
     @Override
     public void setVibrationLocation(@Nullable BlockPos pos) {
         this.vibrationLocation = pos;
     }
 
-    // Indicates that this entity dampens vibrations and should not trigger external sculk devices
     @Override
     public boolean dampensVibrations() {
-        // Umbral Howler should not cause sculk sensors / shriekers to trigger
         return true;
     }
 
@@ -364,11 +338,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  GECKOLIB ANIMATION
     // ============================================================
 
-    // Registers GeckoLib animation controllers for idle, walking, attack, and vibration reaction states
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                // Base locomotion controller (broad animations first)
+                // Base locomotion controller
                 new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
                     boolean moving = this.getNavigation().isInProgress()
                             || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
@@ -388,17 +361,16 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                     return state.setAndContinue(UmbralHowlerAnimations.IDLE);
                 }),
 
-                // Vibration react overlay (register after locomotion so it can override overlapping bones)
+                // Vibration react overlay controller
                 new AnimationController<>(this, CTRL_VIBRATION, 2, state -> PlayState.STOP)
                         .triggerableAnim(TRIG_VIBRATION_REACT, UmbralHowlerAnimations.VIBRATION_REACT),
 
-                // Attack overlay (register last so it can override overlapping bones)
+                // Attack overlay controller
                 new AnimationController<>(this, CTRL_ATTACK, 2, state -> PlayState.STOP)
                         .triggerableAnim(TRIG_ATTACK, UmbralHowlerAnimations.ATTACK)
         );
     }
 
-    // Provides GeckoLib with this entity's animation instance cache
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
@@ -408,12 +380,9 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     //  VIBRATION USER (INNER CLASS)
     // ============================================================
 
-    /**
-     * Vibration system user implementation for the Umbral Howler entity
-     */
     private class UmbralHowlerVibrationUser implements VibrationSystem.User {
 
-        // Position source used to track the listener at the entity's eye height
+        // Listener position is tracked at eye height
         private final PositionSource positionSource =
                 new EntityPositionSource(UmbralHowlerEntity.this, UmbralHowlerEntity.this.getEyeHeight());
 
@@ -439,6 +408,7 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
 
         @Override
         public boolean canReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> gameEvent, GameEvent.Context context) {
+            // Basic validity checks
             if (UmbralHowlerEntity.this.isNoAi() || UmbralHowlerEntity.this.isDeadOrDying()) {
                 return false;
             }
@@ -452,6 +422,7 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                 return false;
             }
 
+            // Cooldown gate
             long gameTime = level.getGameTime();
             return gameTime >= UmbralHowlerEntity.this.nextVibrationGameTime;
         }
@@ -464,10 +435,12 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                                        Entity projectileOwner,
                                        float distance) {
 
+            // Ignore late events while dying
             if (UmbralHowlerEntity.this.isDeadOrDying()) {
                 return;
             }
 
+            // Cooldown gate
             long gameTime = level.getGameTime();
             if (gameTime < UmbralHowlerEntity.this.nextVibrationGameTime) {
                 return;
@@ -475,8 +448,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
 
             UmbralHowlerEntity.this.nextVibrationGameTime = gameTime + VIBRATION_COOLDOWN_TICKS;
 
+            // Store vibration location for AI goals
             UmbralHowlerEntity.this.setVibrationLocation(pos);
 
+            // Acquire a player target if the source is a player or their projectile owner
             Player playerToTarget = null;
 
             if (sourceEntity instanceof Player p) {
@@ -492,11 +467,10 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                 }
             }
 
-            UmbralHowlerEntity.this.level().broadcastEntityEvent(
-                    UmbralHowlerEntity.this,
-                    EVENT_VIBRATION_REACT_ANIM
-            );
+            // Sync vibration reaction animation to clients
+            UmbralHowlerEntity.this.level().broadcastEntityEvent(UmbralHowlerEntity.this, EVENT_VIBRATION_REACT_ANIM);
 
+            // Play vibration react sound on server if not silent
             if (!UmbralHowlerEntity.this.isSilent()) {
                 level.playSound(
                         null,

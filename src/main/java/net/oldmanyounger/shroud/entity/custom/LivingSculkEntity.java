@@ -67,7 +67,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  CONSTANTS
     // ============================================================
 
-    private static final int VIBRATION_COOLDOWN_TICKS = 40;
+    private static final int VIBRATION_COOLDOWN_TICKS = 80;
     private static final int CONVERSION_COOLDOWN_TICKS = 40;
 
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;

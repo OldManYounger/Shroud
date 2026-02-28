@@ -43,7 +43,7 @@ import java.util.function.BiConsumer;
 
 public class BlightedShadeEntity extends Monster implements GeoEntity, VibrationListener, VibrationSystem {
 
-    private static final int VIBRATION_COOLDOWN_TICKS = 40;
+    private static final int VIBRATION_COOLDOWN_TICKS = 80;
 
     // Same follow/engagement behavior values as Living Sculk
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
@@ -132,7 +132,6 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
     public void tick() {
         if (this.level() instanceof ServerLevel serverLevel) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
-            spawnSculkSoulRing(serverLevel);
         }
         super.tick();
     }
@@ -323,56 +322,4 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
             BlightedShadeEntity.this.level().broadcastEntityEvent(BlightedShadeEntity.this, EVENT_VIBRATION_REACT_ANIM);
         }
     }
-
-    // --- Particle ring tuning ---
-    private static final float SOUL_RING_MAX_RADIUS = 2.0F;      // ~2 blocks outward
-    private static final float SOUL_RING_RADIUS_STEP = 0.04F;    // expansion speed per tick (smaller = slower)
-    private static final int SOUL_RING_POINTS_PER_TICK = 36;     // density around circumference
-    private static final int SOUL_RING_LAYERS = 4;               // vertical layers for cylindrical feel
-    private static final double SOUL_RING_BASE_Y = 0.02D;        // start near feet/ground center
-    private static final double SOUL_RING_HEIGHT = 0.55D;        // hollow cylinder height
-
-    private float soulRingRadius = 0.0F;
-
-    private void spawnSculkSoulRing(ServerLevel level) {
-        // Expand radius outward, then reset pulse
-        soulRingRadius += SOUL_RING_RADIUS_STEP;
-        if (soulRingRadius > SOUL_RING_MAX_RADIUS) {
-            soulRingRadius = 0.0F;
-        }
-
-        // Keep a tiny visible center pulse right after reset
-        float radius = Math.max(soulRingRadius, 0.05F);
-
-        final double centerX = this.getX();
-        final double centerY = this.getY() + SOUL_RING_BASE_Y;
-        final double centerZ = this.getZ();
-
-        // Rotate sampling pattern over time so trails don't look like static spokes
-        final float phase = (this.tickCount * 0.27F) % net.minecraft.util.Mth.TWO_PI;
-        final float angleStep = net.minecraft.util.Mth.TWO_PI / SOUL_RING_POINTS_PER_TICK;
-
-        for (int layer = 0; layer < SOUL_RING_LAYERS; layer++) {
-            // Even vertical spacing to form a hollow cylinder wall
-            double y = centerY + (SOUL_RING_HEIGHT * layer / (SOUL_RING_LAYERS - 1.0));
-
-            for (int i = 0; i < SOUL_RING_POINTS_PER_TICK; i++) {
-                // Jitter angle slightly per-particle per-tick to avoid spoke artifacts
-                float jitter = (this.random.nextFloat() - 0.5F) * angleStep * 0.85F;
-                float angle = phase + (i * angleStep) + jitter;
-
-                double x = centerX + net.minecraft.util.Mth.cos(angle) * radius;
-                double z = centerZ + net.minecraft.util.Mth.sin(angle) * radius;
-
-                level.sendParticles(
-                        net.minecraft.core.particles.ParticleTypes.SCULK_SOUL,
-                        x, y, z,
-                        1,      // count
-                        0.0, 0.0, 0.0,
-                        0.0     // speed
-                );
-            }
-        }
-    }
-
 }

@@ -67,7 +67,7 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
     // ============================================================
 
     // Cooldown in ticks before reacting to another vibration (20 ticks = 1 second)
-    private static final int VIBRATION_COOLDOWN_TICKS = 40;
+    private static final int VIBRATION_COOLDOWN_TICKS = 80;
 
     // Passive detection (no vibration): only aggro if the player is extremely close
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
@@ -496,6 +496,17 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                     UmbralHowlerEntity.this,
                     EVENT_VIBRATION_REACT_ANIM
             );
+
+            if (!UmbralHowlerEntity.this.isSilent()) {
+                level.playSound(
+                        null,
+                        UmbralHowlerEntity.this.blockPosition(),
+                        ModSounds.ENTITY_UMBRAL_HOWLER_VIBRATION_REACT.get(),
+                        UmbralHowlerEntity.this.getSoundSource(),
+                        1.0F,
+                        1.0F
+                );
+            }
         }
     }
 }

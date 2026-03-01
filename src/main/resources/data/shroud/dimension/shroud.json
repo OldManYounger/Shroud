@@ -43,6 +43,18 @@
           }
         },
         {
+          "biome": "shroud:sculk_lush_caves",
+          "parameters": {
+            "temperature": [-0.05, 0.35],
+            "humidity": [0.25, 1.0],
+            "continentalness": [-0.05, 0.65],
+            "erosion": [-0.65, -0.15],
+            "weirdness": [-0.3, 0.3],
+            "depth": [0.55, 1.1],
+            "offset": 0.0
+          }
+        },
+        {
           "biome": "shroud:sculk_deep_dark",
           "parameters": {
             "temperature": [-1.0, 1.0],

@@ -1,8 +1,10 @@
 package net.oldmanyounger.shroud.item;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.food.FoodProperties;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
@@ -18,6 +20,16 @@ public class ModItems {
 
     public static final DeferredItem<Item> SCULK_PEARL = ITEMS.register("sculk_pearl",
             () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> GLOOM_PULP = ITEMS.register("gloom_pulp",
+            () -> new ItemNameBlockItem(
+                    ModBlocks.SCULK_VINES.get(),
+                    new Item.Properties().food(
+                            new FoodProperties.Builder()
+                                    .nutrition(3)
+                                    .saturationModifier(0.3F)
+                                    .build()
+                    )
+            ));
 
     public static final DeferredItem<Item> EVENTIDE_INGOT = ITEMS.register("eventide_ingot",
             () -> new Item(new Item.Properties()));

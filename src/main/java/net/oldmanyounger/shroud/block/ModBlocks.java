@@ -54,6 +54,16 @@ public class ModBlocks {
                     .sound(SoundType.GRASS)
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(state -> 14)));
+    public static final DeferredBlock<ModSculkVinesBlock> SCULK_VINES = registerBlockNoItem("sculk_vines",
+            () -> new ModSculkVinesBlock(
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES),
+                    () -> ModBlocks.SCULK_VINES_PLANT.get()
+            ));
+    public static final DeferredBlock<ModSculkVinesPlantBlock> SCULK_VINES_PLANT = registerBlockNoItem("sculk_vines_plant",
+            () -> new ModSculkVinesPlantBlock(
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES_PLANT),
+                    () -> ModBlocks.SCULK_VINES.get()
+            ));
 
     public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
             () -> new Block(BlockBehaviour.Properties.of()
@@ -322,6 +332,7 @@ public class ModBlocks {
                     .sound(SoundType.GLASS)
                     .lightLevel(state -> 15)
                     .noLootTable()));
+
     // Invisible helper block used for projected lighting (air-like, no item)
     public static final DeferredBlock<Block> PROJECTED_LIGHT = registerBlockWithoutItem("projected_light",
             () -> new ModAirLightBlock(15));
@@ -336,6 +347,11 @@ public class ModBlocks {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
+    }
+
+    // Registers a block under the given name and does not create a block item
+    private static <T extends Block> DeferredBlock<T> registerBlockNoItem(String name, Supplier<T> block) {
+        return BLOCKS.register(name, block);
     }
 
     // Registers the BlockItem for a given block in the shared item registry

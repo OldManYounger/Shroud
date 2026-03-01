@@ -38,6 +38,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.SCULK_DEEPSLATE.get());
 
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
+        add(ModBlocks.SCULK_VINES.get(), block -> noDrop());
+        add(ModBlocks.SCULK_VINES_PLANT.get(), block -> noDrop());
 
         dropSelf(ModBlocks.SCULK_EMITTER.get());
 

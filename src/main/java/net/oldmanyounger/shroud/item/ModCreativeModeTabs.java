@@ -123,6 +123,9 @@ public class ModCreativeModeTabs {
                                 // Sculk pearl
                                 output.accept(ModItems.SCULK_PEARL.get());
 
+                                // Gloom pulp
+                                output.accept(ModItems.GLOOM_PULP.get());
+
                                 // Eventide ore
                                 output.accept(ModItems.RAW_EVENTIDE.get());
                                 output.accept(ModItems.EVENTIDE_INGOT.get());

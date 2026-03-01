@@ -1,7 +1,9 @@
-// 1.21.1	2026-02-23T00:33:39.7910366	Tags for minecraft:block mod id shroud
+// 1.21.1	2026-02-28T20:35:55.0328834	Tags for minecraft:block mod id shroud
 5665328f17f217fd8bd9813b1a8453cbec6ab042 data/minecraft/tags/block/air.json
 c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/base_stone_overworld.json
 92682a66c45095ecd232ee46f47382cdaf0fb0d6 data/minecraft/tags/block/buttons.json
+c16569009eb3d1901811088f8dbb50c9f1395238 data/minecraft/tags/block/cave_vines.json
+c16569009eb3d1901811088f8dbb50c9f1395238 data/minecraft/tags/block/climbable.json
 ea1b5eb30d9aa835a759e905b66c8f653ea91138 data/minecraft/tags/block/deepslate_ore_replaceables.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/dirt.json
 39637057c681686b7d81a8e2d84b38039009a417 data/minecraft/tags/block/doors.json
@@ -17,6 +19,7 @@ cbfa68e7cf6045f32f61a5170c1a129a381221f8 data/minecraft/tags/block/mineable/pick
 c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/needs_stone_tool.json
 4474463b211a2b9bb87b89db36df956136608d91 data/minecraft/tags/block/planks.json
 aa2d42a5a464834d55b256a0438ce6b03caf2009 data/minecraft/tags/block/pressure_plates.json
+c16569009eb3d1901811088f8dbb50c9f1395238 data/minecraft/tags/block/replaceable.json
 fb029d3c90fd32b7274ac0f9f17574ee14c8ec28 data/minecraft/tags/block/replaceable_by_trees.json
 870f7b204d11bf5ffcb14e874dd95cf4f9af910d data/minecraft/tags/block/saplings.json
 dc81c07b23dbd549a65c13c3d01ebabf785d1285 data/minecraft/tags/block/slabs.json

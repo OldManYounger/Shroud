@@ -41,6 +41,17 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.AIR)
                 .add(ModBlocks.PROJECTED_LIGHT.get());
 
+        // Gloom pulp tags
+        tag(BlockTags.CAVE_VINES)
+                .add(ModBlocks.SCULK_VINES.get())
+                .add(ModBlocks.SCULK_VINES_PLANT.get());
+        tag(BlockTags.CLIMBABLE)
+                .add(ModBlocks.SCULK_VINES.get())
+                .add(ModBlocks.SCULK_VINES_PLANT.get());
+        tag(BlockTags.REPLACEABLE)
+                .add(ModBlocks.SCULK_VINES.get())
+                .add(ModBlocks.SCULK_VINES_PLANT.get());
+
         // Eventide ore + block are mineable with pickaxe
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.EVENTIDE_BLOCK.get())

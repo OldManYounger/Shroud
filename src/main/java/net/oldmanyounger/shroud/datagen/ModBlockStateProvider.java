@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CaveVines;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -33,6 +34,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.SCULK_STONE);
         blockWithItem(ModBlocks.SCULK_DEEPSLATE);
         saplingBlock(ModBlocks.SCULK_BULB);
+        sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_EMITTER.get());
         blockItem(ModBlocks.SCULK_EMITTER);
@@ -212,6 +214,27 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         blockTexture(blockRegistryObject.get())
                 ).renderType("cutout")
         );
+    }
+
+    private void sculkVinesBlock(DeferredBlock<? extends Block> head, DeferredBlock<? extends Block> plant) {
+        String headPath = head.getId().getPath();
+        String plantPath = plant.getId().getPath();
+
+        ModelFile headUnlit = models().cross(headPath, modLoc("block/" + headPath)).renderType("cutout");
+        ModelFile headLit = models().cross(headPath + "_lit", modLoc("block/" + headPath + "_lit")).renderType("cutout");
+
+        ModelFile plantUnlit = models().cross(plantPath, modLoc("block/" + plantPath)).renderType("cutout");
+        ModelFile plantLit = models().cross(plantPath + "_lit", modLoc("block/" + plantPath + "_lit")).renderType("cutout");
+
+        getVariantBuilder(head.get()).forAllStates(state -> {
+            boolean berries = state.getValue(net.minecraft.world.level.block.CaveVines.BERRIES);
+            return ConfiguredModel.builder().modelFile(berries ? headLit : headUnlit).build();
+        });
+
+        getVariantBuilder(plant.get()).forAllStates(state -> {
+            boolean berries = state.getValue(net.minecraft.world.level.block.CaveVines.BERRIES);
+            return ConfiguredModel.builder().modelFile(berries ? plantLit : plantUnlit).build();
+        });
     }
 
     private void grassBlockWithItem(DeferredBlock<Block> blockRegistryObject) {

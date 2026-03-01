@@ -43,7 +43,7 @@
           }
         },
         {
-          "biome": "shroud:sculk_lush_caves",
+          "biome": "shroud:pulped_caves",
           "parameters": {
             "temperature": [-0.05, 0.35],
             "humidity": [0.25, 1.0],

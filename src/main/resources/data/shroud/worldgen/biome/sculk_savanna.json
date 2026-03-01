@@ -70,8 +70,8 @@
         "maxCount": 4
       },
       {
-        "type": "shroud:umbral_howler",
-        "weight": 10,
+        "type": "shroud:blighted_shade",
+        "weight": 5,
         "minCount": 1,
         "maxCount": 3
       }

@@ -163,8 +163,9 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_SCULK_EMITTER_SPEW =
             SOUND_EVENTS.register(
                     "block.sculk_emitter.spew",
-                    () -> SoundEvent.createVariableRangeEvent(
-                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block.sculk_emitter.spew")
+                    () -> SoundEvent.createFixedRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block.sculk_emitter.spew"),
+                            40.0F // max audible range in blocks (tune: 32, 40, 48, etc.)
                     )
             );
 

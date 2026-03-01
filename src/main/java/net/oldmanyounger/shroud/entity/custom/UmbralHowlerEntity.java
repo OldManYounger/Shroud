@@ -39,6 +39,7 @@ import net.oldmanyounger.shroud.entity.client.UmbralHowlerAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
 import net.oldmanyounger.shroud.sound.ModSounds;
+import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -94,6 +95,18 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
 
     @Nullable
     private BlockPos vibrationLocation;
+
+    private static boolean isCreativePlayer(@javax.annotation.Nullable Entity entity) {
+        return entity instanceof Player p && p.isCreative();
+    }
+
+    private boolean isVibrationFriendlySelf() {
+        return this.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
+
+    private static boolean isVibrationFriendlyEntity(@javax.annotation.Nullable Entity entity) {
+        return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
 
     // ============================================================
     //  CONSTRUCTOR
@@ -418,7 +431,16 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
             }
 
             Entity source = context.sourceEntity();
-            if (source == UmbralHowlerEntity.this) {
+            if (source == UmbralHowlerEntity.this) { // class-specific in each file
+                return false;
+            }
+
+            // If both listener and source are tagged, ignore this vibration
+            if (UmbralHowlerEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
+                return false;
+            }
+
+            if (isCreativePlayer(source)) {
                 return false;
             }
 
@@ -434,6 +456,15 @@ public class UmbralHowlerEntity extends Monster implements GeoEntity, VibrationL
                                        Entity sourceEntity,
                                        Entity projectileOwner,
                                        float distance) {
+
+            if (isCreativePlayer(sourceEntity) || isCreativePlayer(projectileOwner)) {
+                return;
+            }
+
+            if (UmbralHowlerEntity.this.isVibrationFriendlySelf()
+                    && (isVibrationFriendlyEntity(sourceEntity) || isVibrationFriendlyEntity(projectileOwner))) {
+                return;
+            }
 
             // Ignore late events while dying
             if (UmbralHowlerEntity.this.isDeadOrDying()) {

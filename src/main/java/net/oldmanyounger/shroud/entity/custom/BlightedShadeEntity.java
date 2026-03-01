@@ -1,7 +1,9 @@
 package net.oldmanyounger.shroud.entity.custom;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.EntityTypeTags;
@@ -22,17 +24,23 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
+import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
 import net.oldmanyounger.shroud.sound.ModSounds;
+import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -62,6 +70,10 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
 
     private static final int VIBRATION_COOLDOWN_TICKS = 80;
 
+    private static final int BLOCK_CONVERT_INTERVAL_TICKS = 5;
+    private static final int MIN_SCULK_VEINS_PER_CONVERSION = 2;
+    private static final int MAX_SCULK_VEINS_PER_CONVERSION = 4;
+
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
     private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
 
@@ -85,10 +97,29 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
     private final VibrationSystem.User vibrationUser;
     private final DynamicGameEventListener<VibrationSystem.Listener> dynamicGameEventListener;
 
+    private static final Direction[] CARDINAL_DIRECTIONS = new Direction[] {
+            Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST
+    };
+
     private long nextVibrationGameTime = 0L;
 
     @Nullable
     private BlockPos vibrationLocation;
+
+    @Nullable
+    private BlockPos lastConvertedPos;
+
+    private static boolean isCreativePlayer(@javax.annotation.Nullable Entity entity) {
+        return entity instanceof Player p && p.isCreative();
+    }
+
+    private boolean isVibrationFriendlySelf() {
+        return this.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
+
+    private static boolean isVibrationFriendlyEntity(@javax.annotation.Nullable Entity entity) {
+        return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
 
     // ============================================================
     //  CONSTRUCTOR
@@ -174,6 +205,9 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
         // Advance vibration system state only on the server side
         if (this.level() instanceof ServerLevel serverLevel) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
+
+            // Convert valid blocks beneath the shade while moving
+            this.tryConvertBlocksUnderfoot(serverLevel);
         }
 
         super.tick();
@@ -363,7 +397,16 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
             }
 
             Entity source = context.sourceEntity();
-            if (source == BlightedShadeEntity.this) {
+            if (source == BlightedShadeEntity.this) { // class-specific in each file
+                return false;
+            }
+
+            // If both listener and source are tagged, ignore this vibration
+            if (BlightedShadeEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
+                return false;
+            }
+
+            if (isCreativePlayer(source)) {
                 return false;
             }
 
@@ -378,6 +421,15 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
                                        Entity sourceEntity,
                                        Entity projectileOwner,
                                        float distance) {
+
+            if (isCreativePlayer(sourceEntity) || isCreativePlayer(projectileOwner)) {
+                return;
+            }
+
+            if (BlightedShadeEntity.this.isVibrationFriendlySelf()
+                    && (isVibrationFriendlyEntity(sourceEntity) || isVibrationFriendlyEntity(projectileOwner))) {
+                return;
+            }
 
             // Ignore late events while dying
             if (BlightedShadeEntity.this.isDeadOrDying()) {
@@ -426,5 +478,149 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
                 );
             }
         }
+    }
+
+    // ============================================================
+    //  BLOCK CONVERSION UNDERNEATH FOOT
+    // ============================================================
+
+    private void tryConvertBlocksUnderfoot(ServerLevel level) {
+        // Keep behavior server-side and reasonably lightweight
+        if (this.tickCount % BLOCK_CONVERT_INTERVAL_TICKS != 0) {
+            return;
+        }
+
+        // Optional: respect mob griefing so players/admins can disable world edits
+        if (!level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
+            return;
+        }
+
+        // Only convert while on ground (walking across terrain)
+        if (!this.onGround()) {
+            return;
+        }
+
+        BlockPos groundPos = this.blockPosition().below();
+
+        // Avoid repeatedly processing the exact same position
+        if (groundPos.equals(this.lastConvertedPos)) {
+            return;
+        }
+
+        BlockState current = level.getBlockState(groundPos);
+        BlockState replacement = getSculkReplacement(current);
+
+        if (replacement != null) {
+            // 3 = notify clients + update neighbors
+            boolean changed = level.setBlock(groundPos, replacement, 3);
+
+            if (changed) {
+                spawnSculkConversionParticles(level, groundPos);
+                trySpreadSculkVeins(level, groundPos);
+            }
+
+            this.lastConvertedPos = groundPos.immutable();
+        } else {
+            // Still mark as visited so we don't re-check every 5 ticks while stationary
+            this.lastConvertedPos = groundPos.immutable();
+        }
+    }
+
+    private void spawnSculkConversionParticles(ServerLevel level, BlockPos pos) {
+        double x = pos.getX() + 0.5D;
+        double y = pos.getY() + 1.02D; // top surface of converted block
+        double z = pos.getZ() + 0.5D;
+
+        // Brief spurt of sculk soul particles
+        level.sendParticles(
+                ParticleTypes.SCULK_SOUL, x, y, z,
+                6,          // particle count
+                0.20D,      // x spread
+                0.08D,      // y spread
+                0.20D,      // z spread
+                0.01D       // speed
+        );
+    }
+
+    private void trySpreadSculkVeins(ServerLevel level, BlockPos centerPos) {
+        // Randomly choose how many veins to place this conversion (2..4)
+        int targetPlacements = MIN_SCULK_VEINS_PER_CONVERSION
+                + this.random.nextInt(MAX_SCULK_VEINS_PER_CONVERSION - MIN_SCULK_VEINS_PER_CONVERSION + 1);
+
+        int placed = 0;
+        int usedDirMask = 0;
+
+        // Random unique-direction picks via 4-bit mask (low allocation / low overhead)
+        while (placed < targetPlacements && Integer.bitCount(usedDirMask) < 4) {
+            int idx = this.random.nextInt(4);
+            int bit = 1 << idx;
+
+            if ((usedDirMask & bit) != 0) {
+                continue;
+            }
+
+            usedDirMask |= bit;
+
+            Direction outward = CARDINAL_DIRECTIONS[idx];
+            if (placeSculkVeinOnTopOfAdjacent(level, centerPos, outward)) {
+                placed++;
+            }
+        }
+    }
+
+    private boolean placeSculkVeinOnTopOfAdjacent(ServerLevel level, BlockPos centerPos, Direction outwardDir) {
+        // Adjacent ground block around the converted center block
+        BlockPos adjacentBasePos = centerPos.relative(outwardDir);
+        BlockState adjacentBaseState = level.getBlockState(adjacentBasePos);
+
+        // Need a solid top face to support vein on top
+        if (!adjacentBaseState.isFaceSturdy(level, adjacentBasePos, Direction.UP)) {
+            return false;
+        }
+
+        // Vein goes in the air/replaceable block above that adjacent base block
+        BlockPos veinPos = adjacentBasePos.above();
+        BlockState existingAtVeinPos = level.getBlockState(veinPos);
+
+        if (!existingAtVeinPos.canBeReplaced()) {
+            return false;
+        }
+
+        // Attach vein to block below (top-surface placement)
+        BlockState veinState = Blocks.SCULK_VEIN.defaultBlockState()
+                .setValue(MultifaceBlock.getFaceProperty(Direction.DOWN), true);
+
+        if (!veinState.canSurvive(level, veinPos)) {
+            return false;
+        }
+
+        return level.setBlock(veinPos, veinState, 3);
+    }
+
+    @Nullable
+    private BlockState getSculkReplacement(BlockState state) {
+        Block block = state.getBlock();
+
+        // grass -> sculk grass
+        if (block == Blocks.GRASS_BLOCK) {
+            return ModBlocks.SCULK_GRASS.get().defaultBlockState();
+        }
+
+        // dirt -> vanilla sculk
+        if (block == Blocks.DIRT) {
+            return Blocks.SCULK.defaultBlockState();
+        }
+
+        // stone -> sculk stone
+        if (block == Blocks.STONE) {
+            return ModBlocks.SCULK_STONE.get().defaultBlockState();
+        }
+
+        // deepslate -> sculk deepslate
+        if (block == Blocks.DEEPSLATE) {
+            return ModBlocks.SCULK_DEEPSLATE.get().defaultBlockState();
+        }
+
+        return null;
     }
 }

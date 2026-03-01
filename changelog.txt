@@ -1,3 +1,12 @@
+- Version 0.2.5
+    - Adjusted spawn rates of all entities
+    - Added spawn chance for Blighted Shade to Sculk Savanna biome
+    - Added functionality to Blighted Shade which causes it to convert vanilla blocks into Sculk variants (if valid) and spread sculk veins
+    - Added custom tag to mark Sculk entities as 'friendly' to other Sculk entities and to not trigger vibration events
+    - Increased audible range of sculk emitter for more 'ambiance'
+    - Fixed issue where creative mode players would trigger 'vibration react' on Sculk entities
+    - Fixed issue where Blighted Shade would trigger vibrations on other Sculk entities
+
 - Version 0.2.4
     - Added new entity: Blighted Shade (custom functionality to come later)
     - Added sound effects for Umbral Howler and Blighted Shade

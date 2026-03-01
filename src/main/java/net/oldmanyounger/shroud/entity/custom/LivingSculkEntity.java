@@ -45,6 +45,7 @@ import net.oldmanyounger.shroud.entity.client.LivingSculkAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
 import net.oldmanyounger.shroud.sound.ModSounds;
+import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -103,6 +104,18 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
 
     @Nullable
     private BlockPos vibrationLocation;
+
+    private static boolean isCreativePlayer(@javax.annotation.Nullable Entity entity) {
+        return entity instanceof Player p && p.isCreative();
+    }
+
+    private boolean isVibrationFriendlySelf() {
+        return this.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
+
+    private static boolean isVibrationFriendlyEntity(@javax.annotation.Nullable Entity entity) {
+        return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
+    }
 
     // ============================================================
     //  CONSTRUCTOR
@@ -548,7 +561,16 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
             }
 
             Entity source = context.sourceEntity();
-            if (source == LivingSculkEntity.this) {
+            if (source == LivingSculkEntity.this) { // class-specific in each file
+                return false;
+            }
+
+            // If both listener and source are tagged, ignore this vibration
+            if (LivingSculkEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
+                return false;
+            }
+
+            if (isCreativePlayer(source)) {
                 return false;
             }
 
@@ -564,6 +586,15 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                                        Entity sourceEntity,
                                        Entity projectileOwner,
                                        float distance) {
+
+            if (isCreativePlayer(sourceEntity) || isCreativePlayer(projectileOwner)) {
+                return;
+            }
+
+            if (LivingSculkEntity.this.isVibrationFriendlySelf()
+                    && (isVibrationFriendlyEntity(sourceEntity) || isVibrationFriendlyEntity(projectileOwner))) {
+                return;
+            }
 
             // Ignore late events while dying
             if (LivingSculkEntity.this.isDeadOrDying()) {

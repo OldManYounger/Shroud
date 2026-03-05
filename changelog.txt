@@ -1,3 +1,9 @@
+- Version 0.2.6
+    - Added new biome: Pulped Caves
+    - Add sculk vines to caves, along with a custom fruit: Gloom Pulp
+    - Adjusted death effects of Blighted Shade, now drops sculk pearl (no functionality to pearl yet)
+    - Adjusted temperature of other biomes to fall in line with vanilla
+
 - Version 0.2.5
     - Adjusted spawn rates of all entities
     - Added spawn chance for Blighted Shade to Sculk Savanna biome

@@ -24,11 +24,13 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.MultifaceBlock;
+import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.DynamicGameEventListener;
 import net.minecraft.world.level.gameevent.EntityPositionSource;
@@ -39,6 +41,7 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
+import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
 import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -214,9 +217,49 @@ public class BlightedShadeEntity extends Monster implements GeoEntity, Vibration
     }
 
     @Override
-    public void die(net.minecraft.world.damagesource.DamageSource damageSource) {
-        // Intentionally no sculk spreading mechanic
+    public void die(DamageSource damageSource) {
         super.die(damageSource);
+
+        // Skip server-side effects when on the client
+        if (this.level().isClientSide()) {
+            return;
+        }
+
+        ServerLevel serverLevel = (ServerLevel) this.level();
+        BlockPos pos = this.blockPosition();
+
+        // Sculk spread charge based on XP reward
+        this.spreadSculkOnDeath(serverLevel, pos, damageSource);
+
+        // Soul-like sculk particles at the death position
+        serverLevel.sendParticles(
+                ParticleTypes.SCULK_SOUL,
+                this.getX(),
+                this.getY() + 0.5,
+                this.getZ(),
+                20,
+                0.4,
+                0.4,
+                0.4,
+                0.02
+        );
+
+        // Thematic drop
+        this.spawnAtLocation(ModItems.SCULK_PEARL.get());
+    }
+
+    private void spreadSculkOnDeath(ServerLevel level, BlockPos pos, DamageSource damageSource) {
+        // Convert XP reward into sculk spread charge
+        Entity attacker = damageSource.getEntity();
+        int charge = this.getExperienceReward(level, attacker);
+
+        if (charge <= 0) {
+            charge = 1;
+        }
+
+        SculkSpreader sculkSpreader = SculkSpreader.createLevelSpreader();
+        sculkSpreader.addCursors(pos, charge);
+        sculkSpreader.updateCursors(level, pos, level.getRandom(), true);
     }
 
     // ============================================================

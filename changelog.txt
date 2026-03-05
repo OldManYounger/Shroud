@@ -1,3 +1,8 @@
+- Version 0.2.7
+    - Reduced frequency of sculk patch spawns; it was overwhelming other biome generation
+    - Fixed references in lake_lava placed features to reference the custom lake_lava configured feature
+    - Fixed translation for sculk_stone and sculk_deepslate versions of Eventide ore
+
 - Version 0.2.6
     - Added new biome: Pulped Caves
     - Add sculk vines to caves, along with a custom fruit: Gloom Pulp

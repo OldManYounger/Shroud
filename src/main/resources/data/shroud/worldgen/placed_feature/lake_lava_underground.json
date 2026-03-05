@@ -1,5 +1,5 @@
 {
-  "feature": "minecraft:lake_lava",
+  "feature": "shroud:lake_lava",
   "placement": [
     {
       "type": "minecraft:rarity_filter",

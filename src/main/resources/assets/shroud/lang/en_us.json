@@ -4,14 +4,16 @@
   "block.shroud.sculk_grass": "Sculk Grass",
   "block.shroud.sculk_gravel": "Sculk Gravel",
   "block.shroud.sculk_stone": "Sculk Stone",
+  "block.shroud.sculk_deepslate": "Sculk Deepslate",
+
   "block.shroud.sculk_bulb": "Sculk Bulb",
   "block.shroud.sculk_emitter": "Sculk Emitter",
   "block.shroud.sculk_vine": "Sculk Vine",
 
   "block.shroud.eventide_ore": "Eventide Ore",
   "block.shroud.eventide_deepslate_ore": "Deepslate Eventide Ore",
-  "block.shroud.sculk_stone_eventide_ore": "Sculk Stone Eventide Ore",
-  "block.shroud.sculk_deepslate_eventide_ore": "Sculk Deepslate Eventide Ore",
+  "block.shroud.sculk_stone_eventide_ore": "Eventide Ore",
+  "block.shroud.sculk_deepslate_eventide_ore": "Deepslate Eventide Ore",
   "block.shroud.eventide_block": "Eventide Block",
 
   "item.shroud.gloom_pulp": "Gloom Pulp",

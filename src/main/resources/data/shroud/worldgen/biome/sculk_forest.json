@@ -33,8 +33,9 @@
       "shroud:lake_lava_surface"
     ],
     [
-      "minecraft:monster_room",
-      "minecraft:monster_room_deep"
+      "shroud:patch_grass",
+      "shroud:patch_tall_grass",
+      "shroud:patch_sculk_bulb"
     ],
     [
       "shroud:sculk_patch"
@@ -47,25 +48,8 @@
       "shroud:umber_tree_placed"
     ],
     [
-      "shroud:patch_grass",
-      "shroud:patch_tall_grass",
-      "shroud:patch_sculk_bulb"
-    ],
-    [
       "minecraft:glow_lichen"
-    ],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    []
+    ]
   ],
   "has_precipitation": false,
   "spawn_costs": {},

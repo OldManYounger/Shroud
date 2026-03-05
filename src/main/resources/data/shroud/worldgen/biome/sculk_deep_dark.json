@@ -29,10 +29,6 @@
   },
   "features": [
     [
-      "minecraft:monster_room",
-      "minecraft:monster_room_deep"
-    ],
-    [
       "shroud:ore_eventide_placed",
       "shroud:ore_netherite_block_placed"
     ],

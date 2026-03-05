@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:flint"
+          "name": "shroud:sculk_gravel"
         }
       ],
       "rolls": 1.0

@@ -1,5 +1,7 @@
 - Version 0.2.7
     - Reduced frequency of sculk patch spawns; it was overwhelming other biome generation
+    - Added new gravel variant: Sculk Gravel; generates in Shroud similar to the overworld with similar properties
+    - Fixed issue where the sculk emitter would always emit particles upwards instead of where the 'emitter' texture was facing
     - Fixed references in lake_lava placed features to reference the custom lake_lava configured feature
     - Fixed translation for sculk_stone and sculk_deepslate versions of Eventide ore
 

@@ -39,7 +39,7 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)));
 
     public static final DeferredBlock<Block> SCULK_GRAVEL = registerBlock("sculk_gravel",
-            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
+            () -> new ModSculkGravelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
 
     public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
             () -> new ModUpwardParticlePillarBlock(BlockBehaviour.Properties.of()

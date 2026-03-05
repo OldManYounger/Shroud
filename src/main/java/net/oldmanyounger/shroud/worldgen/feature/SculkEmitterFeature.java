@@ -40,7 +40,7 @@ public class SculkEmitterFeature extends Feature<NoneFeatureConfiguration> {
 
         BlockState emitterState = ModBlocks.SCULK_EMITTER.get()
                 .defaultBlockState()
-                .setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y);
+                .setValue(net.minecraft.world.level.block.DirectionalBlock.FACING, Direction.UP);
 
         setBlock(level, pos, emitterState);
         return true;

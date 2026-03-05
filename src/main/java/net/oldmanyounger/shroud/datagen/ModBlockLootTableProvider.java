@@ -4,10 +4,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.item.ModItems;
 
@@ -22,8 +27,11 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
     }
 
-    // Change this later to your custom item, e.g. () -> ModItems.MY_ITEM.get()
-    private static final Supplier<ItemLike> SCULK_GRAVEL_DROP_ITEM = () -> Items.FLINT;
+    // Future staging for gravel-style rare drop logic:
+    // - Set chance > 0 to enable the rare drop path.
+    // - Swap this supplier to your custom item later.
+    private static final Supplier<ItemLike> SCULK_GRAVEL_RARE_DROP_ITEM = () -> Blocks.AIR.asItem(); // placeholder; replace later
+    private static final float SCULK_GRAVEL_RARE_DROP_CHANCE = 0.0F; // currently always drops itself
 
     /** Defines drop behavior for each registered Shroud block */
     @Override
@@ -33,7 +41,8 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                 block -> createSingleItemTableWithSilkTouch(block, Blocks.SCULK));
 
         add(ModBlocks.SCULK_GRAVEL.get(),
-                block -> createSingleItemTable(SCULK_GRAVEL_DROP_ITEM.get()));
+                this::createSculkGravelDropTable);
+
         dropSelf(ModBlocks.SCULK_STONE.get());
         dropSelf(ModBlocks.SCULK_DEEPSLATE.get());
 
@@ -117,6 +126,26 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         this.add(ModBlocks.PROJECTED_LIGHT.get(), noDrop());
     }
 
+    private LootTable.Builder createSculkGravelDropTable(Block block) {
+        // Current behavior: always drop itself.
+        if (SCULK_GRAVEL_RARE_DROP_CHANCE <= 0.0F) {
+            return createSingleItemTable(block);
+        }
+
+        // Future behavior: rare item drop at configured chance, otherwise drop self.
+        return LootTable.lootTable().withPool(
+                LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(applyExplosionCondition(
+                                block,
+                                AlternativesEntry.alternatives(
+                                        LootItem.lootTableItem(SCULK_GRAVEL_RARE_DROP_ITEM.get())
+                                                .when(LootItemRandomChanceCondition.randomChance(SCULK_GRAVEL_RARE_DROP_CHANCE)),
+                                        LootItem.lootTableItem(block)
+                                )
+                        ))
+        );
+    }
 
     /** Returns all known Shroud blocks to ensure loot tables are generated for each one */
     @Override

@@ -1373,7 +1373,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:sculk"
+                                      "Name": "shroud:sculk_gravel"
                                     }
                                   }
                                 ]
@@ -2151,7 +2151,7 @@
                                   {
                                     "type": "minecraft:block",
                                     "result_state": {
-                                      "Name": "minecraft:sculk"
+                                      "Name": "shroud:sculk_gravel"
                                     }
                                   }
                                 ]

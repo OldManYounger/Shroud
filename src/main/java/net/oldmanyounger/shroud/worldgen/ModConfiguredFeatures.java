@@ -51,6 +51,12 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_EVENTIDE =
             registerKey("ore_eventide");
 
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_SCULK_GRAVEL_UPPER =
+            registerKey("ore_sculk_gravel_upper");
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_SCULK_GRAVEL_LOWER =
+            registerKey("ore_sculk_gravel_lower");
+
     /** Resource key for the Sculk spike configured feature */
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SPIKE =
             registerKey("sculk_spike");

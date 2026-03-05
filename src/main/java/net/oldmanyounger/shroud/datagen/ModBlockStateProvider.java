@@ -5,6 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CaveVines;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -36,7 +37,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         saplingBlock(ModBlocks.SCULK_BULB);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
-        logBlock((RotatedPillarBlock) ModBlocks.SCULK_EMITTER.get());
+        emitterBlock(ModBlocks.SCULK_EMITTER.get());
         blockItem(ModBlocks.SCULK_EMITTER);
 
         // Eventide storage block (simple cube + matching item model)
@@ -278,6 +279,44 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         // Item should use ONLY the base model (vanilla behavior)
         simpleBlockItem(blockRegistryObject.get(), baseModel);
+    }
+
+    private void emitterBlock(Block block) {
+        // One special face texture (using existing sculk_emitter_top), all others same texture
+        ModelFile model = models().cube(
+                "sculk_emitter",
+                modLoc("block/sculk_emitter"),     // down
+                modLoc("block/sculk_emitter_top"), // up (emitter face in base orientation)
+                modLoc("block/sculk_emitter"),     // north
+                modLoc("block/sculk_emitter"),     // south
+                modLoc("block/sculk_emitter"),     // west
+                modLoc("block/sculk_emitter")      // east
+        );
+
+        getVariantBuilder(block).forAllStates(state -> {
+            Direction facing = state.getValue(DirectionalBlock.FACING);
+
+            int xRot = switch (facing) {
+                case DOWN -> 180;
+                case UP -> 0;
+                case NORTH -> 90;
+                case SOUTH -> 270;
+                case WEST, EAST -> 90;
+            };
+
+            int yRot = switch (facing) {
+                case EAST -> 90;
+                case SOUTH -> 180;
+                case WEST -> 270;
+                default -> 0;
+            };
+
+            return ConfiguredModel.builder()
+                    .modelFile(model)
+                    .rotationX(xRot)
+                    .rotationY(yRot)
+                    .build();
+        });
     }
 
     private void stackingWallpaperBlock(ModStackingBlock block,

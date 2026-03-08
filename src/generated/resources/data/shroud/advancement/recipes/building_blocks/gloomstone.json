@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_gloomstone_dust": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:gloomstone_dust"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:gloomstone"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_gloomstone_dust"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shroud:gloomstone"
+    ]
+  }
+}

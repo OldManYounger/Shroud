@@ -30,6 +30,8 @@ public class ModItems {
                                     .build()
                     )
             ));
+    public static final DeferredItem<Item> GLOOMSTONE_DUST = ITEMS.register("gloomstone_dust",
+            () -> new Item(new Item.Properties()));
 
     public static final DeferredItem<Item> EVENTIDE_INGOT = ITEMS.register("eventide_ingot",
             () -> new Item(new Item.Properties()));

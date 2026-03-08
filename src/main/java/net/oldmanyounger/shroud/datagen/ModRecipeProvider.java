@@ -27,6 +27,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.GLOOMSTONE.get())
+                .pattern("DD")
+                .pattern("DD")
+                .define('D', ModItems.GLOOMSTONE_DUST.get())
+                .unlockedBy("has_gloomstone_dust", has(ModItems.GLOOMSTONE_DUST.get()))
+                .save(recipeOutput);
+
         List<ItemLike> EVENTIDE_SMELTABLES = List.of(
                 ModItems.RAW_EVENTIDE,
                 ModBlocks.EVENTIDE_ORE,

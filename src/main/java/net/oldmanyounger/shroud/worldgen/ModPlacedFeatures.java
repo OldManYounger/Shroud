@@ -16,38 +16,20 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 
 import java.util.List;
 
-/** Holds all placed features registered by the Shroud mod */
 public class ModPlacedFeatures {
 
-    /** Resource key for the placed SCULK tree feature */
-    public static final ResourceKey<PlacedFeature> SCULK_TREE_PLACED =
-            registerKey("sculk_tree_placed");
+    public static final ResourceKey<PlacedFeature> SCULK_TREE_PLACED = registerKey("sculk_tree_placed");
+    public static final ResourceKey<PlacedFeature> SCRAGGLE_TREE_PLACED = registerKey("scraggle_tree_placed");
+    public static final ResourceKey<PlacedFeature> UMBER_TREE_PLACED = registerKey("umber_tree_placed");
+    public static final ResourceKey<PlacedFeature> BALDACHIN_TREE_PLACED = registerKey("baldachin_tree_placed");
 
-    /** Resource key for the placed UMBER tree feature */
-    public static final ResourceKey<PlacedFeature> UMBER_TREE_PLACED =
-            registerKey("umber_tree_placed");
+    public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED = registerKey("ore_netherite_block_placed");
+    public static final ResourceKey<PlacedFeature> ORE_EVENTIDE_PLACED = registerKey("ore_eventide_placed");
 
-    /** Resource key for the placed netherite block ore feature */
-    public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED =
-            registerKey("ore_netherite_block_placed");
+    public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED = registerKey("sculk_spike_placed");
+    public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED = registerKey("sculk_arch_placed");
+    public static final ResourceKey<PlacedFeature> SCULK_EMITTER_PLACED = registerKey("sculk_emitter_placed");
 
-    /** Resource key for the placed Eventide ore feature */
-    public static final ResourceKey<PlacedFeature> ORE_EVENTIDE_PLACED =
-            registerKey("ore_eventide_placed");
-
-    /** Resource key for the placed SCULK spike feature */
-    public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED =
-            registerKey("sculk_spike_placed");
-
-    /** Resource key for the placed SCULK arch feature */
-    public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED =
-            registerKey("sculk_arch_placed");
-
-    /** Resource key for the placed single-block Sculk Emitter feature */
-    public static final ResourceKey<PlacedFeature> SCULK_EMITTER_PLACED =
-            registerKey("sculk_emitter_placed");
-
-    /** Registers all placed features to the bootstrap context */
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         var configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
@@ -57,6 +39,17 @@ public class ModPlacedFeatures {
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_TREE),
                 VegetationPlacements.treePlacement(
                         PlacementUtils.countExtra(3, 0.1f, 2),
+                        ModBlocks.SCULK_SAPLING.get()
+                )
+        );
+
+        // Much sparser than SCULK_TREE
+        register(
+                context,
+                SCRAGGLE_TREE_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCRAGGLE_TREE),
+                VegetationPlacements.treePlacement(
+                        PlacementUtils.countExtra(1, 0.1f, 0),
                         ModBlocks.SCULK_SAPLING.get()
                 )
         );
@@ -73,15 +66,24 @@ public class ModPlacedFeatures {
 
         register(
                 context,
+                BALDACHIN_TREE_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.BALDACHIN_TREE),
+                List.of(
+                        CountPlacement.of(1),
+                        InSquarePlacement.spread(),
+                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
+                        BiomeFilter.biome()
+                )
+        );
+
+        register(
+                context,
                 ORE_NETHERITE_BLOCK_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.ORE_NETHERITE_BLOCK),
                 List.of(
                         CountPlacement.of(6),
                         InSquarePlacement.spread(),
-                        HeightRangePlacement.uniform(
-                                VerticalAnchor.absolute(-32),
-                                VerticalAnchor.absolute(16)
-                        ),
+                        HeightRangePlacement.uniform(VerticalAnchor.absolute(-32), VerticalAnchor.absolute(16)),
                         BiomeFilter.biome()
                 )
         );
@@ -93,10 +95,7 @@ public class ModPlacedFeatures {
                 List.of(
                         CountPlacement.of(10),
                         InSquarePlacement.spread(),
-                        HeightRangePlacement.triangle(
-                                VerticalAnchor.absolute(-24),
-                                VerticalAnchor.absolute(63)
-                        ),
+                        HeightRangePlacement.triangle(VerticalAnchor.absolute(-24), VerticalAnchor.absolute(63)),
                         BiomeFilter.biome()
                 )
         );
@@ -125,7 +124,6 @@ public class ModPlacedFeatures {
                 )
         );
 
-        // New placed feature for single sculk emitter blocks
         register(
                 context,
                 SCULK_EMITTER_PLACED,
@@ -134,24 +132,16 @@ public class ModPlacedFeatures {
                         RarityFilter.onAverageOnceEvery(3),
                         InSquarePlacement.spread(),
                         PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                        RandomOffsetPlacement.vertical(ConstantInt.of(-1)), // key fix: flush with ground
+                        RandomOffsetPlacement.vertical(ConstantInt.of(-1)),
                         BiomeFilter.biome()
                 )
         );
-
-
-
     }
 
-    /** Creates a namespaced ResourceKey for a placed feature */
     private static ResourceKey<PlacedFeature> registerKey(String name) {
-        return ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, name)
-        );
+        return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, name));
     }
 
-    /** Registers a placed feature using a configured feature and placement modifiers */
     private static void register(
             BootstrapContext<PlacedFeature> context,
             ResourceKey<PlacedFeature> key,

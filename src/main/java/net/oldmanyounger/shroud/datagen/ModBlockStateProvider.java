@@ -34,7 +34,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.SCULK_GRAVEL);
         blockWithItem(ModBlocks.SCULK_STONE);
         blockWithItem(ModBlocks.SCULK_DEEPSLATE);
+        blockWithItem(ModBlocks.GLOOMSTONE);
         saplingBlock(ModBlocks.SCULK_BULB);
+        saplingBlock(ModBlocks.GHOST_BLOOM);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
         emitterBlock(ModBlocks.SCULK_EMITTER.get());

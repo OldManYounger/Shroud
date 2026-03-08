@@ -4,6 +4,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -45,8 +46,10 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
 
         dropSelf(ModBlocks.SCULK_STONE.get());
         dropSelf(ModBlocks.SCULK_DEEPSLATE.get());
+        add(ModBlocks.GLOOMSTONE.get(), block -> createSingleItemTableWithSilkTouch(block, ModItems.GLOOMSTONE_DUST.get()));
 
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
+        add(ModBlocks.GHOST_BLOOM.get(), block -> createShearsOnlyDrop(ModBlocks.GHOST_BLOOM.get()));
         add(ModBlocks.SCULK_VINES.get(), block -> noDrop());
         add(ModBlocks.SCULK_VINES_PLANT.get(), block -> noDrop());
 

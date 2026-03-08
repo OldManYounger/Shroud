@@ -35,7 +35,8 @@ public class ModCreativeModeTabs {
 
                                 // Sculk bulb
                                 output.accept(ModBlocks.SCULK_BULB.get());
-
+                                output.accept(ModBlocks.GHOST_BLOOM.get());
+                                output.accept(ModBlocks.GLOOMSTONE.get());
                                 output.accept(ModBlocks.SCULK_EMITTER.get());
 
                                 // Eventide ore & blocks
@@ -122,6 +123,7 @@ public class ModCreativeModeTabs {
                             .displayItems((params, output) -> {
                                 // Sculk pearl
                                 output.accept(ModItems.SCULK_PEARL.get());
+                                output.accept(ModItems.GLOOMSTONE_DUST.get());
 
                                 // Gloom pulp
                                 output.accept(ModItems.GLOOM_PULP.get());

@@ -34,6 +34,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Registers the Sculk pearl
         basicItem(ModItems.SCULK_PEARL.get());
         basicItem(ModItems.GLOOM_PULP.get());
+        basicItem(ModItems.GLOOMSTONE_DUST.get());
 
         // Registers the Eventide ingot and raw ore texture using item/generated
         basicItem(ModItems.RAW_EVENTIDE.get());
@@ -54,6 +55,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         // Registers the Sculk sapling item texture using item/generated
         saplingItem(ModBlocks.SCULK_BULB);
+        saplingItem(ModBlocks.GHOST_BLOOM);
         saplingItem(ModBlocks.SCULK_SAPLING);
 
         // Registers inventory models for Sculk button, fence, and wall

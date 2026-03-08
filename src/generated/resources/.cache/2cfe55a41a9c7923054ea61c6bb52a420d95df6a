@@ -1,7 +1,9 @@
-// 1.21.1	2026-03-05T13:32:00.6967321	Block States: shroud
+// 1.21.1	2026-03-07T19:47:33.5380425	Block States: shroud
 f5dd1360ffb959d1df5fd33922282b27b8af222a assets/shroud/blockstates/eventide_block.json
 49475ef5d5031f63c267c324f3266dfecb82c5f8 assets/shroud/blockstates/eventide_deepslate_ore.json
 3457543ab409e2a47ef01b3c381b10c6aff0ed8e assets/shroud/blockstates/eventide_ore.json
+a3e084fcf14eeb2d1da7e87c3b4aa4ab728fb17d assets/shroud/blockstates/ghost_bloom.json
+6e99720cb11bb45d0d9b88116bc05e2a14e6e408 assets/shroud/blockstates/gloomstone.json
 da69bea7619c73853d468376119dc3a2ac747143 assets/shroud/blockstates/limbo_carpet.json
 23129f600887e3a25f1dcf283b927505b4d58d04 assets/shroud/blockstates/limbo_carpet_slab.json
 e3a240df09098897c4e098e7cbc739832ba27ea8 assets/shroud/blockstates/limbo_carpet_stairs.json
@@ -54,6 +56,8 @@ f25162a8af7ec9b9e40d0aeeebcae0c471c7d501 assets/shroud/blockstates/umber_wood.js
 405d5f39b8aafbdb8257138c3b15cc93b27e7009 assets/shroud/models/block/eventide_block.json
 897a6a5d71ec8a22b4ca5aeeec934138b9f64aa4 assets/shroud/models/block/eventide_deepslate_ore.json
 a0890965d505d839d7790e6e6a34fc775c40a2f4 assets/shroud/models/block/eventide_ore.json
+64cabe64ed8ebb7bc69c20138bbbd3012745bf37 assets/shroud/models/block/ghost_bloom.json
+87964fa95e87bc4a9e871e0d8b2e11a46cbe964c assets/shroud/models/block/gloomstone.json
 ed5536930d924c29803655996f65848db1aef035 assets/shroud/models/block/limbo_carpet.json
 f734dbe79d18c71eed3d17dddd70584052840457 assets/shroud/models/block/limbo_carpet_slab.json
 24a10f3d6ed339a91a43810e5dedf3037c416592 assets/shroud/models/block/limbo_carpet_slab_top.json
@@ -162,6 +166,7 @@ c2c2239b7ee6a617b2afa94992a0856070f0b16d assets/shroud/models/block/umber_wall_s
 dfd2f805b7217351ef01ff359508060a16a84348 assets/shroud/models/item/eventide_block.json
 fa107fd277a59cb9ea02a5ac3df416d6f45bd218 assets/shroud/models/item/eventide_deepslate_ore.json
 028ce1c6418e900e13d5a265be5a092fc8b46480 assets/shroud/models/item/eventide_ore.json
+e53ca6b59a64d391193d154639e64ee4c7f53618 assets/shroud/models/item/gloomstone.json
 3f7eb2c453e6ce75558c7ab396248be6cf338134 assets/shroud/models/item/limbo_carpet.json
 c4ee81e4407152d044be692416e644a4085d1ce6 assets/shroud/models/item/limbo_carpet_slab.json
 d3f2c567f23c2b8afb36d09cc7a8759cf68ab056 assets/shroud/models/item/limbo_carpet_stairs.json

@@ -13,10 +13,17 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.oldmanyounger.shroud.block.ModBlocks;
 
 /**
- * Generates a large sculk arch between two ground-anchored endpoints
- * Both ends are sunk slightly into the ground to ensure a natural footing
+ * Generates a large sculk arch between two ground-anchored endpoints.
+ * Both ends are sunk slightly into the ground to ensure a natural footing.
+ *
+ * Includes safety checks so very large arches don't get clipped/sheared
+ * at generation write-region boundaries.
  */
 public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
+
+    // Keep arches inside a safer feature-write radius to avoid clipped ends.
+    // Tune upward carefully if you still want larger arches.
+    private static final int SAFE_MAX_HALF_SPAN = 24;
 
     public SculkArchFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
@@ -47,27 +54,25 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         float dirX = Mth.cos(angle);
         float dirZ = Mth.sin(angle);
 
-        // Size parameters (adjust these ranges as desired)
-        final int minHalfSpan = 10; // smallest half-span
-        final int maxHalfSpan = 22; // largest half-span
+        // Size parameters
+        final int minHalfSpan = 10;
+        final int maxHalfSpan = 22;
 
-        final int minHeight = 8;    // smallest peak lift
-        final int maxHeight = 18;   // largest peak lift
+        final int minHeight = 8;
+        final int maxHeight = 18;
 
-        // Roll a half-span in range, then compute a normalized size factor in [0, 1]
         int halfSpan = Mth.nextInt(random, minHalfSpan, maxHalfSpan);
+        halfSpan = Math.min(halfSpan, SAFE_MAX_HALF_SPAN);
+
         float sizeT = (maxHalfSpan == minHalfSpan)
                 ? 0.0F
                 : (halfSpan - (float) minHalfSpan) / (float) (maxHalfSpan - minHalfSpan);
 
-        // Height can be independent, but tying it loosely to size usually looks better
-        // This interpolates within [minHeight, maxHeight], with a little jitter
         int archHeight = Mth.floor(Mth.lerp(sizeT, minHeight, maxHeight));
         archHeight += random.nextInt(3) - 1; // -1..+1 small variation
         archHeight = Mth.clamp(archHeight, minHeight, maxHeight);
 
         // Thickness scales with size
-        // sizeT=0 -> 1, sizeT=1 -> 3 (clamped to 1..4)
         int thickness = 1 + Mth.floor(sizeT * 2.0F);
         thickness = Mth.clamp(thickness, 1, 4);
 
@@ -75,7 +80,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         BlockPos endA = basePos.offset(Mth.floor(-dirX * halfSpan), 0, Mth.floor(-dirZ * halfSpan));
         BlockPos endB = basePos.offset(Mth.floor(dirX * halfSpan), 0, Mth.floor(dirZ * halfSpan));
 
-        // Snap endpoints to ground (scan downward from a bit above)
+        // Snap endpoints to ground
         BlockPos groundA = findGround(level, endA.above(12), 48);
         BlockPos groundB = findGround(level, endB.above(12), 48);
 
@@ -95,13 +100,24 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         BlockPos footA = groundA.below(sinkA);
         BlockPos footB = groundB.below(sinkB);
 
-        // Tie the feet into the ground a bit more so they don't look pasted on
-        stampFoot(level, random, footA, thickness + 1);
-        stampFoot(level, random, footB, thickness + 1);
+        // Extra guard: ensure feet are still within a safer horizontal radius
+        if (!isWithinHorizontalRadius(origin, footA, SAFE_MAX_HALF_SPAN + 8)
+                || !isWithinHorizontalRadius(origin, footB, SAFE_MAX_HALF_SPAN + 8)) {
+            return false;
+        }
 
         // Steps scale with span so larger arches stay smooth
         int span = halfSpan * 2;
         int steps = Mth.clamp(span * 3, 50, 180);
+
+        // Preflight write-region check: abort if any sampled arch region is not writable
+        if (!canWriteEntireArch(level, footA, footB, archHeight, thickness, steps)) {
+            return false;
+        }
+
+        // Tie feet into ground first
+        stampFoot(level, random, footA, thickness + 1);
+        stampFoot(level, random, footB, thickness + 1);
 
         for (int i = 0; i <= steps; i++) {
             float t = (float) i / (float) steps;
@@ -132,8 +148,8 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
     }
 
     /**
-     * Finds the first non-air block at or below start by scanning down
-     * Returns that block position (the ground block), or null if not found
+     * Finds the first non-air block at or below start by scanning down.
+     * Returns that block position (the ground block), or null if not found.
      */
     private static BlockPos findGround(WorldGenLevel level, BlockPos start, int maxDown) {
         BlockPos pos = start;
@@ -148,8 +164,57 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         return null;
     }
 
+    private static boolean isWithinHorizontalRadius(BlockPos origin, BlockPos p, int radius) {
+        return Math.abs(p.getX() - origin.getX()) <= radius
+                && Math.abs(p.getZ() - origin.getZ()) <= radius;
+    }
+
     /**
-     * Creates a slightly larger footing at the ends and a short downward column to anchor it
+     * Preflight check to avoid clipped/sheared arches at generation boundaries.
+     * Samples centerline + shell probe points.
+     */
+    private static boolean canWriteEntireArch(
+            WorldGenLevel level,
+            BlockPos footA,
+            BlockPos footB,
+            int archHeight,
+            int thickness,
+            int steps
+    ) {
+        int r = Mth.clamp(thickness, 1, 6);
+
+        for (int i = 0; i <= steps; i++) {
+            float t = (float) i / (float) steps;
+
+            float x = Mth.lerp(t, footA.getX(), footB.getX());
+            float z = Mth.lerp(t, footA.getZ(), footB.getZ());
+            float baseY = Mth.lerp(t, footA.getY(), footB.getY());
+            float lift = Mth.sin((float) Math.PI * t) * archHeight;
+
+            BlockPos c = new BlockPos(Mth.floor(x), Mth.floor(baseY + lift), Mth.floor(z));
+
+            if (!level.ensureCanWrite(c)) return false;
+
+            BlockPos[] probes = new BlockPos[]{
+                    c.offset( r, 0, 0), c.offset(-r, 0, 0),
+                    c.offset(0,  r, 0), c.offset(0, -r, 0),
+                    c.offset(0, 0,  r), c.offset(0, 0, -r),
+                    c.offset( r, r, 0), c.offset(-r, r, 0),
+                    c.offset( r,-r, 0), c.offset(-r,-r, 0),
+                    c.offset(0, r,  r), c.offset(0, r, -r),
+                    c.offset(0,-r,  r), c.offset(0,-r, -r)
+            };
+
+            for (BlockPos p : probes) {
+                if (!level.ensureCanWrite(p)) return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Creates a slightly larger footing at the ends and a short downward column to anchor it.
      */
     private void stampFoot(WorldGenLevel level, RandomSource random, BlockPos foot, int radius) {
         // Small cap at the foot position
@@ -173,7 +238,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
     }
 
     /**
-     * Places a roughly spherical blob of sculk, replacing air/dirt-like/sculk grass/sculk/veins
+     * Places a roughly spherical blob of sculk, replacing air/dirt-like/sculk grass/sculk/veins.
      */
     private void placeBlob(WorldGenLevel level, RandomSource random, BlockPos center, int radius) {
         int r = Mth.clamp(radius, 1, 4);

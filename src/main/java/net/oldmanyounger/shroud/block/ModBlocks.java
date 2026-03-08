@@ -41,11 +41,22 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SCULK_GRAVEL = registerBlock("sculk_gravel",
             () -> new ModSculkGravelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
 
+    public static final DeferredBlock<Block> GLOOMSTONE = registerBlock("gloomstone",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GLOWSTONE)));
+
     public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
             () -> new ModUpwardParticlePillarBlock(BlockBehaviour.Properties.of()
                     .strength(1.5F)
                     .sound(SoundType.SCULK)
                     .lightLevel(state -> 7)));
+
+    public static final DeferredBlock<Block> GHOST_BLOOM = registerBlock("ghost_bloom",
+            () -> new GhostBloomBlock(BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .instabreak()
+                    .sound(SoundType.GRASS)
+                    .offsetType(BlockBehaviour.OffsetType.XZ)
+                    .lightLevel(state -> 10)));
 
     public static final DeferredBlock<Block> SCULK_BULB = registerBlock("sculk_bulb",
             () -> new ModSculkBulbBlock(BlockBehaviour.Properties.of()

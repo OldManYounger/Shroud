@@ -40,8 +40,7 @@
       "shroud:ore_netherite_block_placed"
     ],
     [
-      "minecraft:glow_lichen",
-      "shroud:sculk_emitter_placed"
+      "minecraft:glow_lichen"
     ],
     []
   ],

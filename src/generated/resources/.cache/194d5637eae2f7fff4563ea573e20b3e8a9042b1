@@ -1,4 +1,4 @@
-// 1.21.1	2026-02-28T20:35:55.0383869	Item Models: shroud
+// 1.21.1	2026-03-07T19:47:33.543282	Item Models: shroud
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/blighted_shade_spawn_egg.json
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
 533d0598dcf9dfd8e7909252ea429f38b1822e3c assets/shroud/models/item/eventide_axe.json
@@ -51,6 +51,8 @@ c12fb95120e7c055fb55ccdc9e14ec8d0a2dbd63 assets/shroud/models/item/eventide_legg
 6bcae9aa7470c049fee6401f1b39ea6898dc04a2 assets/shroud/models/item/eventide_pickaxe.json
 6e9bd29843f119709d3f06b0da8d142389ee1ba1 assets/shroud/models/item/eventide_shovel.json
 51828d68ac81765e1c6fe398d67f84aeb5cdbf9e assets/shroud/models/item/eventide_sword.json
+9b38ca87410a5da403954afa6361e6feba56e0db assets/shroud/models/item/ghost_bloom.json
+0f06e408780a2b5c705fc63c6234d40e95966057 assets/shroud/models/item/gloomstone_dust.json
 5766e32a655014e5b607cd3e5870d787ea46e0df assets/shroud/models/item/gloom_pulp.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/living_sculk_spawn_egg.json
 06abd13f186482f4dba24cf12ff4d291d0c539b2 assets/shroud/models/item/raw_eventide.json

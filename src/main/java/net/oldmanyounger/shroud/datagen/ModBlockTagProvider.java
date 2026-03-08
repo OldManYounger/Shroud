@@ -50,7 +50,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.SCULK_VINES_PLANT.get());
         tag(BlockTags.REPLACEABLE)
                 .add(ModBlocks.SCULK_VINES.get())
-                .add(ModBlocks.SCULK_VINES_PLANT.get());
+                .add(ModBlocks.SCULK_VINES_PLANT.get())
+                .add(ModBlocks.GHOST_BLOOM.get());
 
         // Eventide ore + block are mineable with pickaxe
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -58,7 +59,8 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.EVENTIDE_ORE.get())
                 .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
                 .add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get())
-                .add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get());
+                .add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get())
+                .add(ModBlocks.GLOOMSTONE.get());
 
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(ModBlocks.SCULK_GRAVEL.get());

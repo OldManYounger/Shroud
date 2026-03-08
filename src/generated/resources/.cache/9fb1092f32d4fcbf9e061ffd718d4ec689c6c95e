@@ -1,4 +1,5 @@
-// 1.21.1	2026-01-23T19:18:33.4298735	Recipes
+// 1.21.1	2026-03-07T13:29:55.7007251	Recipes
+c19758685e30acdfd73c1c93d3f65c52977c9d7b data/shroud/advancement/recipes/building_blocks/gloomstone.json
 aea8a957c21d1b6dafdc289df70600ee7bbe865d data/shroud/advancement/recipes/building_blocks/sculk_planks.json
 90e7cb5a4f2e9f86ef8616960b5cf7df9808b842 data/shroud/advancement/recipes/building_blocks/sculk_slab.json
 4c8db362fa89e304e225459ba298cc73db7bd5f9 data/shroud/advancement/recipes/building_blocks/sculk_stairs.json
@@ -61,6 +62,7 @@ a7eaa7dd9201fa9830befff8fe2ca5c583811cab data/shroud/recipe/eventide_leggings.js
 600bf2f506707b7c8b7bd9a4b432ff5afe2a8d0f data/shroud/recipe/eventide_pickaxe.json
 0c83db125b0ff011c8da4b1bfca81112229fcfd3 data/shroud/recipe/eventide_shovel.json
 f40fb1b88dc4d38dd47d78076050e12e7d04d48a data/shroud/recipe/eventide_sword.json
+19b4c9259d80bbf715110afa0fc5cd77fb2c2ccd data/shroud/recipe/gloomstone.json
 6a92881d59ee226f27051c4cba19205e46860b0a data/shroud/recipe/sculk_button.json
 a3dbd5ea1b808696abbf186f4e3720c009422d4e data/shroud/recipe/sculk_door.json
 dec9d44130a6aae8fe8d91b78bd9cb0cdf4d9e93 data/shroud/recipe/sculk_fence.json

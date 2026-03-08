@@ -5,10 +5,13 @@
   "block.shroud.sculk_gravel": "Sculk Gravel",
   "block.shroud.sculk_stone": "Sculk Stone",
   "block.shroud.sculk_deepslate": "Sculk Deepslate",
+  "block.shroud.gloomstone": "Gloomstone",
 
   "block.shroud.sculk_bulb": "Sculk Bulb",
+  "block.shroud.ghost_bloom": "Ghost Bloom",
   "block.shroud.sculk_emitter": "Sculk Emitter",
   "block.shroud.sculk_vine": "Sculk Vine",
+  "item.shroud.gloomstone_dust": "Gloomstone Dust",
 
   "block.shroud.eventide_ore": "Eventide Ore",
   "block.shroud.eventide_deepslate_ore": "Deepslate Eventide Ore",

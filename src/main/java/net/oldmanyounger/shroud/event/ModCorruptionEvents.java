@@ -5,7 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.effect.CorruptionMobEffect;
+import net.oldmanyounger.shroud.effect.ModCorruptionMobEffect;
 import net.oldmanyounger.shroud.effect.ModMobEffects;
 
 @EventBusSubscriber(modid = Shroud.MOD_ID)
@@ -21,14 +21,14 @@ public final class ModCorruptionEvents {
         }
 
         if (player.hasEffect(ModMobEffects.CORRUPTION)) {
-            CorruptionMobEffect.applyCorruptionHealthCap(player);
+            ModCorruptionMobEffect.applyCorruptionHealthCap(player);
 
-            float allowedHealth = CorruptionMobEffect.getAllowedHealth(player);
+            float allowedHealth = ModCorruptionMobEffect.getAllowedHealth(player);
             if (player.getHealth() > allowedHealth) {
                 player.setHealth(allowedHealth);
             }
         } else {
-            CorruptionMobEffect.removeCorruptionHealthCap(player);
+            ModCorruptionMobEffect.removeCorruptionHealthCap(player);
         }
     }
 }

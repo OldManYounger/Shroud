@@ -13,7 +13,7 @@ public final class ModMobEffects {
 
     public static final DeferredHolder<MobEffect, MobEffect> CORRUPTION =
             MOB_EFFECTS.register("corruption",
-                    () -> new CorruptionMobEffect(MobEffectCategory.HARMFUL, 0x5B2A78));
+                    () -> new ModCorruptionMobEffect(MobEffectCategory.HARMFUL, 0x5B2A78));
 
     private ModMobEffects() {
     }

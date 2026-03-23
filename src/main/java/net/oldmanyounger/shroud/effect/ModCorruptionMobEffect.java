@@ -11,12 +11,12 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.oldmanyounger.shroud.Shroud;
 
-public class CorruptionMobEffect extends MobEffect {
+public class ModCorruptionMobEffect extends MobEffect {
     public static final float SAFE_HEALTH = 10.0F; // 5 full hearts
     public static final ResourceLocation MAX_HEALTH_MODIFIER_ID =
             ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "corruption_max_health");
 
-    public CorruptionMobEffect(MobEffectCategory category, int color) {
+    public ModCorruptionMobEffect(MobEffectCategory category, int color) {
         super(category, color);
     }
 

@@ -18,7 +18,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.effect.CorruptionMobEffect;
+import net.oldmanyounger.shroud.effect.ModCorruptionMobEffect;
 import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.network.payload.ShowLastBreathActivationPayload;
@@ -80,8 +80,8 @@ public final class ModTotemEvents {
         player.fallDistance = 0.0F;
 
         player.addEffect(new MobEffectInstance(ModMobEffects.CORRUPTION, 600, 0, false, true, true));
-        CorruptionMobEffect.applyCorruptionHealthCap(player);
-        player.setHealth(CorruptionMobEffect.getAllowedHealth(player));
+        ModCorruptionMobEffect.applyCorruptionHealthCap(player);
+        player.setHealth(ModCorruptionMobEffect.getAllowedHealth(player));
 
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
         player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));

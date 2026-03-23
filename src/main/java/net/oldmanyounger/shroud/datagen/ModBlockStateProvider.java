@@ -1,35 +1,45 @@
 package net.oldmanyounger.shroud.datagen;
 
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.CaveVines;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
-import net.minecraft.core.Direction;
-import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.oldmanyounger.shroud.block.custom.ModStackingBlock;
 
-/** Generates all blockstates and block models for Shroud blocks */
+/**
+ * Generates blockstate definitions and block models for Shroud blocks.
+ *
+ * <p>This provider is responsible for describing how Shroud blocks should be
+ * rendered in the world and, where needed, how their corresponding block items
+ * should be modeled. It covers simple cube blocks, plants, logs, multi-part
+ * grass overlays, directional emitters, vine variants, and stack-aware wallpaper
+ * blocks.
+ *
+ * <p>In the broader context of the project, this class is one of the central
+ * asset-generation providers that converts Java-side block registrations into
+ * the blockstate and model JSON files used by the client renderer.
+ */
 public class ModBlockStateProvider extends BlockStateProvider {
 
-    /** Constructs the blockstate provider using the mod ID and file helper */
+    // Creates the blockstate provider for the Shroud namespace
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, Shroud.MOD_ID, exFileHelper);
     }
 
-    /** Registers blockstates and models for every Shroud block */
+    // Registers blockstate and model output for all supported Shroud blocks
     @Override
     protected void registerStatesAndModels() {
-
-        // Sculk grass and plants
+        // Terrain and plant blocks
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
         blockWithItem(ModBlocks.SCULK_GRAVEL);
         blockWithItem(ModBlocks.SCULK_STONE);
@@ -39,19 +49,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
         saplingBlock(ModBlocks.GHOST_BLOOM);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
+        // Technical and resource blocks
         emitterBlock(ModBlocks.SCULK_EMITTER.get());
         blockItem(ModBlocks.SCULK_EMITTER);
-
-        // Eventide storage block (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);
-
-        // Eventide ore blockstate/model (simple cube + matching item model)
         blockWithItem(ModBlocks.EVENTIDE_ORE);
         blockWithItem(ModBlocks.EVENTIDE_DEEPSLATE_ORE);
         blockWithItem(ModBlocks.SCULK_STONE_EVENTIDE_ORE);
         blockWithItem(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE);
 
-        // Registers Sculk log and wood (normal and stripped) with appropriate axis models
+        // Sculk wood set
         logBlock((RotatedPillarBlock) ModBlocks.SCULK_LOG.get());
         axisBlock((RotatedPillarBlock) ModBlocks.SCULK_WOOD.get(),
                 blockTexture(ModBlocks.SCULK_LOG.get()),
@@ -61,52 +68,32 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 blockTexture(ModBlocks.STRIPPED_SCULK_LOG.get()),
                 blockTexture(ModBlocks.STRIPPED_SCULK_LOG.get()));
 
-        // Registers block items for log and wood variants
         blockItem(ModBlocks.SCULK_LOG);
         blockItem(ModBlocks.SCULK_WOOD);
         blockItem(ModBlocks.STRIPPED_SCULK_LOG);
         blockItem(ModBlocks.STRIPPED_SCULK_WOOD);
 
-        // Registers Sculk planks with a standard cube-all block + item model
         blockWithItem(ModBlocks.SCULK_PLANKS);
-
-        // Registers Sculk leaves and sapling models using cutout rendering
         leavesBlock(ModBlocks.SCULK_LEAVES);
         saplingBlock(ModBlocks.SCULK_SAPLING);
 
-        // Registers Sculk stairs and slab variants
         stairsBlock(ModBlocks.SCULK_STAIRS.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        slabBlock(ModBlocks.SCULK_SLAB.get(),
-                blockTexture(ModBlocks.SCULK_PLANKS.get()),
-                blockTexture(ModBlocks.SCULK_PLANKS.get()));
-
-        // Registers Sculk redstone-interactable blocks
+        slabBlock(ModBlocks.SCULK_SLAB.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()), blockTexture(ModBlocks.SCULK_PLANKS.get()));
         buttonBlock(ModBlocks.SCULK_BUTTON.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
         pressurePlateBlock(ModBlocks.SCULK_PRESSURE_PLATE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-
-        // Registers Sculk fence, gate, and wall models
         fenceBlock(ModBlocks.SCULK_FENCE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
         fenceGateBlock(ModBlocks.SCULK_FENCE_GATE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
         wallBlock(ModBlocks.SCULK_WALL.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
+        doorBlockWithRenderType(ModBlocks.SCULK_DOOR.get(), modLoc("block/sculk_door_bottom"), modLoc("block/sculk_door_top"), "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.SCULK_TRAPDOOR.get(), modLoc("block/sculk_trapdoor"), true, "cutout");
 
-        // Registers Sculk door and trapdoor models using cutout rendering
-        doorBlockWithRenderType(ModBlocks.SCULK_DOOR.get(),
-                modLoc("block/sculk_door_bottom"),
-                modLoc("block/sculk_door_top"),
-                "cutout");
-        trapdoorBlockWithRenderType(ModBlocks.SCULK_TRAPDOOR.get(),
-                modLoc("block/sculk_trapdoor"),
-                true,
-                "cutout");
-
-        // Registers item models for stairs, slab, pressure plate, fence gate, and trapdoor
         blockItem(ModBlocks.SCULK_STAIRS);
         blockItem(ModBlocks.SCULK_SLAB);
         blockItem(ModBlocks.SCULK_PRESSURE_PLATE);
         blockItem(ModBlocks.SCULK_FENCE_GATE);
         blockItem(ModBlocks.SCULK_TRAPDOOR, "_bottom");
 
-        // Registers Umber log and wood (normal and stripped) with appropriate axis models
+        // Umber wood set
         logBlock((RotatedPillarBlock) ModBlocks.UMBER_LOG.get());
         axisBlock((RotatedPillarBlock) ModBlocks.UMBER_WOOD.get(),
                 blockTexture(ModBlocks.UMBER_LOG.get()),
@@ -116,86 +103,60 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 blockTexture(ModBlocks.STRIPPED_UMBER_LOG.get()),
                 blockTexture(ModBlocks.STRIPPED_UMBER_LOG.get()));
 
-        // Registers block items for log and wood variants
         blockItem(ModBlocks.UMBER_LOG);
         blockItem(ModBlocks.UMBER_WOOD);
         blockItem(ModBlocks.STRIPPED_UMBER_LOG);
         blockItem(ModBlocks.STRIPPED_UMBER_WOOD);
 
-        // Registers Umber planks with a standard cube-all block + item model
         blockWithItem(ModBlocks.UMBER_PLANKS);
-
-        // Registers Umber leaves and sapling models using cutout rendering
         leavesBlock(ModBlocks.UMBER_LEAVES);
         saplingBlock(ModBlocks.UMBER_SAPLING);
 
-        // Registers Umber stairs and slab variants
         stairsBlock(ModBlocks.UMBER_STAIRS.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
-        slabBlock(ModBlocks.UMBER_SLAB.get(),
-                blockTexture(ModBlocks.UMBER_PLANKS.get()),
-                blockTexture(ModBlocks.UMBER_PLANKS.get()));
-
-        // Registers Umber redstone-interactable blocks
+        slabBlock(ModBlocks.UMBER_SLAB.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()), blockTexture(ModBlocks.UMBER_PLANKS.get()));
         buttonBlock(ModBlocks.UMBER_BUTTON.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
         pressurePlateBlock(ModBlocks.UMBER_PRESSURE_PLATE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
-
-        // Registers Umber fence, gate, and wall models
         fenceBlock(ModBlocks.UMBER_FENCE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
         fenceGateBlock(ModBlocks.UMBER_FENCE_GATE.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
         wallBlock(ModBlocks.UMBER_WALL.get(), blockTexture(ModBlocks.UMBER_PLANKS.get()));
+        doorBlockWithRenderType(ModBlocks.UMBER_DOOR.get(), modLoc("block/umber_door_bottom"), modLoc("block/umber_door_top"), "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.UMBER_TRAPDOOR.get(), modLoc("block/umber_trapdoor"), true, "cutout");
 
-        // Registers Umber door and trapdoor models using cutout rendering
-        doorBlockWithRenderType(ModBlocks.UMBER_DOOR.get(),
-                modLoc("block/umber_door_bottom"),
-                modLoc("block/umber_door_top"),
-                "cutout");
-        trapdoorBlockWithRenderType(ModBlocks.UMBER_TRAPDOOR.get(),
-                modLoc("block/umber_trapdoor"),
-                true,
-                "cutout");
-
-        // Registers item models for stairs, slab, pressure plate, fence gate, and trapdoor
         blockItem(ModBlocks.UMBER_STAIRS);
         blockItem(ModBlocks.UMBER_SLAB);
         blockItem(ModBlocks.UMBER_PRESSURE_PLATE);
         blockItem(ModBlocks.UMBER_FENCE_GATE);
         blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
 
-        // Limbo blocks and entities
-        stackingWallpaperBlock(ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),
+        // Limbo blocks
+        stackingWallpaperBlock(
+                ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),
                 modLoc("block/limbo_wallpaper_diamond"),
                 modLoc("block/limbo_wallpaper_diamond_stacked"),
                 modLoc("block/limbo_carpet"),
-                modLoc("block/limbo_ceiling_tile"));
+                modLoc("block/limbo_ceiling_tile")
+        );
 
-        stackingWallpaperBlock(ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get(),
+        stackingWallpaperBlock(
+                ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get(),
                 modLoc("block/limbo_wallpaper_segmented"),
                 modLoc("block/limbo_wallpaper_segmented_stacked"),
                 modLoc("block/limbo_carpet"),
-                modLoc("block/limbo_ceiling_tile"));
+                modLoc("block/limbo_ceiling_tile")
+        );
 
         blockItem(ModBlocks.LIMBO_WALLPAPER_DIAMOND);
         blockItem(ModBlocks.LIMBO_WALLPAPER_SEGMENTED);
         simpleBlockWithItem(ModBlocks.LIMBO_CARPET.get(), cubeAll(ModBlocks.LIMBO_CARPET.get()));
-
         stairsBlock(ModBlocks.LIMBO_CARPET_STAIRS.get(), blockTexture(ModBlocks.LIMBO_CARPET.get()));
-        slabBlock(ModBlocks.LIMBO_CARPET_SLAB.get(),
-                blockTexture(ModBlocks.LIMBO_CARPET.get()),
-                blockTexture(ModBlocks.LIMBO_CARPET.get()));
-
+        slabBlock(ModBlocks.LIMBO_CARPET_SLAB.get(), blockTexture(ModBlocks.LIMBO_CARPET.get()), blockTexture(ModBlocks.LIMBO_CARPET.get()));
         blockItem(ModBlocks.LIMBO_CARPET_STAIRS);
         blockItem(ModBlocks.LIMBO_CARPET_SLAB);
-
         simpleBlockWithItem(ModBlocks.LIMBO_CEILING_TILE.get(), cubeAll(ModBlocks.LIMBO_CEILING_TILE.get()));
-
-        simpleBlockWithItem(
-                ModBlocks.LIMBO_FLUORESCENT_LIGHT.get(),
-                cubeAll(ModBlocks.LIMBO_FLUORESCENT_LIGHT.get())
-        );
-
+        simpleBlockWithItem(ModBlocks.LIMBO_FLUORESCENT_LIGHT.get(), cubeAll(ModBlocks.LIMBO_FLUORESCENT_LIGHT.get()));
     }
 
-    /** Creates a sapling model using a cross texture with cutout rendering */
+    // Creates a cutout cross model for plant-like blocks
     private void saplingBlock(DeferredBlock<Block> blockRegistryObject) {
         simpleBlock(
                 blockRegistryObject.get(),
@@ -206,7 +167,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         );
     }
 
-    /** Creates a leaves block + item model using the vanilla leaves template */
+    // Creates a cutout leaves model and matching item model
     private void leavesBlock(DeferredBlock<Block> blockRegistryObject) {
         simpleBlockWithItem(
                 blockRegistryObject.get(),
@@ -219,6 +180,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         );
     }
 
+    // Creates lit and unlit variants for the custom sculk vine head and plant blocks
     private void sculkVinesBlock(DeferredBlock<? extends Block> head, DeferredBlock<? extends Block> plant) {
         String headPath = head.getId().getPath();
         String plantPath = plant.getId().getPath();
@@ -240,10 +202,10 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
     }
 
+    // Builds a multipart grass block model with a tinted overlay, similar to vanilla grass
     private void grassBlockWithItem(DeferredBlock<Block> blockRegistryObject) {
         String path = blockRegistryObject.getId().getPath();
 
-        // Base model: bottom/top/side + particle, with TOP tinted (tintindex 0)
         var baseModel = models().withExistingParent(path, mcLoc("block/block"))
                 .texture("particle", mcLoc("block/sculk"))
                 .texture("bottom", mcLoc("block/sculk"))
@@ -260,8 +222,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .face(net.minecraft.core.Direction.EAST).uvs(0, 0, 16, 16).texture("#side").cullface(net.minecraft.core.Direction.EAST).end()
                 .end();
 
-        // Overlay model: side overlay only, tinted (tintindex 0), like vanilla grass_block_side_overlay
-        // Texture file: assets/shroud/textures/block/<path>_side_overlay.png
         var overlayModel = models().withExistingParent(path + "_overlay", mcLoc("block/block"))
                 .texture("particle", modLoc("block/" + path + "_side_overlay"))
                 .texture("overlay", modLoc("block/" + path + "_side_overlay"));
@@ -274,25 +234,23 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .face(net.minecraft.core.Direction.EAST).uvs(0, 0, 16, 16).texture("#overlay").cullface(net.minecraft.core.Direction.EAST).tintindex(0).end()
                 .end();
 
-        // Multipart: render base + overlay together (identical concept to vanilla)
         getMultipartBuilder(blockRegistryObject.get())
                 .part().modelFile(baseModel).addModel().end()
                 .part().modelFile(overlayModel).addModel().end();
 
-        // Item should use ONLY the base model (vanilla behavior)
         simpleBlockItem(blockRegistryObject.get(), baseModel);
     }
 
+    // Creates the directional emitter block model and rotates it based on the block's facing state
     private void emitterBlock(Block block) {
-        // One special face texture (using existing sculk_emitter_top), all others same texture
         ModelFile model = models().cube(
                 "sculk_emitter",
-                modLoc("block/sculk_emitter"),     // down
-                modLoc("block/sculk_emitter_top"), // up (emitter face in base orientation)
-                modLoc("block/sculk_emitter"),     // north
-                modLoc("block/sculk_emitter"),     // south
-                modLoc("block/sculk_emitter"),     // west
-                modLoc("block/sculk_emitter")      // east
+                modLoc("block/sculk_emitter"),
+                modLoc("block/sculk_emitter_top"),
+                modLoc("block/sculk_emitter"),
+                modLoc("block/sculk_emitter"),
+                modLoc("block/sculk_emitter"),
+                modLoc("block/sculk_emitter")
         );
 
         getVariantBuilder(block).forAllStates(state -> {
@@ -321,27 +279,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
     }
 
+    // Creates the normal and stacked variants for a wallpaper block that changes appearance when vertically stacked
     private void stackingWallpaperBlock(ModStackingBlock block,
                                         ResourceLocation normalSide,
                                         ResourceLocation stackedSide,
                                         ResourceLocation topTexture,
                                         ResourceLocation bottomTexture) {
-
         String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
 
-        // Not stacked
-        ModelFile normalModel = models().cubeBottomTop(name,
-                normalSide,
-                bottomTexture,
-                topTexture
-        );
-
-        // Stacked
-        ModelFile stackedModel = models().cubeBottomTop(name + "_stacked",
-                stackedSide,
-                bottomTexture,
-                topTexture
-        );
+        ModelFile normalModel = models().cubeBottomTop(name, normalSide, bottomTexture, topTexture);
+        ModelFile stackedModel = models().cubeBottomTop(name + "_stacked", stackedSide, bottomTexture, topTexture);
 
         getVariantBuilder(block).forAllStates(state -> {
             boolean stacked = state.getValue(ModStackingBlock.STACKED);
@@ -351,19 +298,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
     }
 
-
-    /** Registers a block and its item model using a generated cube-all template */
+    // Registers a block with a standard cube-all block model and matching block item model
     private void blockWithItem(DeferredBlock<?> deferredBlock) {
         simpleBlockWithItem(deferredBlock.get(), cubeAll(deferredBlock.get()));
     }
 
-    /** Registers a block item model using a direct model reference */
+    // Registers a block item model that points directly at the generated block model
     private void blockItem(DeferredBlock<?> deferredBlock) {
         simpleBlockItem(deferredBlock.get(),
                 new ModelFile.UncheckedModelFile("shroud:block/" + deferredBlock.getId().getPath()));
     }
 
-    /** Registers a block item model with a suffix (used for trapdoor bottom model) */
+    // Registers a block item model that points to a suffixed block model variant
     private void blockItem(DeferredBlock<?> deferredBlock, String appendix) {
         simpleBlockItem(deferredBlock.get(),
                 new ModelFile.UncheckedModelFile("shroud:block/" + deferredBlock.getId().getPath() + appendix));

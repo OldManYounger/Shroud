@@ -20,132 +20,24 @@ import net.oldmanyounger.shroud.item.ModItems;
 
 import java.util.LinkedHashMap;
 
-/** Generates item models for Shroud items that are not handled by the blockstate provider */
+/**
+ * Generates item models for Shroud items that are not fully handled through
+ * blockstate generation alone.
+ *
+ * <p>This provider covers standard generated items, handheld tools and weapons,
+ * sapling-style items, block-derived inventory models, spawn eggs, and trimmed
+ * armor model overrides. It keeps all non-blockstate item model generation in a
+ * single place so the mod's item assets are easier to maintain and expand.
+ *
+ * <p>In the broader context of the project, this class is the item-side
+ * counterpart to the blockstate provider, turning Java registrations into the
+ * item model JSON resources required by the client.
+ */
 public class ModItemModelProvider extends ItemModelProvider {
 
-    /** Creates the item model provider bound to the Shroud mod ID */
-    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, Shroud.MOD_ID, existingFileHelper);
-    }
+    // Trim material predicate values used for generating armor trim overrides
+    private static final LinkedHashMap<ResourceKey<TrimMaterial>, Float> trimMaterials = new LinkedHashMap<>();
 
-    /** Registers item models for all standalone Shroud items */
-    @Override
-    protected void registerModels() {
-        // Registers the Sculk pearl
-        basicItem(ModItems.SCULK_PEARL.get());
-        basicItem(ModItems.GLOOM_PULP.get());
-        basicItem(ModItems.GLOOMSTONE_DUST.get());
-        basicItem(ModItems.TOTEM_OF_LAST_BREATH.get());
-
-        // Registers the Eventide ingot and raw ore texture using item/generated
-        basicItem(ModItems.RAW_EVENTIDE.get());
-        basicItem(ModItems.EVENTIDE_INGOT.get());
-
-        handheldItem(ModItems.EVENTIDE_SWORD.get());
-        handheldItem(ModItems.EVENTIDE_PICKAXE.get());
-        handheldItem(ModItems.EVENTIDE_SHOVEL.get());
-        handheldItem(ModItems.EVENTIDE_AXE.get());
-        handheldItem(ModItems.EVENTIDE_HOE.get());
-
-        trimmedArmorItem(ModItems.EVENTIDE_HELMET);
-        trimmedArmorItem(ModItems.EVENTIDE_CHESTPLATE);
-        trimmedArmorItem(ModItems.EVENTIDE_LEGGINGS);
-        trimmedArmorItem(ModItems.EVENTIDE_BOOTS);
-
-        basicItem(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
-
-        // Registers the Sculk sapling item texture using item/generated
-        saplingItem(ModBlocks.SCULK_BULB);
-        saplingItem(ModBlocks.GHOST_BLOOM);
-        saplingItem(ModBlocks.SCULK_SAPLING);
-
-        // Registers inventory models for Sculk button, fence, and wall
-        buttonItem(ModBlocks.SCULK_BUTTON, ModBlocks.SCULK_PLANKS);
-        fenceItem(ModBlocks.SCULK_FENCE, ModBlocks.SCULK_PLANKS);
-        wallItem(ModBlocks.SCULK_WALL, ModBlocks.SCULK_PLANKS);
-
-        // Registers standard generated item model for the Sculk door item
-        basicItem(ModBlocks.SCULK_DOOR.asItem());
-
-        // Registers the Umber sapling item texture using item/generated
-        saplingItem(ModBlocks.UMBER_SAPLING);
-
-        // Registers inventory models for Umber button, fence, and wall
-        buttonItem(ModBlocks.UMBER_BUTTON, ModBlocks.UMBER_PLANKS);
-        fenceItem(ModBlocks.UMBER_FENCE, ModBlocks.UMBER_PLANKS);
-        wallItem(ModBlocks.UMBER_WALL, ModBlocks.UMBER_PLANKS);
-
-        // Registers standard generated item model for the Umber door item
-        basicItem(ModBlocks.UMBER_DOOR.asItem());
-
-        registerSpawnEggModels();
-    }
-
-    /** Registers all custom spawn egg item models */
-    private void registerSpawnEggModels() {
-        withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
-        withExistingParent(ModItems.UMBRAL_HOWLER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
-        withExistingParent(ModItems.RESONANT_HULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
-        withExistingParent(ModItems.BLIGHTED_SHADE_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
-    }
-
-
-    /** Creates the model for a Sculk sapling using item/generated */
-    private ItemModelBuilder saplingItem(DeferredBlock<Block> item) {
-        return withExistingParent(
-                item.getId().getPath(),
-                ResourceLocation.parse("item/generated")
-        ).texture("layer0",
-                ResourceLocation.fromNamespaceAndPath(
-                        Shroud.MOD_ID,
-                        "block/" + item.getId().getPath()
-                ));
-    }
-
-    /** Creates a handheld-style item model for tools or weapons */
-    private ItemModelBuilder handheldItem(DeferredItem<?> item) {
-        return withExistingParent(
-                item.getId().getPath(),
-                ResourceLocation.parse("item/handheld")
-        ).texture("layer0",
-                ResourceLocation.fromNamespaceAndPath(
-                        Shroud.MOD_ID,
-                        "item/" + item.getId().getPath()
-                ));
-    }
-
-    /** Registers the inventory model for a Sculk button item */
-    public void buttonItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
-        withExistingParent(block.getId().getPath(), mcLoc("block/button_inventory"))
-                .texture("texture",
-                        ResourceLocation.fromNamespaceAndPath(
-                                Shroud.MOD_ID,
-                                "block/" + baseBlock.getId().getPath()
-                        ));
-    }
-
-    /** Registers the inventory model for a Sculk fence item */
-    public void fenceItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
-        withExistingParent(block.getId().getPath(), mcLoc("block/fence_inventory"))
-                .texture("texture",
-                        ResourceLocation.fromNamespaceAndPath(
-                                Shroud.MOD_ID,
-                                "block/" + baseBlock.getId().getPath()
-                        ));
-    }
-
-    /** Registers the inventory model for a Sculk wall item */
-    public void wallItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
-        withExistingParent(block.getId().getPath(), mcLoc("block/wall_inventory"))
-                .texture("wall",
-                        ResourceLocation.fromNamespaceAndPath(
-                                Shroud.MOD_ID,
-                                "block/" + baseBlock.getId().getPath()
-                        ));
-    }
-
-    /** Registers trim materials **/
-    private static LinkedHashMap<ResourceKey<TrimMaterial>, Float> trimMaterials = new LinkedHashMap<>();
     static {
         trimMaterials.put(TrimMaterials.QUARTZ, 0.1F);
         trimMaterials.put(TrimMaterials.IRON, 0.2F);
@@ -159,7 +51,99 @@ public class ModItemModelProvider extends ItemModelProvider {
         trimMaterials.put(TrimMaterials.AMETHYST, 1.0F);
     }
 
-    // Shoutout to El_Redstoniano for making this; used for trimming custom armors
+    // Creates the item model provider for the Shroud namespace
+    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
+        super(output, Shroud.MOD_ID, existingFileHelper);
+    }
+
+    // Registers all standalone item models produced by this provider
+    @Override
+    protected void registerModels() {
+        // Basic generated items
+        basicItem(ModItems.SCULK_PEARL.get());
+        basicItem(ModItems.GLOOM_PULP.get());
+        basicItem(ModItems.GLOOMSTONE_DUST.get());
+        basicItem(ModItems.TOTEM_OF_LAST_BREATH.get());
+        basicItem(ModItems.RAW_EVENTIDE.get());
+        basicItem(ModItems.EVENTIDE_INGOT.get());
+        basicItem(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
+
+        // Eventide tools and weapons
+        handheldItem(ModItems.EVENTIDE_SWORD.get());
+        handheldItem(ModItems.EVENTIDE_PICKAXE.get());
+        handheldItem(ModItems.EVENTIDE_SHOVEL.get());
+        handheldItem(ModItems.EVENTIDE_AXE.get());
+        handheldItem(ModItems.EVENTIDE_HOE.get());
+
+        // Eventide armor with trim support
+        trimmedArmorItem(ModItems.EVENTIDE_HELMET);
+        trimmedArmorItem(ModItems.EVENTIDE_CHESTPLATE);
+        trimmedArmorItem(ModItems.EVENTIDE_LEGGINGS);
+        trimmedArmorItem(ModItems.EVENTIDE_BOOTS);
+
+        // Plant and block-derived items
+        saplingItem(ModBlocks.SCULK_BULB);
+        saplingItem(ModBlocks.GHOST_BLOOM);
+        saplingItem(ModBlocks.SCULK_SAPLING);
+        buttonItem(ModBlocks.SCULK_BUTTON, ModBlocks.SCULK_PLANKS);
+        fenceItem(ModBlocks.SCULK_FENCE, ModBlocks.SCULK_PLANKS);
+        wallItem(ModBlocks.SCULK_WALL, ModBlocks.SCULK_PLANKS);
+        basicItem(ModBlocks.SCULK_DOOR.asItem());
+
+        saplingItem(ModBlocks.UMBER_SAPLING);
+        buttonItem(ModBlocks.UMBER_BUTTON, ModBlocks.UMBER_PLANKS);
+        fenceItem(ModBlocks.UMBER_FENCE, ModBlocks.UMBER_PLANKS);
+        wallItem(ModBlocks.UMBER_WALL, ModBlocks.UMBER_PLANKS);
+        basicItem(ModBlocks.UMBER_DOOR.asItem());
+
+        // Spawn eggs
+        registerSpawnEggModels();
+    }
+
+    // Registers template_spawn_egg models for all custom spawn eggs
+    private void registerSpawnEggModels() {
+        withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.UMBRAL_HOWLER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.RESONANT_HULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.BLIGHTED_SHADE_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+    }
+
+    // Creates an item/generated model for a plant-like block item using the block texture
+    private ItemModelBuilder saplingItem(DeferredBlock<Block> item) {
+        return withExistingParent(item.getId().getPath(), ResourceLocation.parse("item/generated"))
+                .texture("layer0",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + item.getId().getPath()));
+    }
+
+    // Creates a handheld item model for tools and weapons
+    private ItemModelBuilder handheldItem(DeferredItem<?> item) {
+        return withExistingParent(item.getId().getPath(), ResourceLocation.parse("item/handheld"))
+                .texture("layer0",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "item/" + item.getId().getPath()));
+    }
+
+    // Creates the inventory model for a button item using the supplied base block texture
+    public void buttonItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
+        withExistingParent(block.getId().getPath(), mcLoc("block/button_inventory"))
+                .texture("texture",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + baseBlock.getId().getPath()));
+    }
+
+    // Creates the inventory model for a fence item using the supplied base block texture
+    public void fenceItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
+        withExistingParent(block.getId().getPath(), mcLoc("block/fence_inventory"))
+                .texture("texture",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + baseBlock.getId().getPath()));
+    }
+
+    // Creates the inventory model for a wall item using the supplied base block texture
+    public void wallItem(DeferredBlock<?> block, DeferredBlock<Block> baseBlock) {
+        withExistingParent(block.getId().getPath(), mcLoc("block/wall_inventory"))
+                .texture("wall",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + baseBlock.getId().getPath()));
+    }
+
+    // Generates trim override item models for a custom armor piece
     private void trimmedArmorItem(DeferredItem<ArmorItem> itemDeferredItem) {
         final String MOD_ID = Shroud.MOD_ID;
 
@@ -179,19 +163,16 @@ public class ModItemModelProvider extends ItemModelProvider {
                 String trimPath = "trims/items/" + armorType + "_trim_" + trimMaterial.location().getPath();
                 String currentTrimName = armorItemPath + "_" + trimMaterial.location().getPath() + "_trim";
                 ResourceLocation armorItemResLoc = ResourceLocation.parse(armorItemPath);
-                ResourceLocation trimResLoc = ResourceLocation.parse(trimPath); // minecraft namespace
+                ResourceLocation trimResLoc = ResourceLocation.parse(trimPath);
                 ResourceLocation trimNameResLoc = ResourceLocation.parse(currentTrimName);
 
-                // Ensure the trim texture is acknowledged by the ExistingFileHelper
                 existingFileHelper.trackGenerated(trimResLoc, PackType.CLIENT_RESOURCES, ".png", "textures");
 
-                // Trimmed armor item model
                 getBuilder(currentTrimName)
                         .parent(new ModelFile.UncheckedModelFile("item/generated"))
                         .texture("layer0", armorItemResLoc.getNamespace() + ":item/" + armorItemResLoc.getPath())
                         .texture("layer1", trimResLoc);
 
-                // Base (non-trimmed) armor item model with trim overrides
                 this.withExistingParent(itemDeferredItem.getId().getPath(), mcLoc("item/generated"))
                         .override()
                         .model(new ModelFile.UncheckedModelFile(
@@ -199,9 +180,7 @@ public class ModItemModelProvider extends ItemModelProvider {
                         .predicate(mcLoc("trim_type"), trimValue)
                         .end()
                         .texture("layer0",
-                                ResourceLocation.fromNamespaceAndPath(
-                                        MOD_ID,
-                                        "item/" + itemDeferredItem.getId().getPath()));
+                                ResourceLocation.fromNamespaceAndPath(MOD_ID, "item/" + itemDeferredItem.getId().getPath()));
             });
         }
     }

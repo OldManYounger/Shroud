@@ -16,57 +16,68 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-/** Registers all data-generation providers used by the Shroud mod */
+/**
+ * Entry point for Shroud's data generation pipeline.
+ *
+ * <p>This class listens for NeoForge's gather-data event and wires together all
+ * of the individual datagen providers responsible for producing recipes, block
+ * states, item models, loot tables, tags, and built-in datapack content. Rather
+ * than placing that setup logic across multiple unrelated classes, it keeps the
+ * mod's entire datagen registration flow centralized and easy to expand.
+ *
+ * <p>In the broader context of the project, this class acts as the orchestration
+ * layer for generating the JSON assets that back much of Shroud's content,
+ * helping keep runtime resources consistent with the Java registrations.
+ */
 @EventBusSubscriber(modid = Shroud.MOD_ID)
 public class DataGenerators {
 
-    /** Handles the GatherDataEvent and attaches all server and client datagen providers */
+    // Handles the gather-data event and attaches all active client/server providers
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-
-        // Main generator instance that coordinates all datagen providers
+        // Main generator used to register all providers
         DataGenerator generator = event.getGenerator();
 
-        // Output handler responsible for writing pack files
+        // Destination pack output for generated files
         PackOutput packOutput = generator.getPackOutput();
 
-        // Helper used for validating references to existing models/textures
+        // Helper used to validate references to existing generated or static assets
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        // Registry lookup provider used by recipes, worldgen, tags, etc.
+        // Registry lookup future shared by multiple datagen providers
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        // Loot table generation provider
-        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-                new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+        // Block loot table generation
+        generator.addProvider(event.includeServer(), new LootTableProvider(
+                packOutput,
+                Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)),
+                lookupProvider
+        ));
 
-        // Recipe generation provider
-        generator.addProvider(event.includeServer(),
-                new ModRecipeProvider(packOutput, lookupProvider));
+        // Recipe generation
+        generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput, lookupProvider));
 
-        // Block tags generation provider
+        // Block tag generation
         BlockTagsProvider blockTagsProvider =
                 new ModBlockTagProvider(packOutput, lookupProvider, existingFileHelper);
         generator.addProvider(event.includeServer(), blockTagsProvider);
 
-        // Item tags generation provider
+        // Item tag generation, using block tag contents where needed
         generator.addProvider(event.includeServer(),
                 new ModItemTagProvider(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), existingFileHelper));
 
-        // Item model generation provider
-        generator.addProvider(event.includeClient(),
-                new ModItemModelProvider(packOutput, existingFileHelper));
+        // Item model generation
+        generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
 
-        // Blockstate + block model generation provider
-        generator.addProvider(event.includeClient(),
-                new ModBlockStateProvider(packOutput, existingFileHelper));
+        // Blockstate and block model generation
+        generator.addProvider(event.includeClient(), new ModBlockStateProvider(packOutput, existingFileHelper));
 
-        // Optional: datamap provider (disabled unless needed)
+        // Optional data map generation hook, left disabled unless needed later
         //        generator.addProvider(event.includeServer(),
         //                new ModDataMapProvider(packOutput, lookupProvider));
 
-        // Datapack provider (dimensions, biomes, and other JSON worldgen)
-        generator.addProvider(event.includeServer(),
-                new ModDatapackProvider(packOutput, lookupProvider));
+        // Built-in datapack generation for worldgen and trim content
+        generator.addProvider(event.includeServer(), new ModDatapackProvider(packOutput, lookupProvider));
     }
 }

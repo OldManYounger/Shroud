@@ -25,8 +25,6 @@ import net.oldmanyounger.shroud.network.payload.ShowLastBreathActivationPayload;
 
 @EventBusSubscriber(modid = Shroud.MOD_ID)
 public final class ModTotemEvents {
-    private static final int CORRUPTION_DURATION = 30 * 20;
-
     private ModTotemEvents() {
     }
 
@@ -87,8 +85,8 @@ public final class ModTotemEvents {
 
         player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
         player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
-        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 3));
+        player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 900, 0));
+        player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 600, 4));
     }
 
     private static InteractionHand getTotemHand(ServerPlayer player) {

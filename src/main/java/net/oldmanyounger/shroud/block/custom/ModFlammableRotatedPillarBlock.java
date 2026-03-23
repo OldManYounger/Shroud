@@ -11,59 +11,75 @@ import net.neoforged.neoforge.common.ItemAbility;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import org.jetbrains.annotations.Nullable;
 
-/** Custom rotated pillar block providing flammability and axe-stripping behavior for logs and wood */
+/**
+ * Defines a flammable rotated pillar block for Shroud wood-family blocks such
+ * as logs and wood variants.
+ *
+ * <p>In the broader context of the project, this class provides shared behavior for pillar-like
+ * natural materials that should act like vanilla logs: they can burn, spread
+ * fire, and be transformed into stripped variants when used with an axe. This
+ * keeps the block registration layer simpler by centralizing that reusable
+ * behavior in one place rather than re-implementing it for each custom log type.
+ *
+ * <p>The class extends {@link RotatedPillarBlock} so it retains vanilla axis
+ * rotation behavior, then adds two important pieces of project-specific logic:
+ * flammability values for fire interaction, and axe-stripping rules that map
+ * Shroud logs and woods to their corresponding stripped blocks while preserving
+ * the pillar axis.
+ */
 public class ModFlammableRotatedPillarBlock extends RotatedPillarBlock {
 
-    /** Creates a flammable rotated pillar block using the provided properties */
+    // Creates a new flammable pillar block using the supplied block properties
     public ModFlammableRotatedPillarBlock(Properties properties) {
         super(properties);
     }
 
-    /** Marks all Sculk pillar variants as flammable */
+    // Marks this custom pillar block as flammable from any side
     @Override
     public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return true;
     }
 
-    /** Defines the flammability rate for pillar blocks */
+    // Returns the block's flammability value used when fire checks ignition chance
     @Override
     public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 5;
     }
 
-    /** Defines the fire spread speed for pillar blocks */
+    // Returns the speed at which fire can spread across this block
     @Override
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return 5;
     }
 
-    /** Handles axe-stripping interactions for Sculk logs and wood */
+    // Handles axe interactions that convert custom logs and wood blocks into stripped variants
     @Override
     public @Nullable BlockState getToolModifiedState(BlockState state, UseOnContext context, ItemAbility itemAbility, boolean simulate) {
+        // Only apply custom stripping behavior when the held tool is an axe
         if (context.getItemInHand().getItem() instanceof AxeItem) {
 
-            // Converts Sculk log to its stripped variant
+            // Convert the Sculk log into its stripped version while preserving axis rotation
             if (state.is(ModBlocks.SCULK_LOG)) {
                 return ModBlocks.STRIPPED_SCULK_LOG.get()
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }
 
-            // Converts Sculk wood to its stripped variant
+            // Convert the Sculk wood into its stripped version while preserving axis rotation
             if (state.is(ModBlocks.SCULK_WOOD)) {
                 return ModBlocks.STRIPPED_SCULK_WOOD.get()
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }
 
-            // Converts Umber log to its stripped variant
+            // Convert the Umber log into its stripped version while preserving axis rotation
             if (state.is(ModBlocks.UMBER_LOG)) {
                 return ModBlocks.STRIPPED_UMBER_LOG.get()
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }
 
-            // Converts Umber wood to its stripped variant
+            // Convert the Umber wood into its stripped version while preserving axis rotation
             if (state.is(ModBlocks.UMBER_WOOD)) {
                 return ModBlocks.STRIPPED_UMBER_WOOD.get()
                         .defaultBlockState()
@@ -71,6 +87,7 @@ public class ModFlammableRotatedPillarBlock extends RotatedPillarBlock {
             }
         }
 
+        // Fall back to vanilla or inherited tool modification handling when no custom match is found
         return super.getToolModifiedState(state, context, itemAbility, simulate);
     }
 }

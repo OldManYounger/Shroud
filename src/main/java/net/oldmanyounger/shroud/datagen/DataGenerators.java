@@ -62,8 +62,8 @@ public class DataGenerators {
                 new ModBlockStateProvider(packOutput, existingFileHelper));
 
         // Optional: datamap provider (disabled unless needed)
-//        generator.addProvider(event.includeServer(),
-//                new ModDataMapProvider(packOutput, lookupProvider));
+        //        generator.addProvider(event.includeServer(),
+        //                new ModDataMapProvider(packOutput, lookupProvider));
 
         // Datapack provider (dimensions, biomes, and other JSON worldgen)
         generator.addProvider(event.includeServer(),

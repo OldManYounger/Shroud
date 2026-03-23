@@ -34,6 +34,17 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_gloomstone_dust", has(ModItems.GLOOMSTONE_DUST.get()))
                 .save(recipeOutput);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.TOTEM_OF_LAST_BREATH.get())
+                .pattern("EGE")
+                .pattern("PTP")
+                .pattern("EGE")
+                .define('G', ModItems.GLOOMSTONE_DUST.get())
+                .define('E', Items.ECHO_SHARD)
+                .define('P', ModItems.SCULK_PEARL.get())
+                .define('T', Items.TOTEM_OF_UNDYING)
+                .unlockedBy("has_totem_of_undying", has(Items.TOTEM_OF_UNDYING))
+                .save(recipeOutput);
+
         List<ItemLike> EVENTIDE_SMELTABLES = List.of(
                 ModItems.RAW_EVENTIDE,
                 ModBlocks.EVENTIDE_ORE,

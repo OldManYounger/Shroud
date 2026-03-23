@@ -1,5 +1,11 @@
 - Version 0.3.1
-    - 
+    - Additions
+        - Added corruption mob effect which locks off some hearts for the duration, but also provides strength IV for the duration
+        - Add Totem of Last Breath which revives the player with five hearts, and applies corruption
+    - Changes, Tweaks & Updates
+        - Living Sculk will now convert some items in the player's inventory to their corrupted variants (i.e. totem of undying)
+            - Note that this will never affect any 'irreplaceable' items such as armor, tools, weapons, enchanted books, etc.
+    - Bug Fixes
 
 - Version 0.3.0
     - Added new biome: Sculk Shore, in order to ease the transition between beaches and other biomes

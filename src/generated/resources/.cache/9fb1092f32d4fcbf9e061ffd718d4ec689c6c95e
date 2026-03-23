@@ -1,4 +1,4 @@
-// 1.21.1	2026-03-07T13:29:55.7007251	Recipes
+// 1.21.1	2026-03-23T00:55:29.0524278	Recipes
 c19758685e30acdfd73c1c93d3f65c52977c9d7b data/shroud/advancement/recipes/building_blocks/gloomstone.json
 aea8a957c21d1b6dafdc289df70600ee7bbe865d data/shroud/advancement/recipes/building_blocks/sculk_planks.json
 90e7cb5a4f2e9f86ef8616960b5cf7df9808b842 data/shroud/advancement/recipes/building_blocks/sculk_slab.json
@@ -18,6 +18,7 @@ c1c8a36fa5ece684a011a6dff291bb119f13a7e9 data/shroud/advancement/recipes/combat/
 7e56519cc1e1cff159c03cb20fac1fe0eadefa17 data/shroud/advancement/recipes/combat/eventide_helmet.json
 abf4586fa95394ba82479b294b4350e4409b7f75 data/shroud/advancement/recipes/combat/eventide_leggings.json
 001b9ab4d8cfab5d9f5ecb61316e5b58cffa0748 data/shroud/advancement/recipes/combat/eventide_sword.json
+fd732772ccbb17e60137e2a1a207bc69a6785c4d data/shroud/advancement/recipes/combat/totem_of_last_breath.json
 dec33c5e6d4cb2e785f255ef9e5bd6631fcc704a data/shroud/advancement/recipes/decorations/sculk_fence.json
 6d1797fc9d90fc2c0e0edc7750ba3793491484e5 data/shroud/advancement/recipes/decorations/umber_fence.json
 a9e378ab03df60b9b7630d81a5b04f4f44df492c data/shroud/advancement/recipes/misc/eventide.json
@@ -76,6 +77,7 @@ ee80402ae964901b91544e6a5bcb94ef0b516154 data/shroud/recipe/sculk_wall.json
 452d95df89e4707c0842037889a0d3df7012ccea data/shroud/recipe/sculk_wood.json
 df18c6357e4f2427bd9f97d5463dc9603c86cab2 data/shroud/recipe/stripped_sculk_wood.json
 abfe2dccab02a094755e5a1337740602a752bdf1 data/shroud/recipe/stripped_umber_wood.json
+8d0e10d7e4ac135dc2ba548358b1d9b5435d1159 data/shroud/recipe/totem_of_last_breath.json
 422f34938f72ea102a761414ba63b67c76411253 data/shroud/recipe/umber_button.json
 f2f8880477b25710bce9065e66a3783a5eb1d6c9 data/shroud/recipe/umber_door.json
 739e5a48be0e2bd738ef9c9ce9841143cd94e02f data/shroud/recipe/umber_fence.json

@@ -35,6 +35,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.SCULK_PEARL.get());
         basicItem(ModItems.GLOOM_PULP.get());
         basicItem(ModItems.GLOOMSTONE_DUST.get());
+        basicItem(ModItems.TOTEM_OF_LAST_BREATH.get());
 
         // Registers the Eventide ingot and raw ore texture using item/generated
         basicItem(ModItems.RAW_EVENTIDE.get());

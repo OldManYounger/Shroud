@@ -15,6 +15,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
+import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeRenderer;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
@@ -61,6 +62,7 @@ public class Shroud {
         ModStructures.STRUCTURES.register(modEventBus);
         ModStructurePieces.STRUCTURE_PIECES.register(modEventBus);
         ModStructurePlacements.STRUCTURE_PLACEMENTS.register(modEventBus);
+        ModMobEffects.MOB_EFFECTS.register(modEventBus);
 
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
 

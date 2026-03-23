@@ -124,6 +124,7 @@ public class ModCreativeModeTabs {
                                 // Sculk pearl
                                 output.accept(ModItems.SCULK_PEARL.get());
                                 output.accept(ModItems.GLOOMSTONE_DUST.get());
+                                output.accept(ModItems.TOTEM_OF_LAST_BREATH.get());
 
                                 // Gloom pulp
                                 output.accept(ModItems.GLOOM_PULP.get());

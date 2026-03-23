@@ -44,6 +44,7 @@ import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.LivingSculkAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
+import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.sound.ModSounds;
 import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -267,8 +268,9 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     public boolean doHurtTarget(Entity target) {
         boolean result = super.doHurtTarget(target);
 
-        // Impact sound on successful hit
         if (result) {
+            this.tryCorruptOffhandTotem(target);
+
             this.level().playSound(
                     null,
                     this.getX(),
@@ -643,5 +645,52 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 );
             }
         }
+    }
+
+    private void tryCorruptOffhandTotem(Entity target) {
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+
+        if (!(target instanceof Player player)) {
+            return;
+        }
+
+        if (player.isCreative() || player.isSpectator()) {
+            return;
+        }
+
+        ItemStack offhandStack = player.getOffhandItem();
+        if (!offhandStack.is(Items.TOTEM_OF_UNDYING)) {
+            return;
+        }
+
+        int count = offhandStack.getCount();
+        ItemStack corruptedTotem = new ItemStack(ModItems.TOTEM_OF_LAST_BREATH.get(), count);
+
+        player.setItemInHand(InteractionHand.OFF_HAND, corruptedTotem);
+
+        serverLevel.sendParticles(
+                ParticleTypes.SCULK_SOUL,
+                player.getX(),
+                player.getY() + 1.0D,
+                player.getZ(),
+                12,
+                0.25D,
+                0.4D,
+                0.25D,
+                0.02D
+        );
+
+        serverLevel.playSound(
+                null,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                SoundEvents.SCULK_CATALYST_BLOOM,
+                SoundSource.HOSTILE,
+                0.8F,
+                1.2F
+        );
     }
 }

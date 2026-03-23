@@ -1,5 +1,6 @@
 {
   "item.shroud.sculk_pearl": "Sculk Pearl",
+  "item.shroud.totem_of_last_breath": "Totem of Last Breath",
 
   "block.shroud.sculk_grass": "Sculk Grass",
   "block.shroud.sculk_gravel": "Sculk Gravel",
@@ -101,6 +102,9 @@
   "entity.shroud.umbral_howler": "Umbral Howler",
   "entity.shroud.resonant_hulk": "Resonant Hulk",
   "entity.shroud.blighted_shade": "Blighted Shade",
+
+  "effect.shroud.corruption": "Corruption",
+  "item.shroud.totem_of_last_breath.desc": "Revives you with 5 hearts. The rest are sealed by corruption. But within that corruption... power?",
 
   "creativetab.shroud.shroud_blocks": "Shroud Blocks",
   "creativetab.shroud.shroud_items": "Shroud Items"

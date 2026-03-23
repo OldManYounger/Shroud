@@ -1,4 +1,7 @@
-- Version 0.2.7
+- Version 0.3.1
+    - 
+
+- Version 0.3.0
     - Added new biome: Sculk Shore, in order to ease the transition between beaches and other biomes
     - Added new gravel variant: Sculk Gravel; generates in Shroud similar to the overworld with similar properties
     - Added new variant of the Sculk tree: Scraggle tree, for use in transitory biomes

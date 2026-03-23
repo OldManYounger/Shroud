@@ -12,6 +12,7 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.item.custom.ModArmorItem;
+import net.oldmanyounger.shroud.item.custom.TotemOfLastBreathItem;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class ModItems {
 
     public static final DeferredItem<Item> SCULK_PEARL = ITEMS.register("sculk_pearl",
             () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> TOTEM_OF_LAST_BREATH = ITEMS.register("totem_of_last_breath",
+            () -> new TotemOfLastBreathItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     public static final DeferredItem<Item> GLOOM_PULP = ITEMS.register("gloom_pulp",
             () -> new ItemNameBlockItem(
                     ModBlocks.SCULK_VINES.get(),

@@ -3,6 +3,7 @@
         - Added corruption mob effect which reduces the player's max health for the duration, but also provides strength V
         - Added Totem of Last Breath which revives the player and applies the corruption mob effect
             - Added recipe for Totem of Last Breath using Shroud materials (gloomstone will generate next patch)
+        - Added compatibility with `Colorful Hearts` mod
     - Changes
         - Living Sculk will now convert some items in the player's inventory to their corrupted variants (i.e. totem of undying)
             - Note that this will never affect any 'irreplaceable' items such as armor, tools, weapons, enchanted books, etc.

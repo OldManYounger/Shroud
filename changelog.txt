@@ -1,3 +1,18 @@
+- Version X
+    - Additions
+    - Changes
+    - Removals
+    - Bug Fixes
+
+- Version 0.3.2
+    - Additions
+    - Changes
+    - Removals
+    - Bug Fixes
+        - Added biome translations so that map mods will display the plain-text name properly
+        - Added logo to mods.toml for proper icon display in Prism Launcher and elsewhere
+        - Updated mod description to more accurately reflect the content within said mod
+
 - Version 0.3.1
     - Additions
         - Added corruption mob effect which reduces the player's max health for the duration, but also provides strength V
@@ -10,6 +25,7 @@
     - Removals
     - Bug Fixes
         - Endeavor to re-comment all code up to this point began; completed through datagen as of 0.3.1
+        - In process of adding compatibility with Colorful Hearts renderer
 
 - Version 0.3.0
     - Added new biome: Sculk Shore, in order to ease the transition between beaches and other biomes

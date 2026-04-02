@@ -36,7 +36,7 @@ import java.util.List;
 /** Holds all configured features registered by the Shroud mod */
 public class ModConfiguredFeatures {
 
-    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_TREE = registerKey("sculk_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> VIRELITH_TREE = registerKey("virelith_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCRAGGLE_TREE = registerKey("scraggle_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> UMBER_TREE = registerKey("umber_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> BALDACHIN_TREE = registerKey("baldachin_tree");
@@ -51,7 +51,7 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_EMITTER = registerKey("sculk_emitter");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        register(context, SCULK_TREE, Feature.TREE, buildSculkTree());
+        register(context, VIRELITH_TREE, Feature.TREE, buildVirelithTree());
         register(context, SCRAGGLE_TREE, Feature.TREE, buildScraggleTree());
         register(context, UMBER_TREE, Feature.TREE, buildUmberTree());
         register(context, BALDACHIN_TREE, Feature.TREE, buildBaldachinTree());
@@ -64,11 +64,11 @@ public class ModConfiguredFeatures {
         register(context, SCULK_EMITTER, ModFeatures.SCULK_EMITTER.get(), NoneFeatureConfiguration.INSTANCE);
     }
 
-    private static TreeConfiguration buildSculkTree() {
+    private static TreeConfiguration buildVirelithTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
-                BlockStateProvider.simple(ModBlocks.SCULK_LOG.get()),
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()),
                 new ForkingTrunkPlacer(5, 2, 3),
-                BlockStateProvider.simple(ModBlocks.SCULK_LEAVES.get()),
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()),
                 new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0)),
                 new TwoLayersFeatureSize(1, 0, 2)
         )
@@ -78,10 +78,10 @@ public class ModConfiguredFeatures {
 
     private static TreeConfiguration buildScraggleTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
-                BlockStateProvider.simple(ModBlocks.SCULK_LOG.get()),
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()),
                 // Short trunk, occasional fork-ish behavior
                 new ForkingTrunkPlacer(3, 1, 2),
-                BlockStateProvider.simple(ModBlocks.SCULK_LEAVES.get()),
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()),
                 // Small, sparse canopy similar in spirit to acacia
                 new AcaciaFoliagePlacer(ConstantInt.of(1), ConstantInt.of(0)),
                 // Keeps canopy compact and low
@@ -94,7 +94,7 @@ public class ModConfiguredFeatures {
 
     private static TreeConfiguration buildBaldachinTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
-                BlockStateProvider.simple(ModBlocks.SCULK_LOG.get()), // Trunk block provider (all trunk/branch logs use SCULK_LOG)
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()), // Trunk block provider (all trunk/branch logs use SCULK_LOG)
                 new CherryTrunkPlacer(
                         9,                 // baseHeight: minimum trunk height before random additions
                         3,                 // heightRandA: first random height add (0..1)
@@ -104,7 +104,7 @@ public class ModConfiguredFeatures {
                         UniformInt.of(-4, -3), // branchStartOffsetFromTop: where branch starts relative to top of trunk (higher negative = starts lower)
                         ConstantInt.of(-1) // branchEndOffsetFromTop: target branch end height offset from trunk top (always -1)
                 ),
-                BlockStateProvider.simple(ModBlocks.SCULK_LEAVES.get()), // Foliage block provider (all generated leaves use SCULK_LEAVES)
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()), // Foliage block provider (all generated leaves use SCULK_LEAVES)
                 new CherryFoliagePlacer(
                         ConstantInt.of(4), // radius: base canopy radius
                         ConstantInt.of(0), // offset: vertical shift of foliage attachment center

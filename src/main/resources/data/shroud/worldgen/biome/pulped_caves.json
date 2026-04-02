@@ -33,21 +33,17 @@
       "shroud:lake_lava_underground",
       "shroud:lake_lava_surface"
     ],
-    [
-      "minecraft:amethyst_geode"
-    ],
     [],
     [],
-    [
-      "shroud:ore_eventide_placed",
-      "shroud:ore_netherite_block_placed"
-    ],
+    [],
+    [],
     [
       "shroud:sculk_patch"
     ],
     [
       "minecraft:glow_lichen",
-      "shroud:sculk_vines"
+      "shroud:sculk_vines",
+      "shroud:sculk_gloomstone_geode"
     ]
   ],
   "has_precipitation": true,

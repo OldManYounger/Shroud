@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shroud:block/virelith_slab"
+    },
+    "type=double": {
+      "model": "shroud:block/virelith_planks"
+    },
+    "type=top": {
+      "model": "shroud:block/virelith_slab_top"
+    }
+  }
+}

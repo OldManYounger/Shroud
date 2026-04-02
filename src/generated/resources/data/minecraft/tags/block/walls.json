@@ -1,6 +1,11 @@
 {
   "values": [
-    "shroud:sculk_wall",
+    "shroud:virelith_wall",
+    "shroud:sculk_cobblestone_wall",
+    "shroud:sculk_stone_brick_wall",
+    "shroud:cobbled_sculk_deepslate_wall",
+    "shroud:sculk_deepslate_brick_wall",
+    "shroud:sculk_deepslate_tile_wall",
     "shroud:umber_wall"
   ]
 }

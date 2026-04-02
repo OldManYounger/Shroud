@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "shroud:block/chiseled_sculk_stone_bricks"
+  }
+}

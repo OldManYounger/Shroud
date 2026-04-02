@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    [
+      {
+        "item": "shroud:virelith_log"
+      },
+      {
+        "item": "shroud:virelith_wood"
+      },
+      {
+        "item": "shroud:stripped_virelith_log"
+      },
+      {
+        "item": "shroud:stripped_virelith_wood"
+      }
+    ]
+  ],
+  "result": {
+    "count": 4,
+    "id": "shroud:virelith_planks"
+  }
+}

@@ -42,9 +42,53 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Terrain and plant blocks
         grassBlockWithItem(ModBlocks.SCULK_GRASS);
         blockWithItem(ModBlocks.SCULK_GRAVEL);
-        blockWithItem(ModBlocks.SCULK_STONE);
-        blockWithItem(ModBlocks.SCULK_DEEPSLATE);
         blockWithItem(ModBlocks.GLOOMSTONE);
+
+        blockWithItem(ModBlocks.SCULK_STONE);
+        blockWithItem(ModBlocks.SCULK_COBBLESTONE);
+        blockWithItem(ModBlocks.SCULK_STONE_BRICKS);
+        blockWithItem(ModBlocks.CRACKED_SCULK_STONE_BRICKS);
+        blockWithItem(ModBlocks.CHISELED_SCULK_STONE_BRICKS);
+
+        blockWithItem(ModBlocks.SCULK_DEEPSLATE);
+        blockWithItem(ModBlocks.COBBLED_SCULK_DEEPSLATE);
+        blockWithItem(ModBlocks.SCULK_DEEPSLATE_BRICKS);
+        blockWithItem(ModBlocks.CRACKED_SCULK_DEEPSLATE_BRICKS);
+        blockWithItem(ModBlocks.SCULK_DEEPSLATE_TILES);
+        blockWithItem(ModBlocks.CRACKED_SCULK_DEEPSLATE_TILES);
+
+        // Sculk stone/deepslate structural variants
+        stairsBlock(ModBlocks.SCULK_COBBLESTONE_STAIRS.get(), blockTexture(ModBlocks.SCULK_COBBLESTONE.get()));
+        slabBlock(ModBlocks.SCULK_COBBLESTONE_SLAB.get(), blockTexture(ModBlocks.SCULK_COBBLESTONE.get()), blockTexture(ModBlocks.SCULK_COBBLESTONE.get()));
+        wallBlock(ModBlocks.SCULK_COBBLESTONE_WALL.get(), blockTexture(ModBlocks.SCULK_COBBLESTONE.get()));
+
+        stairsBlock(ModBlocks.SCULK_STONE_BRICK_STAIRS.get(), blockTexture(ModBlocks.SCULK_STONE_BRICKS.get()));
+        slabBlock(ModBlocks.SCULK_STONE_BRICK_SLAB.get(), blockTexture(ModBlocks.SCULK_STONE_BRICKS.get()), blockTexture(ModBlocks.SCULK_STONE_BRICKS.get()));
+        wallBlock(ModBlocks.SCULK_STONE_BRICK_WALL.get(), blockTexture(ModBlocks.SCULK_STONE_BRICKS.get()));
+
+        stairsBlock(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get(), blockTexture(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()));
+        slabBlock(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get(), blockTexture(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()), blockTexture(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()));
+        wallBlock(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get(), blockTexture(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()));
+
+        stairsBlock(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()));
+        slabBlock(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()), blockTexture(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()));
+        wallBlock(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()));
+
+        stairsBlock(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_TILES.get()));
+        slabBlock(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_TILES.get()), blockTexture(ModBlocks.SCULK_DEEPSLATE_TILES.get()));
+        wallBlock(ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get(), blockTexture(ModBlocks.SCULK_DEEPSLATE_TILES.get()));
+
+        blockItem(ModBlocks.SCULK_COBBLESTONE_STAIRS);
+        blockItem(ModBlocks.SCULK_COBBLESTONE_SLAB);
+        blockItem(ModBlocks.SCULK_STONE_BRICK_STAIRS);
+        blockItem(ModBlocks.SCULK_STONE_BRICK_SLAB);
+        blockItem(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS);
+        blockItem(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB);
+        blockItem(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS);
+        blockItem(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB);
+        blockItem(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS);
+        blockItem(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB);
+
         saplingBlock(ModBlocks.SCULK_BULB);
         saplingBlock(ModBlocks.GHOST_BLOOM);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
@@ -58,40 +102,40 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(ModBlocks.SCULK_STONE_EVENTIDE_ORE);
         blockWithItem(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE);
 
-        // Sculk wood set
-        logBlock((RotatedPillarBlock) ModBlocks.SCULK_LOG.get());
-        axisBlock((RotatedPillarBlock) ModBlocks.SCULK_WOOD.get(),
-                blockTexture(ModBlocks.SCULK_LOG.get()),
-                blockTexture(ModBlocks.SCULK_LOG.get()));
-        logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_SCULK_LOG.get());
-        axisBlock((RotatedPillarBlock) ModBlocks.STRIPPED_SCULK_WOOD.get(),
-                blockTexture(ModBlocks.STRIPPED_SCULK_LOG.get()),
-                blockTexture(ModBlocks.STRIPPED_SCULK_LOG.get()));
+        // Virelith wood set
+        logBlock((RotatedPillarBlock) ModBlocks.VIRELITH_LOG.get());
+        axisBlock((RotatedPillarBlock) ModBlocks.VIRELITH_WOOD.get(),
+                blockTexture(ModBlocks.VIRELITH_LOG.get()),
+                blockTexture(ModBlocks.VIRELITH_LOG.get()));
+        logBlock((RotatedPillarBlock) ModBlocks.STRIPPED_VIRELITH_LOG.get());
+        axisBlock((RotatedPillarBlock) ModBlocks.STRIPPED_VIRELITH_WOOD.get(),
+                blockTexture(ModBlocks.STRIPPED_VIRELITH_LOG.get()),
+                blockTexture(ModBlocks.STRIPPED_VIRELITH_LOG.get()));
 
-        blockItem(ModBlocks.SCULK_LOG);
-        blockItem(ModBlocks.SCULK_WOOD);
-        blockItem(ModBlocks.STRIPPED_SCULK_LOG);
-        blockItem(ModBlocks.STRIPPED_SCULK_WOOD);
+        blockItem(ModBlocks.VIRELITH_LOG);
+        blockItem(ModBlocks.VIRELITH_WOOD);
+        blockItem(ModBlocks.STRIPPED_VIRELITH_LOG);
+        blockItem(ModBlocks.STRIPPED_VIRELITH_WOOD);
 
-        blockWithItem(ModBlocks.SCULK_PLANKS);
-        leavesBlock(ModBlocks.SCULK_LEAVES);
-        saplingBlock(ModBlocks.SCULK_SAPLING);
+        blockWithItem(ModBlocks.VIRELITH_PLANKS);
+        leavesBlock(ModBlocks.VIRELITH_LEAVES);
+        saplingBlock(ModBlocks.VIRELITH_SAPLING);
 
-        stairsBlock(ModBlocks.SCULK_STAIRS.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        slabBlock(ModBlocks.SCULK_SLAB.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        buttonBlock(ModBlocks.SCULK_BUTTON.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        pressurePlateBlock(ModBlocks.SCULK_PRESSURE_PLATE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        fenceBlock(ModBlocks.SCULK_FENCE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        fenceGateBlock(ModBlocks.SCULK_FENCE_GATE.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        wallBlock(ModBlocks.SCULK_WALL.get(), blockTexture(ModBlocks.SCULK_PLANKS.get()));
-        doorBlockWithRenderType(ModBlocks.SCULK_DOOR.get(), modLoc("block/sculk_door_bottom"), modLoc("block/sculk_door_top"), "cutout");
-        trapdoorBlockWithRenderType(ModBlocks.SCULK_TRAPDOOR.get(), modLoc("block/sculk_trapdoor"), true, "cutout");
+        stairsBlock(ModBlocks.VIRELITH_STAIRS.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        slabBlock(ModBlocks.VIRELITH_SLAB.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        buttonBlock(ModBlocks.VIRELITH_BUTTON.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        pressurePlateBlock(ModBlocks.VIRELITH_PRESSURE_PLATE.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        fenceBlock(ModBlocks.VIRELITH_FENCE.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        fenceGateBlock(ModBlocks.VIRELITH_FENCE_GATE.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        wallBlock(ModBlocks.VIRELITH_WALL.get(), blockTexture(ModBlocks.VIRELITH_PLANKS.get()));
+        doorBlockWithRenderType(ModBlocks.VIRELITH_DOOR.get(), modLoc("block/virelith_door_bottom"), modLoc("block/virelith_door_top"), "cutout");
+        trapdoorBlockWithRenderType(ModBlocks.VIRELITH_TRAPDOOR.get(), modLoc("block/virelith_trapdoor"), true, "cutout");
 
-        blockItem(ModBlocks.SCULK_STAIRS);
-        blockItem(ModBlocks.SCULK_SLAB);
-        blockItem(ModBlocks.SCULK_PRESSURE_PLATE);
-        blockItem(ModBlocks.SCULK_FENCE_GATE);
-        blockItem(ModBlocks.SCULK_TRAPDOOR, "_bottom");
+        blockItem(ModBlocks.VIRELITH_STAIRS);
+        blockItem(ModBlocks.VIRELITH_SLAB);
+        blockItem(ModBlocks.VIRELITH_PRESSURE_PLATE);
+        blockItem(ModBlocks.VIRELITH_FENCE_GATE);
+        blockItem(ModBlocks.VIRELITH_TRAPDOOR, "_bottom");
 
         // Umber wood set
         logBlock((RotatedPillarBlock) ModBlocks.UMBER_LOG.get());
@@ -243,14 +287,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     // Creates the directional emitter block model and rotates it based on the block's facing state
     private void emitterBlock(Block block) {
-        ModelFile model = models().cube(
+        ModelFile model = models().cubeBottomTop(
                 "sculk_emitter",
-                modLoc("block/sculk_emitter"),
-                modLoc("block/sculk_emitter_top"),
-                modLoc("block/sculk_emitter"),
-                modLoc("block/sculk_emitter"),
-                modLoc("block/sculk_emitter"),
-                modLoc("block/sculk_emitter")
+                modLoc("block/sculk_emitter"),      // side
+                modLoc("block/sculk_emitter"),      // bottom
+                modLoc("block/sculk_emitter_top")   // top
         );
 
         getVariantBuilder(block).forAllStates(state -> {

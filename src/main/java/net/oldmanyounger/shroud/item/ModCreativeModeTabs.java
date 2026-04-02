@@ -23,7 +23,7 @@ public class ModCreativeModeTabs {
 
     /** Main Shroud tab displaying all Sculk wood-set blocks */
     public static final Supplier<CreativeModeTab> SHROUD_BLOCK_TAB = CREATIVE_MODE_TABS.register("shroud_blocks",
-                    () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.SCULK_LOG.get()))
+                    () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModBlocks.VIRELITH_LOG.get()))
                             .title(Component.translatable("creativetab.shroud.shroud_blocks"))
                             .displayItems((params, output) -> {
 
@@ -31,7 +31,36 @@ public class ModCreativeModeTabs {
                                 output.accept(ModBlocks.SCULK_GRASS.get());
                                 output.accept(ModBlocks.SCULK_GRAVEL.get());
                                 output.accept(ModBlocks.SCULK_STONE.get());
+                                output.accept(ModBlocks.SCULK_COBBLESTONE.get());
+                                output.accept(ModBlocks.SCULK_STONE_BRICKS.get());
+                                output.accept(ModBlocks.CRACKED_SCULK_STONE_BRICKS.get());
+                                output.accept(ModBlocks.CHISELED_SCULK_STONE_BRICKS.get());
                                 output.accept(ModBlocks.SCULK_DEEPSLATE.get());
+                                output.accept(ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_BRICKS.get());
+                                output.accept(ModBlocks.CRACKED_SCULK_DEEPSLATE_BRICKS.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_TILES.get());
+                                output.accept(ModBlocks.CRACKED_SCULK_DEEPSLATE_TILES.get());
+
+                                output.accept(ModBlocks.SCULK_COBBLESTONE_STAIRS.get());
+                                output.accept(ModBlocks.SCULK_COBBLESTONE_SLAB.get());
+                                output.accept(ModBlocks.SCULK_COBBLESTONE_WALL.get());
+
+                                output.accept(ModBlocks.SCULK_STONE_BRICK_STAIRS.get());
+                                output.accept(ModBlocks.SCULK_STONE_BRICK_SLAB.get());
+                                output.accept(ModBlocks.SCULK_STONE_BRICK_WALL.get());
+
+                                output.accept(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get());
+                                output.accept(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get());
+                                output.accept(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get());
+
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get());
+
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get());
+                                output.accept(ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get());
 
                                 // Sculk bulb
                                 output.accept(ModBlocks.SCULK_BULB.get());
@@ -46,33 +75,27 @@ public class ModCreativeModeTabs {
                                 output.accept(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get());
                                 output.accept(ModBlocks.EVENTIDE_BLOCK.get());
 
-                                // Sculk logs and wood
-                                output.accept(ModBlocks.SCULK_LOG.get());
-                                output.accept(ModBlocks.SCULK_WOOD.get());
-                                output.accept(ModBlocks.STRIPPED_SCULK_LOG.get());
-                                output.accept(ModBlocks.STRIPPED_SCULK_WOOD.get());
+                                output.accept(ModBlocks.VIRELITH_LOG.get());
+                                output.accept(ModBlocks.VIRELITH_WOOD.get());
+                                output.accept(ModBlocks.STRIPPED_VIRELITH_LOG.get());
+                                output.accept(ModBlocks.STRIPPED_VIRELITH_WOOD.get());
 
-                                // Sculk planks, leaves and sapling
-                                output.accept(ModBlocks.SCULK_PLANKS.get());
-                                output.accept(ModBlocks.SCULK_LEAVES.get());
-                                output.accept(ModBlocks.SCULK_SAPLING.get());
+                                output.accept(ModBlocks.VIRELITH_PLANKS.get());
+                                output.accept(ModBlocks.VIRELITH_LEAVES.get());
+                                output.accept(ModBlocks.VIRELITH_SAPLING.get());
 
-                                // Sculk plank variants
-                                output.accept(ModBlocks.SCULK_STAIRS.get());
-                                output.accept(ModBlocks.SCULK_SLAB.get());
+                                output.accept(ModBlocks.VIRELITH_STAIRS.get());
+                                output.accept(ModBlocks.VIRELITH_SLAB.get());
 
-                                // Sculk structural blocks
-                                output.accept(ModBlocks.SCULK_FENCE.get());
-                                output.accept(ModBlocks.SCULK_FENCE_GATE.get());
-                                output.accept(ModBlocks.SCULK_WALL.get());
+                                output.accept(ModBlocks.VIRELITH_FENCE.get());
+                                output.accept(ModBlocks.VIRELITH_FENCE_GATE.get());
+                                output.accept(ModBlocks.VIRELITH_WALL.get());
 
-                                // Sculk door and trapdoor
-                                output.accept(ModBlocks.SCULK_DOOR.get());
-                                output.accept(ModBlocks.SCULK_TRAPDOOR.get());
+                                output.accept(ModBlocks.VIRELITH_DOOR.get());
+                                output.accept(ModBlocks.VIRELITH_TRAPDOOR.get());
 
-                                // Sculk redstone-interaction blocks
-                                output.accept(ModBlocks.SCULK_PRESSURE_PLATE.get());
-                                output.accept(ModBlocks.SCULK_BUTTON.get());
+                                output.accept(ModBlocks.VIRELITH_PRESSURE_PLATE.get());
+                                output.accept(ModBlocks.VIRELITH_BUTTON.get());
 
                                 // Umber logs and wood
                                 output.accept(ModBlocks.UMBER_LOG.get());

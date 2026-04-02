@@ -55,9 +55,93 @@ public class ModBlocks {
     public static final DeferredBlock<Block> SCULK_STONE = registerBlock("sculk_stone",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
 
-    // Deep sculk stone terrain variant
+    // Sculk stone family variants
+    public static final DeferredBlock<Block> SCULK_COBBLESTONE = registerBlock("sculk_cobblestone",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE)));
+
+    public static final DeferredBlock<Block> SCULK_STONE_BRICKS = registerBlock("sculk_stone_bricks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS)));
+
+    public static final DeferredBlock<Block> CRACKED_SCULK_STONE_BRICKS = registerBlock("cracked_sculk_stone_bricks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRACKED_STONE_BRICKS)));
+
+    public static final DeferredBlock<Block> CHISELED_SCULK_STONE_BRICKS = registerBlock("chiseled_sculk_stone_bricks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CHISELED_STONE_BRICKS)));
+
+    // Sculk cobblestone structural variants (vanilla cobblestone-like)
+    public static final DeferredBlock<StairBlock> SCULK_COBBLESTONE_STAIRS = registerBlock("sculk_cobblestone_stairs",
+            () -> new StairBlock(ModBlocks.SCULK_COBBLESTONE.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_STAIRS)));
+
+    public static final DeferredBlock<SlabBlock> SCULK_COBBLESTONE_SLAB = registerBlock("sculk_cobblestone_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_SLAB)));
+
+    public static final DeferredBlock<WallBlock> SCULK_COBBLESTONE_WALL = registerBlock("sculk_cobblestone_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_WALL)));
+
+    // Sculk stone bricks structural variants (vanilla stone bricks-like)
+    public static final DeferredBlock<StairBlock> SCULK_STONE_BRICK_STAIRS = registerBlock("sculk_stone_brick_stairs",
+            () -> new StairBlock(ModBlocks.SCULK_STONE_BRICKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICK_STAIRS)));
+
+    public static final DeferredBlock<SlabBlock> SCULK_STONE_BRICK_SLAB = registerBlock("sculk_stone_brick_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICK_SLAB)));
+
+    public static final DeferredBlock<WallBlock> SCULK_STONE_BRICK_WALL = registerBlock("sculk_stone_brick_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICK_WALL)));
+
+    // Deep sculk stone terrain block
     public static final DeferredBlock<Block> SCULK_DEEPSLATE = registerBlock("sculk_deepslate",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)));
+
+    // Sculk deepslate family variants
+    public static final DeferredBlock<Block> COBBLED_SCULK_DEEPSLATE = registerBlock("cobbled_sculk_deepslate",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE)));
+
+    public static final DeferredBlock<Block> SCULK_DEEPSLATE_BRICKS = registerBlock("sculk_deepslate_bricks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICKS)));
+
+    public static final DeferredBlock<Block> CRACKED_SCULK_DEEPSLATE_BRICKS = registerBlock("cracked_sculk_deepslate_bricks",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRACKED_DEEPSLATE_BRICKS)));
+
+    public static final DeferredBlock<Block> SCULK_DEEPSLATE_TILES = registerBlock("sculk_deepslate_tiles",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILES)));
+
+    public static final DeferredBlock<Block> CRACKED_SCULK_DEEPSLATE_TILES = registerBlock("cracked_sculk_deepslate_tiles",
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRACKED_DEEPSLATE_TILES)));
+
+    // Cobbled sculk deepslate structural variants (vanilla cobbled deepslate-like)
+    public static final DeferredBlock<StairBlock> COBBLED_SCULK_DEEPSLATE_STAIRS = registerBlock("cobbled_sculk_deepslate_stairs",
+            () -> new StairBlock(ModBlocks.COBBLED_SCULK_DEEPSLATE.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE_STAIRS)));
+
+    public static final DeferredBlock<SlabBlock> COBBLED_SCULK_DEEPSLATE_SLAB = registerBlock("cobbled_sculk_deepslate_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE_SLAB)));
+
+    public static final DeferredBlock<WallBlock> COBBLED_SCULK_DEEPSLATE_WALL = registerBlock("cobbled_sculk_deepslate_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE_WALL)));
+
+    // Sculk deepslate bricks structural variants (vanilla deepslate bricks-like)
+    public static final DeferredBlock<StairBlock> SCULK_DEEPSLATE_BRICK_STAIRS = registerBlock("sculk_deepslate_brick_stairs",
+            () -> new StairBlock(ModBlocks.SCULK_DEEPSLATE_BRICKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICK_STAIRS)));
+
+    public static final DeferredBlock<SlabBlock> SCULK_DEEPSLATE_BRICK_SLAB = registerBlock("sculk_deepslate_brick_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICK_SLAB)));
+
+    public static final DeferredBlock<WallBlock> SCULK_DEEPSLATE_BRICK_WALL = registerBlock("sculk_deepslate_brick_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICK_WALL)));
+
+    // Sculk deepslate tiles structural variants (vanilla deepslate tiles-like)
+    public static final DeferredBlock<StairBlock> SCULK_DEEPSLATE_TILE_STAIRS = registerBlock("sculk_deepslate_tile_stairs",
+            () -> new StairBlock(ModBlocks.SCULK_DEEPSLATE_TILES.get().defaultBlockState(),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILE_STAIRS)));
+
+    public static final DeferredBlock<SlabBlock> SCULK_DEEPSLATE_TILE_SLAB = registerBlock("sculk_deepslate_tile_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILE_SLAB)));
+
+    public static final DeferredBlock<WallBlock> SCULK_DEEPSLATE_TILE_WALL = registerBlock("sculk_deepslate_tile_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILE_WALL)));
 
     // Falling sculk gravel terrain block
     public static final DeferredBlock<Block> SCULK_GRAVEL = registerBlock("sculk_gravel",
@@ -147,108 +231,102 @@ public class ModBlocks {
                             .sound(SoundType.DEEPSLATE)));
 
     // -------------------------------------------------------------------------
-    // Sculk wood set
+    // Virelith wood set (renamed from Sculk wood set)
     // -------------------------------------------------------------------------
 
-    // Sculk log and wood variants
-    public static final DeferredBlock<Block> SCULK_LOG = registerBlock("sculk_log",
+    // Virelith log and wood variants
+    public static final DeferredBlock<Block> VIRELITH_LOG = registerBlock("virelith_log",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
-    public static final DeferredBlock<Block> SCULK_WOOD = registerBlock("sculk_wood",
+    public static final DeferredBlock<Block> VIRELITH_WOOD = registerBlock("virelith_wood",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_WOOD)));
-    public static final DeferredBlock<Block> STRIPPED_SCULK_LOG = registerBlock("stripped_sculk_log",
+    public static final DeferredBlock<Block> STRIPPED_VIRELITH_LOG = registerBlock("stripped_virelith_log",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_LOG)));
-    public static final DeferredBlock<Block> STRIPPED_SCULK_WOOD = registerBlock("stripped_sculk_wood",
+    public static final DeferredBlock<Block> STRIPPED_VIRELITH_WOOD = registerBlock("stripped_virelith_wood",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD)));
 
-    // Sculk plank block
-    public static final DeferredBlock<Block> SCULK_PLANKS = registerBlock("sculk_planks",
+    // Virelith plank block
+    public static final DeferredBlock<Block> VIRELITH_PLANKS = registerBlock("virelith_planks",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)) {
-                // Marks sculk planks as flammable
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
-                // Sets the flammability value for sculk planks
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 20;
                 }
 
-                // Sets the fire spread speed for sculk planks
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 5;
                 }
             });
 
-    // Sculk leaves block
-    public static final DeferredBlock<Block> SCULK_LEAVES = registerBlock("sculk_leaves",
+    // Virelith leaves block
+    public static final DeferredBlock<Block> VIRELITH_LEAVES = registerBlock("virelith_leaves",
             () -> new ModLeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)) {
-                // Marks sculk leaves as flammable
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
-                // Sets the flammability value for sculk leaves
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 60;
                 }
 
-                // Sets the fire spread speed for sculk leaves
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 30;
                 }
             });
 
-    // Sculk sapling tied to sculk terrain
-    public static final DeferredBlock<Block> SCULK_SAPLING = registerBlock(
-            "sculk_sapling",
+    // Virelith sapling tied to sculk terrain
+    public static final DeferredBlock<Block> VIRELITH_SAPLING = registerBlock(
+            "virelith_sapling",
             () -> new ModSaplingBlock(
-                    ModTreeGrowers.SCULK,
+                    ModTreeGrowers.VIRELITH,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING),
                     ModBlocks.SCULK_GRASS,
                     () -> Blocks.SCULK));
 
-    // Sculk building set variants
-    public static final DeferredBlock<StairBlock> SCULK_STAIRS = registerBlock("sculk_stairs",
-            () -> new StairBlock(ModBlocks.SCULK_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.of()
+    // Virelith building set variants
+    public static final DeferredBlock<StairBlock> VIRELITH_STAIRS = registerBlock("virelith_stairs",
+            () -> new StairBlock(ModBlocks.VIRELITH_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<SlabBlock> SCULK_SLAB = registerBlock("sculk_slab",
+    public static final DeferredBlock<SlabBlock> VIRELITH_SLAB = registerBlock("virelith_slab",
             () -> new SlabBlock(BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<PressurePlateBlock> SCULK_PRESSURE_PLATE = registerBlock("sculk_pressure_plate",
+    public static final DeferredBlock<PressurePlateBlock> VIRELITH_PRESSURE_PLATE = registerBlock("virelith_pressure_plate",
             () -> new PressurePlateBlock(BlockSetType.IRON, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<ButtonBlock> SCULK_BUTTON = registerBlock("sculk_button",
+    public static final DeferredBlock<ButtonBlock> VIRELITH_BUTTON = registerBlock("virelith_button",
             () -> new ButtonBlock(BlockSetType.IRON, 20, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()
                     .noCollission()));
-    public static final DeferredBlock<FenceBlock> SCULK_FENCE = registerBlock("sculk_fence",
+    public static final DeferredBlock<FenceBlock> VIRELITH_FENCE = registerBlock("virelith_fence",
             () -> new FenceBlock(BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<FenceGateBlock> SCULK_FENCE_GATE = registerBlock("sculk_fence_gate",
+    public static final DeferredBlock<FenceGateBlock> VIRELITH_FENCE_GATE = registerBlock("virelith_fence_gate",
             () -> new FenceGateBlock(WoodType.ACACIA, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<WallBlock> SCULK_WALL = registerBlock("sculk_wall",
+    public static final DeferredBlock<WallBlock> VIRELITH_WALL = registerBlock("virelith_wall",
             () -> new WallBlock(BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()));
-    public static final DeferredBlock<DoorBlock> SCULK_DOOR = registerBlock("sculk_door",
+    public static final DeferredBlock<DoorBlock> VIRELITH_DOOR = registerBlock("virelith_door",
             () -> new DoorBlock(BlockSetType.ACACIA, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
-    public static final DeferredBlock<TrapDoorBlock> SCULK_TRAPDOOR = registerBlock("sculk_trapdoor",
+    public static final DeferredBlock<TrapDoorBlock> VIRELITH_TRAPDOOR = registerBlock("virelith_trapdoor",
             () -> new TrapDoorBlock(BlockSetType.ACACIA, BlockBehaviour.Properties.of()
                     .strength(2f)
                     .requiresCorrectToolForDrops()
@@ -316,7 +394,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> UMBER_SAPLING = registerBlock(
             "umber_sapling",
             () -> new ModSaplingBlock(
-                    ModTreeGrowers.SCULK,
+                    ModTreeGrowers.UMBER,
                     BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_SAPLING),
                     ModBlocks.SCULK_GRASS,
                     () -> Blocks.SCULK));

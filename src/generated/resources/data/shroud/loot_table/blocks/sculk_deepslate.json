@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "shroud:sculk_deepslate"
+          "name": "shroud:cobbled_sculk_deepslate"
         }
       ],
       "rolls": 1.0

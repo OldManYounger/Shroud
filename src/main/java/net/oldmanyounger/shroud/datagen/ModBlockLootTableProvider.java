@@ -51,9 +51,40 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         // Terrain and utility blocks
         add(ModBlocks.SCULK_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, Blocks.SCULK));
         add(ModBlocks.SCULK_GRAVEL.get(), this::createSculkGravelDropTable);
-        dropSelf(ModBlocks.SCULK_STONE.get());
-        dropSelf(ModBlocks.SCULK_DEEPSLATE.get());
         add(ModBlocks.GLOOMSTONE.get(), block -> createSingleItemTableWithSilkTouch(block, ModItems.GLOOMSTONE_DUST.get()));
+
+        add(ModBlocks.SCULK_STONE.get(), block -> createSingleItemTable(ModBlocks.SCULK_COBBLESTONE.get()));
+        dropSelf(ModBlocks.SCULK_COBBLESTONE.get());
+        dropSelf(ModBlocks.SCULK_STONE_BRICKS.get());
+        dropSelf(ModBlocks.CRACKED_SCULK_STONE_BRICKS.get());
+        dropSelf(ModBlocks.CHISELED_SCULK_STONE_BRICKS.get());
+
+        add(ModBlocks.SCULK_DEEPSLATE.get(), block -> createSingleItemTable(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()));
+        dropSelf(ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_BRICKS.get());
+        dropSelf(ModBlocks.CRACKED_SCULK_DEEPSLATE_BRICKS.get());
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_TILES.get());
+        dropSelf(ModBlocks.CRACKED_SCULK_DEEPSLATE_TILES.get());
+
+        dropSelf(ModBlocks.SCULK_COBBLESTONE_STAIRS.get());
+        add(ModBlocks.SCULK_COBBLESTONE_SLAB.get(), block -> createSlabItemTable(ModBlocks.SCULK_COBBLESTONE_SLAB.get()));
+        dropSelf(ModBlocks.SCULK_COBBLESTONE_WALL.get());
+
+        dropSelf(ModBlocks.SCULK_STONE_BRICK_STAIRS.get());
+        add(ModBlocks.SCULK_STONE_BRICK_SLAB.get(), block -> createSlabItemTable(ModBlocks.SCULK_STONE_BRICK_SLAB.get()));
+        dropSelf(ModBlocks.SCULK_STONE_BRICK_WALL.get());
+
+        dropSelf(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get());
+        add(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get(), block -> createSlabItemTable(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get()));
+        dropSelf(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get());
+
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get());
+        add(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get(), block -> createSlabItemTable(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get()));
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get());
+
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get());
+        add(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get(), block -> createSlabItemTable(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get()));
+        dropSelf(ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get());
 
         // Plants and flora
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
@@ -73,24 +104,24 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get(), block -> createOreDrop(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
         add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get(), block -> createOreDrop(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get(), ModItems.RAW_EVENTIDE.get()));
 
-        // Sculk wood set
-        dropSelf(ModBlocks.SCULK_LOG.get());
-        dropSelf(ModBlocks.SCULK_WOOD.get());
-        dropSelf(ModBlocks.STRIPPED_SCULK_LOG.get());
-        dropSelf(ModBlocks.STRIPPED_SCULK_WOOD.get());
-        dropSelf(ModBlocks.SCULK_PLANKS.get());
-        dropSelf(ModBlocks.SCULK_SAPLING.get());
-        add(ModBlocks.SCULK_LEAVES.get(),
-                block -> createLeavesDrops(block, ModBlocks.SCULK_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
-        dropSelf(ModBlocks.SCULK_STAIRS.get());
-        add(ModBlocks.SCULK_SLAB.get(), block -> createSlabItemTable(ModBlocks.SCULK_SLAB.get()));
-        dropSelf(ModBlocks.SCULK_BUTTON.get());
-        dropSelf(ModBlocks.SCULK_PRESSURE_PLATE.get());
-        dropSelf(ModBlocks.SCULK_FENCE.get());
-        dropSelf(ModBlocks.SCULK_FENCE_GATE.get());
-        dropSelf(ModBlocks.SCULK_WALL.get());
-        dropSelf(ModBlocks.SCULK_TRAPDOOR.get());
-        add(ModBlocks.SCULK_DOOR.get(), block -> createDoorTable(ModBlocks.SCULK_DOOR.get()));
+        // Virelith wood set
+        dropSelf(ModBlocks.VIRELITH_LOG.get());
+        dropSelf(ModBlocks.VIRELITH_WOOD.get());
+        dropSelf(ModBlocks.STRIPPED_VIRELITH_LOG.get());
+        dropSelf(ModBlocks.STRIPPED_VIRELITH_WOOD.get());
+        dropSelf(ModBlocks.VIRELITH_PLANKS.get());
+        dropSelf(ModBlocks.VIRELITH_SAPLING.get());
+        add(ModBlocks.VIRELITH_LEAVES.get(),
+                block -> createLeavesDrops(block, ModBlocks.VIRELITH_SAPLING.get(), NORMAL_LEAVES_SAPLING_CHANCES));
+        dropSelf(ModBlocks.VIRELITH_STAIRS.get());
+        add(ModBlocks.VIRELITH_SLAB.get(), block -> createSlabItemTable(ModBlocks.VIRELITH_SLAB.get()));
+        dropSelf(ModBlocks.VIRELITH_BUTTON.get());
+        dropSelf(ModBlocks.VIRELITH_PRESSURE_PLATE.get());
+        dropSelf(ModBlocks.VIRELITH_FENCE.get());
+        dropSelf(ModBlocks.VIRELITH_FENCE_GATE.get());
+        dropSelf(ModBlocks.VIRELITH_WALL.get());
+        dropSelf(ModBlocks.VIRELITH_TRAPDOOR.get());
+        add(ModBlocks.VIRELITH_DOOR.get(), block -> createDoorTable(ModBlocks.VIRELITH_DOOR.get()));
 
         // Umber wood set
         dropSelf(ModBlocks.UMBER_LOG.get());

@@ -64,15 +64,15 @@ public class ModItemTagProvider extends ItemTagsProvider {
         tag(ItemTags.TRIM_TEMPLATES)
                 .add(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
 
-        // Sculk wood family
+        // Virelith wood family
         tag(ItemTags.LOGS_THAT_BURN)
-                .add(ModBlocks.SCULK_LOG.get().asItem())
-                .add(ModBlocks.SCULK_WOOD.get().asItem())
-                .add(ModBlocks.STRIPPED_SCULK_LOG.get().asItem())
-                .add(ModBlocks.STRIPPED_SCULK_WOOD.get().asItem());
+                .add(ModBlocks.VIRELITH_LOG.get().asItem())
+                .add(ModBlocks.VIRELITH_WOOD.get().asItem())
+                .add(ModBlocks.STRIPPED_VIRELITH_LOG.get().asItem())
+                .add(ModBlocks.STRIPPED_VIRELITH_WOOD.get().asItem());
 
         tag(ItemTags.PLANKS)
-                .add(ModBlocks.SCULK_PLANKS.asItem());
+                .add(ModBlocks.VIRELITH_PLANKS.asItem());
 
         // Umber wood family
         tag(ItemTags.LOGS_THAT_BURN)

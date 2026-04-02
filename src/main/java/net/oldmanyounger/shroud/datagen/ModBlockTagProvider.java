@@ -61,6 +61,32 @@ public class ModBlockTagProvider extends BlockTagsProvider {
 
         // Mining and ore tags
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .add(ModBlocks.SCULK_STONE.get())
+                .add(ModBlocks.SCULK_COBBLESTONE.get())
+                .add(ModBlocks.SCULK_STONE_BRICKS.get())
+                .add(ModBlocks.CRACKED_SCULK_STONE_BRICKS.get())
+                .add(ModBlocks.CHISELED_SCULK_STONE_BRICKS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICKS.get())
+                .add(ModBlocks.CRACKED_SCULK_DEEPSLATE_BRICKS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILES.get())
+                .add(ModBlocks.CRACKED_SCULK_DEEPSLATE_TILES.get())
+                .add(ModBlocks.SCULK_COBBLESTONE_STAIRS.get())
+                .add(ModBlocks.SCULK_COBBLESTONE_SLAB.get())
+                .add(ModBlocks.SCULK_COBBLESTONE_WALL.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_STAIRS.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_SLAB.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_WALL.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get())
                 .add(ModBlocks.EVENTIDE_BLOCK.get())
                 .add(ModBlocks.EVENTIDE_ORE.get())
                 .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
@@ -97,49 +123,70 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .addTag(BlockTags.INCORRECT_FOR_IRON_TOOL)
                 .remove(ModTags.Blocks.NEEDS_EVENTIDE_TOOL);
 
-        // Sculk wood set
+        // Virelith wood set
         wooden(
-                ModBlocks.SCULK_LOG.get(),
-                ModBlocks.SCULK_WOOD.get(),
-                ModBlocks.STRIPPED_SCULK_LOG.get(),
-                ModBlocks.STRIPPED_SCULK_WOOD.get(),
-                ModBlocks.SCULK_PLANKS.get(),
-                ModBlocks.SCULK_STAIRS.get(),
-                ModBlocks.SCULK_SLAB.get(),
-                ModBlocks.SCULK_FENCE.get(),
-                ModBlocks.SCULK_FENCE_GATE.get(),
-                ModBlocks.SCULK_WALL.get(),
-                ModBlocks.SCULK_DOOR.get(),
-                ModBlocks.SCULK_TRAPDOOR.get(),
-                ModBlocks.SCULK_BUTTON.get(),
-                ModBlocks.SCULK_PRESSURE_PLATE.get()
+                ModBlocks.VIRELITH_LOG.get(),
+                ModBlocks.VIRELITH_WOOD.get(),
+                ModBlocks.STRIPPED_VIRELITH_LOG.get(),
+                ModBlocks.STRIPPED_VIRELITH_WOOD.get(),
+                ModBlocks.VIRELITH_PLANKS.get(),
+                ModBlocks.VIRELITH_STAIRS.get(),
+                ModBlocks.VIRELITH_SLAB.get(),
+                ModBlocks.VIRELITH_FENCE.get(),
+                ModBlocks.VIRELITH_FENCE_GATE.get(),
+                ModBlocks.VIRELITH_WALL.get(),
+                ModBlocks.VIRELITH_DOOR.get(),
+                ModBlocks.VIRELITH_TRAPDOOR.get(),
+                ModBlocks.VIRELITH_BUTTON.get(),
+                ModBlocks.VIRELITH_PRESSURE_PLATE.get()
         );
 
         tag(BlockTags.LOGS)
-                .add(ModBlocks.SCULK_LOG.get())
-                .add(ModBlocks.SCULK_WOOD.get())
-                .add(ModBlocks.STRIPPED_SCULK_LOG.get())
-                .add(ModBlocks.STRIPPED_SCULK_WOOD.get());
+                .add(ModBlocks.VIRELITH_LOG.get())
+                .add(ModBlocks.VIRELITH_WOOD.get())
+                .add(ModBlocks.STRIPPED_VIRELITH_LOG.get())
+                .add(ModBlocks.STRIPPED_VIRELITH_WOOD.get());
 
         tag(BlockTags.LOGS_THAT_BURN)
-                .add(ModBlocks.SCULK_LOG.get())
-                .add(ModBlocks.SCULK_WOOD.get())
-                .add(ModBlocks.STRIPPED_SCULK_LOG.get())
-                .add(ModBlocks.STRIPPED_SCULK_WOOD.get());
+                .add(ModBlocks.VIRELITH_LOG.get())
+                .add(ModBlocks.VIRELITH_WOOD.get())
+                .add(ModBlocks.STRIPPED_VIRELITH_LOG.get())
+                .add(ModBlocks.STRIPPED_VIRELITH_WOOD.get());
 
-        tag(BlockTags.PLANKS).add(ModBlocks.SCULK_PLANKS.get());
-        tag(BlockTags.LEAVES).add(ModBlocks.SCULK_LEAVES.get());
-        tag(BlockTags.SAPLINGS).add(ModBlocks.SCULK_SAPLING.get());
+        tag(BlockTags.PLANKS).add(ModBlocks.VIRELITH_PLANKS.get());
+        tag(BlockTags.LEAVES).add(ModBlocks.VIRELITH_LEAVES.get());
+        tag(BlockTags.SAPLINGS).add(ModBlocks.VIRELITH_SAPLING.get());
 
-        stairs(ModBlocks.SCULK_STAIRS.get());
-        slab(ModBlocks.SCULK_SLAB.get());
-        fence(ModBlocks.SCULK_FENCE.get());
-        fenceGate(ModBlocks.SCULK_FENCE_GATE.get());
-        wall(ModBlocks.SCULK_WALL.get());
-        door(ModBlocks.SCULK_DOOR.get());
-        trapdoor(ModBlocks.SCULK_TRAPDOOR.get());
-        button(ModBlocks.SCULK_BUTTON.get());
-        pressurePlate(ModBlocks.SCULK_PRESSURE_PLATE.get());
+        stairs(ModBlocks.VIRELITH_STAIRS.get());
+        slab(ModBlocks.VIRELITH_SLAB.get());
+        fence(ModBlocks.VIRELITH_FENCE.get());
+        fenceGate(ModBlocks.VIRELITH_FENCE_GATE.get());
+        wall(ModBlocks.VIRELITH_WALL.get());
+        door(ModBlocks.VIRELITH_DOOR.get());
+        trapdoor(ModBlocks.VIRELITH_TRAPDOOR.get());
+        button(ModBlocks.VIRELITH_BUTTON.get());
+        pressurePlate(ModBlocks.VIRELITH_PRESSURE_PLATE.get());
+
+        tag(BlockTags.STAIRS)
+                .add(ModBlocks.SCULK_COBBLESTONE_STAIRS.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_STAIRS.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get());
+
+        tag(BlockTags.SLABS)
+                .add(ModBlocks.SCULK_COBBLESTONE_SLAB.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_SLAB.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get());
+
+        tag(BlockTags.WALLS)
+                .add(ModBlocks.SCULK_COBBLESTONE_WALL.get())
+                .add(ModBlocks.SCULK_STONE_BRICK_WALL.get())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get())
+                .add(ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get());
 
         // Umber wood set
         wooden(

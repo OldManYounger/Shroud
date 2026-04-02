@@ -59,15 +59,14 @@ public class ModFlammableRotatedPillarBlock extends RotatedPillarBlock {
         if (context.getItemInHand().getItem() instanceof AxeItem) {
 
             // Convert the Sculk log into its stripped version while preserving axis rotation
-            if (state.is(ModBlocks.SCULK_LOG)) {
-                return ModBlocks.STRIPPED_SCULK_LOG.get()
+            if (state.is(ModBlocks.VIRELITH_LOG)) {
+                return ModBlocks.STRIPPED_VIRELITH_LOG.get()
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }
 
-            // Convert the Sculk wood into its stripped version while preserving axis rotation
-            if (state.is(ModBlocks.SCULK_WOOD)) {
-                return ModBlocks.STRIPPED_SCULK_WOOD.get()
+            if (state.is(ModBlocks.VIRELITH_WOOD)) {
+                return ModBlocks.STRIPPED_VIRELITH_WOOD.get()
                         .defaultBlockState()
                         .setValue(AXIS, state.getValue(AXIS));
             }

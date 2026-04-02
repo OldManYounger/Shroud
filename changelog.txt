@@ -4,6 +4,25 @@
     - Removals
     - Bug Fixes
 
+- Version 0.4.0
+    - Additions
+        - Added sculk stone and sculk deepslate variants, as well as cobbled versions
+            - Added stairs, slabs, etc. for all relevant variations
+            - Added necessary crafting and smelting recipes where necessary
+        - Added new gloomstone geode to Shroud dimension
+            - Similar to amethyst geodes, but containing gloomstone and no crystals (for now)
+    - Changes
+        - Sculk wood and all references have been renamed to virelith; textures remain the same
+        - Biome names for some biomes have been updated from their placeholders
+            - Sculk Forest -> Umbral Forest
+            - Sculk Savanna -> Pallid Grove
+            - Sculk Shore -> Shrouded Shore
+        - Sculk emitter will not emit sound when a wool block is placed on it's bottom side (relative to where it's facing)
+    - Removals
+        - Removed Netherite block feature from all biomes; this was a holdover from testing
+    - Bug Fixes
+        - Fixed broken particle texture when breaking a sculk emitter
+
 - Version 0.3.2
     - Additions
     - Changes

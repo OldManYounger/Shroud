@@ -34,10 +34,7 @@
     [
       "shroud:sculk_patch"
     ],
-    [
-      "shroud:ore_eventide_placed",
-      "shroud:ore_netherite_block_placed"
-    ],
+    [],
     [
       "minecraft:glow_lichen"
     ],

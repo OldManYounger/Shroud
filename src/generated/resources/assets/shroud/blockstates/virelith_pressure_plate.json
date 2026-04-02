@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "shroud:block/virelith_pressure_plate"
+    },
+    "powered=true": {
+      "model": "shroud:block/virelith_pressure_plate_down"
+    }
+  }
+}

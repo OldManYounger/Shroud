@@ -68,6 +68,12 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.EVENTIDE_INGOT.get());
         basicItem(ModItems.EVENTIDE_SMITHING_TEMPLATE.get());
 
+        wallItem(ModBlocks.SCULK_COBBLESTONE_WALL, ModBlocks.SCULK_COBBLESTONE);
+        wallItem(ModBlocks.SCULK_STONE_BRICK_WALL, ModBlocks.SCULK_STONE_BRICKS);
+        wallItem(ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL, ModBlocks.COBBLED_SCULK_DEEPSLATE);
+        wallItem(ModBlocks.SCULK_DEEPSLATE_BRICK_WALL, ModBlocks.SCULK_DEEPSLATE_BRICKS);
+        wallItem(ModBlocks.SCULK_DEEPSLATE_TILE_WALL, ModBlocks.SCULK_DEEPSLATE_TILES);
+
         // Eventide tools and weapons
         handheldItem(ModItems.EVENTIDE_SWORD.get());
         handheldItem(ModItems.EVENTIDE_PICKAXE.get());
@@ -84,11 +90,11 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Plant and block-derived items
         saplingItem(ModBlocks.SCULK_BULB);
         saplingItem(ModBlocks.GHOST_BLOOM);
-        saplingItem(ModBlocks.SCULK_SAPLING);
-        buttonItem(ModBlocks.SCULK_BUTTON, ModBlocks.SCULK_PLANKS);
-        fenceItem(ModBlocks.SCULK_FENCE, ModBlocks.SCULK_PLANKS);
-        wallItem(ModBlocks.SCULK_WALL, ModBlocks.SCULK_PLANKS);
-        basicItem(ModBlocks.SCULK_DOOR.asItem());
+        saplingItem(ModBlocks.VIRELITH_SAPLING);
+        buttonItem(ModBlocks.VIRELITH_BUTTON, ModBlocks.VIRELITH_PLANKS);
+        fenceItem(ModBlocks.VIRELITH_FENCE, ModBlocks.VIRELITH_PLANKS);
+        wallItem(ModBlocks.VIRELITH_WALL, ModBlocks.VIRELITH_PLANKS);
+        basicItem(ModBlocks.VIRELITH_DOOR.asItem());
 
         saplingItem(ModBlocks.UMBER_SAPLING);
         buttonItem(ModBlocks.UMBER_BUTTON, ModBlocks.UMBER_PLANKS);

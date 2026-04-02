@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "shroud:block/cobbled_sculk_deepslate",
+    "side": "shroud:block/cobbled_sculk_deepslate",
+    "top": "shroud:block/cobbled_sculk_deepslate"
+  }
+}

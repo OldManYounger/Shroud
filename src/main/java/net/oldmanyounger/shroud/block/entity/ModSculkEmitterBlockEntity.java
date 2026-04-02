@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -46,9 +47,28 @@ public class ModSculkEmitterBlockEntity extends BlockEntity {
     // Countdown until the next particle emission event
     private int ticksUntilNextSpew = -1;
 
+    // True when wool is placed on the block behind the emitter (opposite facing)
+    private boolean soundSuppressedByWool = false;
+
     // Creates the sculk emitter block entity for the registered emitter block
     public ModSculkEmitterBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.SCULK_EMITTER.get(), pos, state);
+    }
+
+    // Recomputes whether sound should be suppressed by adjacent wool behind the emitter face
+    public void updateWoolMuteState() {
+        if (level == null) return;
+
+        Direction facing = getBlockState().getValue(DirectionalBlock.FACING);
+        BlockPos behindEmitter = worldPosition.relative(facing.getOpposite());
+
+        this.soundSuppressedByWool = level.getBlockState(behindEmitter).is(BlockTags.WOOL);
+        setChanged();
+    }
+
+    // Returns true when the spew sound is allowed to play
+    public boolean canPlaySpewSound() {
+        return !soundSuppressedByWool;
     }
 
     // Server-side tick entry point that waits for the next emission cycle, then spawns particles and sound
@@ -78,8 +98,10 @@ public class ModSculkEmitterBlockEntity extends BlockEntity {
         Direction facing = getBlockState().getValue(DirectionalBlock.FACING);
         spawnDirectionalJet(serverLevel, worldPosition, facing, random, emissionDistance);
 
-        // Play the associated spew sound effect from the emitter's position
-        playSpewSound(serverLevel, worldPosition, random);
+        // Play sound only when not wool-muted from the rear side
+        if (canPlaySpewSound()) {
+            playSpewSound(serverLevel, worldPosition, random);
+        }
 
         // Schedule the next randomized interval
         ticksUntilNextSpew = sampleInterval(random);

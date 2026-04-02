@@ -3,12 +3,11 @@ package net.oldmanyounger.shroud.block.custom;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -80,6 +79,29 @@ public class ModParticlePillarBlock extends DirectionalBlock implements EntityBl
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new ModSculkEmitterBlockEntity(pos, state);
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+
+        if (!level.isClientSide && level.getBlockEntity(pos) instanceof ModSculkEmitterBlockEntity emitter) {
+            emitter.updateWoolMuteState();
+        }
+    }
+
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+
+        if (level.isClientSide) return;
+
+        Direction facing = state.getValue(FACING);
+        BlockPos behindEmitter = pos.relative(facing.getOpposite());
+
+        // Only recompute when the block behind (opposite emission direction) changes
+        if (neighborPos.equals(behindEmitter) && level.getBlockEntity(pos) instanceof ModSculkEmitterBlockEntity emitter) {
+            emitter.updateWoolMuteState();
+        }
     }
 
     // Supplies the server-side ticker for the matching block entity type

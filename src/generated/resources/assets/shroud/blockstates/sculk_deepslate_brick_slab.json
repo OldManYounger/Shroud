@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "shroud:block/sculk_deepslate_brick_slab"
+    },
+    "type=double": {
+      "model": "shroud:block/sculk_deepslate_bricks"
+    },
+    "type=top": {
+      "model": "shroud:block/sculk_deepslate_brick_slab_top"
+    }
+  }
+}

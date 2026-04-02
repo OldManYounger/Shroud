@@ -1,11 +1,8 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "down": "shroud:block/sculk_emitter",
-    "east": "shroud:block/sculk_emitter",
-    "north": "shroud:block/sculk_emitter",
-    "south": "shroud:block/sculk_emitter",
-    "up": "shroud:block/sculk_emitter_top",
-    "west": "shroud:block/sculk_emitter"
+    "bottom": "shroud:block/sculk_emitter",
+    "side": "shroud:block/sculk_emitter",
+    "top": "shroud:block/sculk_emitter_top"
   }
 }

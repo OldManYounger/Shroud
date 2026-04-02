@@ -7,7 +7,7 @@
       "preset": "minecraft:overworld",
       "biomes": [
         {
-          "biome": "shroud:sculk_forest",
+          "biome": "shroud:umbral_forest",
           "parameters": {
             "temperature": [-0.45, 0.2],
             "humidity": [-0.1, 0.1],
@@ -19,7 +19,7 @@
           }
         },
         {
-          "biome": "shroud:sculk_savanna",
+          "biome": "shroud:pallid_grove",
           "parameters": {
             "temperature": [0.2, 0.55],
             "humidity": [-1.0, -0.1],
@@ -43,7 +43,7 @@
           }
         },
         {
-          "biome": "shroud:sculk_shore",
+          "biome": "shroud:shrouded_shore",
           "parameters": {
             "temperature": [0.15, 0.75],
             "humidity": [-1.0, 0.25],

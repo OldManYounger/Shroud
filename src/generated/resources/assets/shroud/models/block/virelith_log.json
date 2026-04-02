@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "shroud:block/virelith_log_top",
+    "side": "shroud:block/virelith_log"
+  }
+}

@@ -36,7 +36,7 @@
       "predicate": {
         "type": "minecraft:would_survive",
         "state": {
-          "Name": "shroud:sculk_sapling",
+          "Name": "shroud:virelith_sapling",
           "Properties": {
             "stage": "0"
           }

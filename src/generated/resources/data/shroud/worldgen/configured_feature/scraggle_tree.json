@@ -16,7 +16,7 @@
     "foliage_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "shroud:sculk_leaves",
+        "Name": "shroud:virelith_leaves",
         "Properties": {
           "distance": "7",
           "persistent": "false",
@@ -41,7 +41,7 @@
     "trunk_provider": {
       "type": "minecraft:simple_state_provider",
       "state": {
-        "Name": "shroud:sculk_log",
+        "Name": "shroud:virelith_log",
         "Properties": {
           "axis": "y"
         }

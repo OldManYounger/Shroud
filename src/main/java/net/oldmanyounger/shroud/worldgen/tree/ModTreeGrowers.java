@@ -10,9 +10,9 @@ import java.util.Optional;
 public class ModTreeGrowers {
 
     /** TreeGrower for the Sculk tree, linking it to the SCULK_TREE configured feature */
-    public static final TreeGrower SCULK =
+    public static final TreeGrower VIRELITH =
             new TreeGrower(Shroud.MOD_ID + ":sculk", Optional.empty(),
-                    Optional.of(ModConfiguredFeatures.SCULK_TREE), Optional.empty());
+                    Optional.of(ModConfiguredFeatures.VIRELITH_TREE), Optional.empty());
 
     /** TreeGrower for the Umber tree, linking it to the UMBER_TREE configured feature */
     public static final TreeGrower UMBER =

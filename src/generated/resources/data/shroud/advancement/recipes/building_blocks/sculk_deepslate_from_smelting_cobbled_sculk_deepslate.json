@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cobbled_sculk_deepslate": {
+      "conditions": {
+        "items": [
+          {
+            "items": "shroud:cobbled_sculk_deepslate"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:sculk_deepslate_from_smelting_cobbled_sculk_deepslate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cobbled_sculk_deepslate"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "shroud:sculk_deepslate_from_smelting_cobbled_sculk_deepslate"
+    ]
+  }
+}

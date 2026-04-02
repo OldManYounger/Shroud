@@ -28,16 +28,14 @@
     }
   },
   "features": [
-    [
-      "shroud:ore_eventide_placed",
-      "shroud:ore_netherite_block_placed"
-    ],
+    [],
     [
       "minecraft:sculk_vein",
       "minecraft:sculk_patch_deep_dark"
     ],
     [
-      "minecraft:glow_lichen"
+      "minecraft:glow_lichen",
+      "shroud:sculk_gloomstone_geode"
     ],
     []
   ],

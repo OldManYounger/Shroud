@@ -71,6 +71,122 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT))
                 .save(recipeOutput);
 
+        // Sculk stone and deepslate variant recipes
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_STONE_BRICKS.get(), 4)
+                .pattern("##")
+                .pattern("##")
+                .define('#', ModBlocks.SCULK_STONE.get())
+                .unlockedBy("has_sculk_stone", has(ModBlocks.SCULK_STONE.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.CHISELED_SCULK_STONE_BRICKS.get())
+                .pattern("#")
+                .pattern("#")
+                .define('#', ModBlocks.SCULK_STONE_BRICKS.get())
+                .unlockedBy("has_sculk_stone_bricks", has(ModBlocks.SCULK_STONE_BRICKS.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_BRICKS.get(), 4)
+                .pattern("##")
+                .pattern("##")
+                .define('#', ModBlocks.COBBLED_SCULK_DEEPSLATE.get())
+                .unlockedBy("has_cobbled_sculk_deepslate", has(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_TILES.get(), 4)
+                .pattern("##")
+                .pattern("##")
+                .define('#', ModBlocks.SCULK_DEEPSLATE_BRICKS.get())
+                .unlockedBy("has_sculk_deepslate_bricks", has(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()))
+                .save(recipeOutput);
+
+        // Furnace recipes: cobbled -> smooth
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(ModBlocks.SCULK_COBBLESTONE.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.SCULK_STONE.get(),
+                        0.1f,
+                        200
+                )
+                .unlockedBy("has_sculk_cobblestone", has(ModBlocks.SCULK_COBBLESTONE.get()))
+                .save(recipeOutput, Shroud.MOD_ID + ":sculk_stone_from_smelting_sculk_cobblestone");
+
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.SCULK_DEEPSLATE.get(),
+                        0.1f,
+                        200
+                )
+                .unlockedBy("has_cobbled_sculk_deepslate", has(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+                .save(recipeOutput, Shroud.MOD_ID + ":sculk_deepslate_from_smelting_cobbled_sculk_deepslate");
+
+        // Cracked variants via smelting
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(ModBlocks.SCULK_STONE_BRICKS.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.CRACKED_SCULK_STONE_BRICKS.get(),
+                        0.1f,
+                        200
+                )
+                .unlockedBy("has_sculk_stone_bricks", has(ModBlocks.SCULK_STONE_BRICKS.get()))
+                .save(recipeOutput, Shroud.MOD_ID + ":cracked_sculk_stone_bricks_from_smelting");
+
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.CRACKED_SCULK_DEEPSLATE_BRICKS.get(),
+                        0.1f,
+                        200
+                )
+                .unlockedBy("has_sculk_deepslate_bricks", has(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()))
+                .save(recipeOutput, Shroud.MOD_ID + ":cracked_sculk_deepslate_bricks_from_smelting");
+
+        SimpleCookingRecipeBuilder.smelting(
+                        Ingredient.of(ModBlocks.SCULK_DEEPSLATE_TILES.get()),
+                        RecipeCategory.BUILDING_BLOCKS,
+                        ModBlocks.CRACKED_SCULK_DEEPSLATE_TILES.get(),
+                        0.1f,
+                        200
+                )
+                .unlockedBy("has_sculk_deepslate_tiles", has(ModBlocks.SCULK_DEEPSLATE_TILES.get()))
+                .save(recipeOutput, Shroud.MOD_ID + ":cracked_sculk_deepslate_tiles_from_smelting");
+
+        // Sculk cobblestone structural recipes
+        stairBuilder(ModBlocks.SCULK_COBBLESTONE_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_COBBLESTONE.get()))
+                .unlockedBy("has_sculk_cobblestone", has(ModBlocks.SCULK_COBBLESTONE.get()))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_COBBLESTONE_SLAB.get(), ModBlocks.SCULK_COBBLESTONE.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_COBBLESTONE_WALL.get(), ModBlocks.SCULK_COBBLESTONE.get());
+
+        // Sculk stone brick structural recipes
+        stairBuilder(ModBlocks.SCULK_STONE_BRICK_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_STONE_BRICKS.get()))
+                .unlockedBy("has_sculk_stone_bricks", has(ModBlocks.SCULK_STONE_BRICKS.get()))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_STONE_BRICK_SLAB.get(), ModBlocks.SCULK_STONE_BRICKS.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_STONE_BRICK_WALL.get(), ModBlocks.SCULK_STONE_BRICKS.get());
+
+        // Cobbled sculk deepslate structural recipes
+        stairBuilder(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get(), Ingredient.of(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+                .unlockedBy("has_cobbled_sculk_deepslate", has(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get(), ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get(), ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
+
+        // Sculk deepslate brick structural recipes
+        stairBuilder(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()))
+                .unlockedBy("has_sculk_deepslate_bricks", has(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_BRICK_SLAB.get(), ModBlocks.SCULK_DEEPSLATE_BRICKS.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_BRICK_WALL.get(), ModBlocks.SCULK_DEEPSLATE_BRICKS.get());
+
+        // Sculk deepslate tile structural recipes
+        stairBuilder(ModBlocks.SCULK_DEEPSLATE_TILE_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_DEEPSLATE_TILES.get()))
+                .unlockedBy("has_sculk_deepslate_tiles", has(ModBlocks.SCULK_DEEPSLATE_TILES.get()))
+                .save(recipeOutput);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_TILE_SLAB.get(), ModBlocks.SCULK_DEEPSLATE_TILES.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_TILE_WALL.get(), ModBlocks.SCULK_DEEPSLATE_TILES.get());
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.EVENTIDE_INGOT.get(), 9)
                 .requires(ModBlocks.EVENTIDE_BLOCK)
                 .unlockedBy("has_eventide_block", has(ModBlocks.EVENTIDE_BLOCK))
@@ -168,59 +284,59 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_eventide_ingot", has(ModItems.EVENTIDE_INGOT.get()))
                 .save(recipeOutput);
 
-        // Sculk wood set recipes
-        var sculkPlanks = ModBlocks.SCULK_PLANKS.get();
+        // Virelith wood set recipes
+        var virelithPlanks = ModBlocks.VIRELITH_PLANKS.get();
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_PLANKS.get(), 4)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.VIRELITH_PLANKS.get(), 4)
                 .requires(Ingredient.of(
-                        ModBlocks.SCULK_LOG.get(),
-                        ModBlocks.SCULK_WOOD.get(),
-                        ModBlocks.STRIPPED_SCULK_LOG.get(),
-                        ModBlocks.STRIPPED_SCULK_WOOD.get()
+                        ModBlocks.VIRELITH_LOG.get(),
+                        ModBlocks.VIRELITH_WOOD.get(),
+                        ModBlocks.STRIPPED_VIRELITH_LOG.get(),
+                        ModBlocks.STRIPPED_VIRELITH_WOOD.get()
                 ))
-                .unlockedBy("has_sculk_log", has(ModBlocks.SCULK_LOG.get()))
-                .unlockedBy("has_sculk_wood", has(ModBlocks.SCULK_WOOD.get()))
-                .unlockedBy("has_stripped_sculk_log", has(ModBlocks.STRIPPED_SCULK_LOG.get()))
-                .unlockedBy("has_stripped_sculk_wood", has(ModBlocks.STRIPPED_SCULK_WOOD.get()))
+                .unlockedBy("has_virelith_log", has(ModBlocks.VIRELITH_LOG.get()))
+                .unlockedBy("has_virelith_wood", has(ModBlocks.VIRELITH_WOOD.get()))
+                .unlockedBy("has_stripped_virelith_log", has(ModBlocks.STRIPPED_VIRELITH_LOG.get()))
+                .unlockedBy("has_stripped_virelith_wood", has(ModBlocks.STRIPPED_VIRELITH_WOOD.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_WOOD.get(), 3)
-                .define('#', ModBlocks.SCULK_LOG.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.VIRELITH_WOOD.get(), 3)
+                .define('#', ModBlocks.VIRELITH_LOG.get())
                 .pattern("##")
                 .pattern("##")
-                .unlockedBy("has_sculk_log", has(ModBlocks.SCULK_LOG.get()))
+                .unlockedBy("has_virelith_log", has(ModBlocks.VIRELITH_LOG.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STRIPPED_SCULK_WOOD.get(), 3)
-                .define('#', ModBlocks.STRIPPED_SCULK_LOG.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STRIPPED_VIRELITH_WOOD.get(), 3)
+                .define('#', ModBlocks.STRIPPED_VIRELITH_LOG.get())
                 .pattern("##")
                 .pattern("##")
-                .unlockedBy("has_stripped_sculk_log", has(ModBlocks.STRIPPED_SCULK_LOG.get()))
+                .unlockedBy("has_stripped_virelith_log", has(ModBlocks.STRIPPED_VIRELITH_LOG.get()))
                 .save(recipeOutput);
 
-        stairBuilder(ModBlocks.SCULK_STAIRS.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        stairBuilder(ModBlocks.VIRELITH_STAIRS.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
-        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_SLAB.get(), sculkPlanks);
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.VIRELITH_SLAB.get(), virelithPlanks);
 
-        buttonBuilder(ModBlocks.SCULK_BUTTON.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        buttonBuilder(ModBlocks.VIRELITH_BUTTON.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
-        pressurePlate(recipeOutput, ModBlocks.SCULK_PRESSURE_PLATE.get(), sculkPlanks);
+        pressurePlate(recipeOutput, ModBlocks.VIRELITH_PRESSURE_PLATE.get(), virelithPlanks);
 
-        fenceBuilder(ModBlocks.SCULK_FENCE.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        fenceBuilder(ModBlocks.VIRELITH_FENCE.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
-        fenceGateBuilder(ModBlocks.SCULK_FENCE_GATE.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        fenceGateBuilder(ModBlocks.VIRELITH_FENCE_GATE.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
-        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_WALL.get(), sculkPlanks);
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.VIRELITH_WALL.get(), virelithPlanks);
 
-        doorBuilder(ModBlocks.SCULK_DOOR.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        doorBuilder(ModBlocks.VIRELITH_DOOR.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
-        trapdoorBuilder(ModBlocks.SCULK_TRAPDOOR.get(), Ingredient.of(sculkPlanks)).group("sculk")
-                .unlockedBy("has_sculk_planks", has(sculkPlanks))
+        trapdoorBuilder(ModBlocks.VIRELITH_TRAPDOOR.get(), Ingredient.of(virelithPlanks)).group("virelith")
+                .unlockedBy("has_virelith_planks", has(virelithPlanks))
                 .save(recipeOutput);
 
         // Umber wood set recipes

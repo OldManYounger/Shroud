@@ -36,10 +36,12 @@
       "shroud:sculk_patch"
     ],
     [
-      "shroud:ore_eventide_placed",
-      "shroud:ore_netherite_block_placed"
+      "shroud:ore_eventide_placed"
     ],
-    [],
+    [
+      "shroud:baldachin_tree_placed",
+      "shroud:virelith_tree_placed"
+    ],
     [
       "shroud:sculk_arch_placed"
     ],

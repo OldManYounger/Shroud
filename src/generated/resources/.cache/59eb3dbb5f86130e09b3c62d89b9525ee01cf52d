@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-02T15:58:27.3440454	Loot Tables
+// 1.21.1	2026-04-03T19:47:53.4595088	Loot Tables
 e9bf82aea1ba268dea679101d20ab81ed6eda304 data/shroud/loot_table/blocks/chiseled_sculk_stone_bricks.json
 223c87792749534a1c050cd158888f7c91f2bfca data/shroud/loot_table/blocks/cobbled_sculk_deepslate.json
 05e75e85bfb2fb339679423340d694b00d26470a data/shroud/loot_table/blocks/cobbled_sculk_deepslate_slab.json
@@ -11,7 +11,7 @@ b2c3d12ed9541867cb74c78ac0e6e6d9cb96a436 data/shroud/loot_table/blocks/eventide_
 0502176aa91cf571c033af1d7e58737d523b1567 data/shroud/loot_table/blocks/eventide_deepslate_ore.json
 be7643d2a2a270f19ff900c42d1a1d9c6124b42c data/shroud/loot_table/blocks/eventide_ore.json
 f03a4a213302e7eea348edf724f17383b283d51c data/shroud/loot_table/blocks/ghost_bloom.json
-db57fb72363bcadb3742946f8528f2947062fb93 data/shroud/loot_table/blocks/gloomstone.json
+1774006d8ed02d28f0078aecc2c57d067e42a2a6 data/shroud/loot_table/blocks/gloomstone.json
 eb86cfb454b5a01fe7787c7d1ea644a7cd6bbb35 data/shroud/loot_table/blocks/projected_light.json
 609c53d051318361c5c558ce294398e1249766f2 data/shroud/loot_table/blocks/sculk_bulb.json
 80554fc53bc1f67e55d23ea950da1278303dcb80 data/shroud/loot_table/blocks/sculk_cobblestone.json

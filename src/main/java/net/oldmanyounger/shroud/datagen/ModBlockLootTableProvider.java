@@ -2,8 +2,10 @@ package net.oldmanyounger.shroud.datagen;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -11,8 +13,11 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.item.ModItems;
 
@@ -51,7 +56,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         // Terrain and utility blocks
         add(ModBlocks.SCULK_GRASS.get(), block -> createSingleItemTableWithSilkTouch(block, Blocks.SCULK));
         add(ModBlocks.SCULK_GRAVEL.get(), this::createSculkGravelDropTable);
-        add(ModBlocks.GLOOMSTONE.get(), block -> createSingleItemTableWithSilkTouch(block, ModItems.GLOOMSTONE_DUST.get()));
+        add(ModBlocks.GLOOMSTONE.get(), block -> createGloomstoneLikeDrops(block, ModItems.GLOOMSTONE_DUST.get()));
 
         add(ModBlocks.SCULK_STONE.get(), block -> createSingleItemTable(ModBlocks.SCULK_COBBLESTONE.get()));
         dropSelf(ModBlocks.SCULK_COBBLESTONE.get());
@@ -162,6 +167,20 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
                                         LootItem.lootTableItem(block)
                                 )
                         ))
+        );
+    }
+
+    private LootTable.Builder createGloomstoneLikeDrops(Block block, ItemLike dustItem) {
+        return createSilkTouchDispatchTable(
+                block,
+                applyExplosionDecay(
+                        block,
+                        LootItem.lootTableItem(dustItem)
+                                .apply(SetItemCountFunction.setCount(UniformGenerator.between(2.0F, 4.0F)))
+                                .apply(ApplyBonusCount.addUniformBonusCount(
+                                        registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(Enchantments.FORTUNE)
+                                ))
+                )
         );
     }
 

@@ -40,7 +40,9 @@
     [
       "shroud:sculk_patch"
     ],
-    [],
+    [
+      "shroud:ore_eventide_placed"
+    ],
     [
       "shroud:umber_tree_placed"
     ],

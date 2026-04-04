@@ -89,8 +89,8 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_BRICKS.get(), 4)
                 .pattern("##")
                 .pattern("##")
-                .define('#', ModBlocks.COBBLED_SCULK_DEEPSLATE.get())
-                .unlockedBy("has_cobbled_sculk_deepslate", has(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+                .define('#', ModBlocks.SCULK_DEEPSLATE.get())
+                .unlockedBy("has_sculk_deepslate", has(ModBlocks.SCULK_DEEPSLATE.get()))
                 .save(recipeOutput);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_DEEPSLATE_TILES.get(), 4)
@@ -166,12 +166,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_STONE_BRICK_SLAB.get(), ModBlocks.SCULK_STONE_BRICKS.get());
         wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.SCULK_STONE_BRICK_WALL.get(), ModBlocks.SCULK_STONE_BRICKS.get());
 
-        // Cobbled sculk deepslate structural recipes
-        stairBuilder(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get(), Ingredient.of(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
-                .unlockedBy("has_cobbled_sculk_deepslate", has(ModBlocks.COBBLED_SCULK_DEEPSLATE.get()))
+        // Sculk deepslate structural recipes
+        stairBuilder(ModBlocks.COBBLED_SCULK_DEEPSLATE_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_DEEPSLATE.get()))
+                .unlockedBy("has_sculk_deepslate", has(ModBlocks.SCULK_DEEPSLATE.get()))
                 .save(recipeOutput);
-        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get(), ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
-        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get(), ModBlocks.COBBLED_SCULK_DEEPSLATE.get());
+        slab(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_SLAB.get(), ModBlocks.SCULK_DEEPSLATE.get());
+        wall(recipeOutput, RecipeCategory.BUILDING_BLOCKS, ModBlocks.COBBLED_SCULK_DEEPSLATE_WALL.get(), ModBlocks.SCULK_DEEPSLATE.get());
 
         // Sculk deepslate brick structural recipes
         stairBuilder(ModBlocks.SCULK_DEEPSLATE_BRICK_STAIRS.get(), Ingredient.of(ModBlocks.SCULK_DEEPSLATE_BRICKS.get()))

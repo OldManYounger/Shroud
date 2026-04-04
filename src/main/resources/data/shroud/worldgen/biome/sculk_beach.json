@@ -35,7 +35,9 @@
     [
       "shroud:sculk_patch"
     ],
-    [],
+    [
+      "shroud:ore_eventide_placed"
+    ],
     [
       "minecraft:glow_lichen",
       "shroud:sculk_gloomstone_geode"

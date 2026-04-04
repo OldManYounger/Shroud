@@ -1,8 +1,21 @@
 - Version X
-    - Additions
-    - Changes
-    - Removals
-    - Bug Fixes
+    Additions
+    Changes
+    Removals
+    Bug Fixes
+
+- Version 0.4.1
+    Additions
+    Changes
+        - Slightly reduced rate of gloomstone geode generation
+        - Updated drop rate of gloomstone dust from gloomstone to match glowstone
+        - Reordered creative mode tabs to more closely match vanilla ordering
+    Removals
+        - Removed last instance of netherite blocks spawning in the Sculk Ocean biome
+    Bug Fixes
+        - Fixed custom trees not generating in Pallid Grove biome
+        - Fixed Eventide ore not generating in the majority of biomes
+        - Fixed recipes for sculk deepslate variants using cobbled sculk deepslate instead of sculk deepslate
 
 - Version 0.4.0
     - Additions

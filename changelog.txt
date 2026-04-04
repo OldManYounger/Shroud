@@ -10,6 +10,7 @@
         - Slightly reduced rate of gloomstone geode generation
         - Updated drop rate of gloomstone dust from gloomstone to match glowstone
         - Reordered creative mode tabs to more closely match vanilla ordering
+        - Continued back-end update of code formatting and comments
     Removals
         - Removed last instance of netherite blocks spawning in the Sculk Ocean biome
     Bug Fixes

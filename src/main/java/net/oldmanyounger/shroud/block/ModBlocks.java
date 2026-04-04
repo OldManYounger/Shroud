@@ -39,23 +39,17 @@ import java.util.function.Supplier;
  */
 public class ModBlocks {
 
-    // Central deferred register that owns all Shroud block registrations
+    // Central deferred register that owns all Shroud block registrations.
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(Shroud.MOD_ID);
 
-    // -------------------------------------------------------------------------
-    // Core terrain and environment blocks
-    // -------------------------------------------------------------------------
-
-    // Custom spreading sculk surface block
+    // Core terrain and environment blocks.
     public static final DeferredBlock<Block> SCULK_GRASS = registerBlock("sculk_grass",
             () -> new ModGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRASS_BLOCK)));
 
-    // Base sculk stone terrain block
     public static final DeferredBlock<Block> SCULK_STONE = registerBlock("sculk_stone",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)));
 
-    // Sculk stone family variants
     public static final DeferredBlock<Block> SCULK_COBBLESTONE = registerBlock("sculk_cobblestone",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE)));
 
@@ -68,7 +62,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> CHISELED_SCULK_STONE_BRICKS = registerBlock("chiseled_sculk_stone_bricks",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CHISELED_STONE_BRICKS)));
 
-    // Sculk cobblestone structural variants (vanilla cobblestone-like)
+    // Sculk cobblestone structural variants.
     public static final DeferredBlock<StairBlock> SCULK_COBBLESTONE_STAIRS = registerBlock("sculk_cobblestone_stairs",
             () -> new StairBlock(ModBlocks.SCULK_COBBLESTONE.get().defaultBlockState(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_STAIRS)));
@@ -79,7 +73,7 @@ public class ModBlocks {
     public static final DeferredBlock<WallBlock> SCULK_COBBLESTONE_WALL = registerBlock("sculk_cobblestone_wall",
             () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE_WALL)));
 
-    // Sculk stone bricks structural variants (vanilla stone bricks-like)
+    // Sculk stone brick structural variants.
     public static final DeferredBlock<StairBlock> SCULK_STONE_BRICK_STAIRS = registerBlock("sculk_stone_brick_stairs",
             () -> new StairBlock(ModBlocks.SCULK_STONE_BRICKS.get().defaultBlockState(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICK_STAIRS)));
@@ -90,11 +84,10 @@ public class ModBlocks {
     public static final DeferredBlock<WallBlock> SCULK_STONE_BRICK_WALL = registerBlock("sculk_stone_brick_wall",
             () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICK_WALL)));
 
-    // Deep sculk stone terrain block
+    // Sculk deepslate and derived sets.
     public static final DeferredBlock<Block> SCULK_DEEPSLATE = registerBlock("sculk_deepslate",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)));
 
-    // Sculk deepslate family variants
     public static final DeferredBlock<Block> COBBLED_SCULK_DEEPSLATE = registerBlock("cobbled_sculk_deepslate",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE)));
 
@@ -110,7 +103,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> CRACKED_SCULK_DEEPSLATE_TILES = registerBlock("cracked_sculk_deepslate_tiles",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.CRACKED_DEEPSLATE_TILES)));
 
-    // Cobbled sculk deepslate structural variants (vanilla cobbled deepslate-like)
+    // Cobbled sculk deepslate structural variants.
     public static final DeferredBlock<StairBlock> COBBLED_SCULK_DEEPSLATE_STAIRS = registerBlock("cobbled_sculk_deepslate_stairs",
             () -> new StairBlock(ModBlocks.COBBLED_SCULK_DEEPSLATE.get().defaultBlockState(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE_STAIRS)));
@@ -121,7 +114,7 @@ public class ModBlocks {
     public static final DeferredBlock<WallBlock> COBBLED_SCULK_DEEPSLATE_WALL = registerBlock("cobbled_sculk_deepslate_wall",
             () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLED_DEEPSLATE_WALL)));
 
-    // Sculk deepslate bricks structural variants (vanilla deepslate bricks-like)
+    // Sculk deepslate brick structural variants.
     public static final DeferredBlock<StairBlock> SCULK_DEEPSLATE_BRICK_STAIRS = registerBlock("sculk_deepslate_brick_stairs",
             () -> new StairBlock(ModBlocks.SCULK_DEEPSLATE_BRICKS.get().defaultBlockState(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICK_STAIRS)));
@@ -132,7 +125,7 @@ public class ModBlocks {
     public static final DeferredBlock<WallBlock> SCULK_DEEPSLATE_BRICK_WALL = registerBlock("sculk_deepslate_brick_wall",
             () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_BRICK_WALL)));
 
-    // Sculk deepslate tiles structural variants (vanilla deepslate tiles-like)
+    // Sculk deepslate tile structural variants.
     public static final DeferredBlock<StairBlock> SCULK_DEEPSLATE_TILE_STAIRS = registerBlock("sculk_deepslate_tile_stairs",
             () -> new StairBlock(ModBlocks.SCULK_DEEPSLATE_TILES.get().defaultBlockState(),
                     BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILE_STAIRS)));
@@ -143,19 +136,13 @@ public class ModBlocks {
     public static final DeferredBlock<WallBlock> SCULK_DEEPSLATE_TILE_WALL = registerBlock("sculk_deepslate_tile_wall",
             () -> new WallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE_TILE_WALL)));
 
-    // Falling sculk gravel terrain block
     public static final DeferredBlock<Block> SCULK_GRAVEL = registerBlock("sculk_gravel",
             () -> new ModSculkGravelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAVEL)));
 
-    // Glowing stone-like block
     public static final DeferredBlock<Block> GLOOMSTONE = registerBlock("gloomstone",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GLOWSTONE)));
 
-    // -------------------------------------------------------------------------
-    // Flora and plant blocks
-    // -------------------------------------------------------------------------
-
-    // Hanging decorative flower-like plant
+    // Flora and plant blocks.
     public static final DeferredBlock<Block> GHOST_BLOOM = registerBlock("ghost_bloom",
             () -> new ModGhostBloomBlock(BlockBehaviour.Properties.of()
                     .noCollission()
@@ -164,7 +151,6 @@ public class ModBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(state -> 10)));
 
-    // Ground plant restricted to sculk surfaces
     public static final DeferredBlock<Block> SCULK_BULB = registerBlock("sculk_bulb",
             () -> new ModSculkBulbBlock(BlockBehaviour.Properties.of()
                     .noCollission()
@@ -173,32 +159,25 @@ public class ModBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(state -> 14)));
 
-    // Harvestable cave-vine-like head block for sculk vines
     public static final DeferredBlock<ModSculkVinesBlock> SCULK_VINES = registerBlockNoItem("sculk_vines",
             () -> new ModSculkVinesBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES),
                     () -> ModBlocks.SCULK_VINES_PLANT.get()
             ));
 
-    // Matching body block for the sculk vine growth chain
     public static final DeferredBlock<ModSculkVinesPlantBlock> SCULK_VINES_PLANT = registerBlockNoItem("sculk_vines_plant",
             () -> new ModSculkVinesPlantBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES_PLANT),
                     () -> ModBlocks.SCULK_VINES.get()
             ));
 
-    // -------------------------------------------------------------------------
-    // Resource and ore blocks
-    // -------------------------------------------------------------------------
-
-    // Solid refined eventide storage block
+    // Resource and ore blocks.
     public static final DeferredBlock<Block> EVENTIDE_BLOCK = registerBlock("eventide_block",
             () -> new Block(BlockBehaviour.Properties.of()
                     .strength(4f)
                     .requiresCorrectToolForDrops()
                     .sound(SoundType.AMETHYST)));
 
-    // Overworld eventide ore
     public static final DeferredBlock<Block> EVENTIDE_ORE = registerBlock("eventide_ore",
             () -> new DropExperienceBlock(UniformInt.of(2, 4),
                     BlockBehaviour.Properties.of()
@@ -206,7 +185,6 @@ public class ModBlocks {
                             .requiresCorrectToolForDrops()
                             .sound(SoundType.STONE)));
 
-    // Deepslate eventide ore
     public static final DeferredBlock<Block> EVENTIDE_DEEPSLATE_ORE = registerBlock("eventide_deepslate_ore",
             () -> new DropExperienceBlock(UniformInt.of(3, 6),
                     BlockBehaviour.Properties.of()
@@ -214,7 +192,6 @@ public class ModBlocks {
                             .requiresCorrectToolForDrops()
                             .sound(SoundType.DEEPSLATE)));
 
-    // Eventide ore embedded in sculk stone
     public static final DeferredBlock<Block> SCULK_STONE_EVENTIDE_ORE = registerBlock("sculk_stone_eventide_ore",
             () -> new DropExperienceBlock(UniformInt.of(2, 4),
                     BlockBehaviour.Properties.of()
@@ -222,7 +199,6 @@ public class ModBlocks {
                             .requiresCorrectToolForDrops()
                             .sound(SoundType.STONE)));
 
-    // Eventide ore embedded in sculk deepslate
     public static final DeferredBlock<Block> SCULK_DEEPSLATE_EVENTIDE_ORE = registerBlock("sculk_deepslate_eventide_ore",
             () -> new DropExperienceBlock(UniformInt.of(3, 6),
                     BlockBehaviour.Properties.of()
@@ -230,11 +206,7 @@ public class ModBlocks {
                             .requiresCorrectToolForDrops()
                             .sound(SoundType.DEEPSLATE)));
 
-    // -------------------------------------------------------------------------
-    // Virelith wood set (renamed from Sculk wood set)
-    // -------------------------------------------------------------------------
-
-    // Virelith log and wood variants
+    // Virelith wood set.
     public static final DeferredBlock<Block> VIRELITH_LOG = registerBlock("virelith_log",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
     public static final DeferredBlock<Block> VIRELITH_WOOD = registerBlock("virelith_wood",
@@ -244,45 +216,48 @@ public class ModBlocks {
     public static final DeferredBlock<Block> STRIPPED_VIRELITH_WOOD = registerBlock("stripped_virelith_wood",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD)));
 
-    // Virelith plank block
     public static final DeferredBlock<Block> VIRELITH_PLANKS = registerBlock("virelith_planks",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)) {
+                // Marks virelith planks as flammable.
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
+                // Sets the flammability value for virelith planks.
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 20;
                 }
 
+                // Sets the fire spread speed for virelith planks.
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 5;
                 }
             });
 
-    // Virelith leaves block
     public static final DeferredBlock<Block> VIRELITH_LEAVES = registerBlock("virelith_leaves",
             () -> new ModLeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)) {
+                // Marks virelith leaves as flammable.
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
+                // Sets the flammability value for virelith leaves.
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 60;
                 }
 
+                // Sets the fire spread speed for virelith leaves.
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 30;
                 }
             });
 
-    // Virelith sapling tied to sculk terrain
     public static final DeferredBlock<Block> VIRELITH_SAPLING = registerBlock(
             "virelith_sapling",
             () -> new ModSaplingBlock(
@@ -291,7 +266,6 @@ public class ModBlocks {
                     ModBlocks.SCULK_GRASS,
                     () -> Blocks.SCULK));
 
-    // Virelith building set variants
     public static final DeferredBlock<StairBlock> VIRELITH_STAIRS = registerBlock("virelith_stairs",
             () -> new StairBlock(ModBlocks.VIRELITH_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.of()
                     .strength(2f)
@@ -332,11 +306,7 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
-    // -------------------------------------------------------------------------
-    // Umber wood set
-    // -------------------------------------------------------------------------
-
-    // Umber log and wood variants
+    // Umber wood set.
     public static final DeferredBlock<Block> UMBER_LOG = registerBlock("umber_log",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LOG)));
     public static final DeferredBlock<Block> UMBER_WOOD = registerBlock("umber_wood",
@@ -346,51 +316,48 @@ public class ModBlocks {
     public static final DeferredBlock<Block> STRIPPED_UMBER_WOOD = registerBlock("stripped_umber_wood",
             () -> new ModFlammableRotatedPillarBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STRIPPED_OAK_WOOD)));
 
-    // Umber plank block
     public static final DeferredBlock<Block> UMBER_PLANKS = registerBlock("umber_planks",
             () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)) {
-                // Marks umber planks as flammable
+                // Marks umber planks as flammable.
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
-                // Sets the flammability value for umber planks
+                // Sets the flammability value for umber planks.
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 20;
                 }
 
-                // Sets the fire spread speed for umber planks
+                // Sets the fire spread speed for umber planks.
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 5;
                 }
             });
 
-    // Umber leaves block
     public static final DeferredBlock<Block> UMBER_LEAVES = registerBlock("umber_leaves",
             () -> new ModLeavesBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_LEAVES)) {
-                // Marks umber leaves as flammable
+                // Marks umber leaves as flammable.
                 @Override
                 public boolean isFlammable(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return true;
                 }
 
-                // Sets the flammability value for umber leaves
+                // Sets the flammability value for umber leaves.
                 @Override
                 public int getFlammability(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 60;
                 }
 
-                // Sets the fire spread speed for umber leaves
+                // Sets the fire spread speed for umber leaves.
                 @Override
                 public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
                     return 30;
                 }
             });
 
-    // Umber sapling registration
     public static final DeferredBlock<Block> UMBER_SAPLING = registerBlock(
             "umber_sapling",
             () -> new ModSaplingBlock(
@@ -399,7 +366,6 @@ public class ModBlocks {
                     ModBlocks.SCULK_GRASS,
                     () -> Blocks.SCULK));
 
-    // Umber building set variants
     public static final DeferredBlock<StairBlock> UMBER_STAIRS = registerBlock("umber_stairs",
             () -> new StairBlock(ModBlocks.UMBER_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.of()
                     .strength(2f)
@@ -440,11 +406,7 @@ public class ModBlocks {
                     .requiresCorrectToolForDrops()
                     .noOcclusion()));
 
-    // -------------------------------------------------------------------------
-    // Limbo and technical blocks
-    // -------------------------------------------------------------------------
-
-    // Decorative stacked wallpaper variants
+    // Limbo and technical blocks.
     public static final DeferredBlock<ModStackingBlock> LIMBO_WALLPAPER_DIAMOND = registerBlock("limbo_wallpaper_diamond",
             () -> new ModStackingBlock(BlockBehaviour.Properties.of()
                     .strength(-1.0F, 3600000.0F)
@@ -456,7 +418,6 @@ public class ModBlocks {
                     .sound(SoundType.DEEPSLATE_BRICKS)
                     .noLootTable()));
 
-    // Limbo carpet and trim variants
     public static final DeferredBlock<Block> LIMBO_CARPET = registerBlock("limbo_carpet",
             () -> new Block(BlockBehaviour.Properties.of()
                     .strength(-1.0f, 3600000.0F)
@@ -473,14 +434,12 @@ public class ModBlocks {
                     .sound(SoundType.WOOL)
                     .noLootTable()));
 
-    // Limbo structural ceiling block
     public static final DeferredBlock<Block> LIMBO_CEILING_TILE = registerBlock("limbo_ceiling_tile",
             () -> new Block(BlockBehaviour.Properties.of()
                     .strength(-1.0f, 3600000.0F)
                     .sound(SoundType.WOOD)
                     .noLootTable()));
 
-    // Visible light source block that owns the projecting-light block entity
     public static final DeferredBlock<Block> LIMBO_FLUORESCENT_LIGHT = registerBlock("limbo_fluorescent_light",
             () -> new ModProjectingLightBlock(BlockBehaviour.Properties.of()
                     .strength(1.0F)
@@ -488,48 +447,38 @@ public class ModBlocks {
                     .lightLevel(state -> 15)
                     .noLootTable()));
 
-    // Invisible helper light block used only for projected illumination
     public static final DeferredBlock<Block> PROJECTED_LIGHT = registerBlockWithoutItem("projected_light",
             () -> new ModAirLightBlock(15));
 
-    // Sculk emitter block with directional particle behavior
     public static final DeferredBlock<Block> SCULK_EMITTER = registerBlock("sculk_emitter",
             () -> new ModParticlePillarBlock(BlockBehaviour.Properties.of()
                     .strength(1.5F)
                     .sound(SoundType.SCULK)
                     .lightLevel(state -> 7)));
 
-    // Nether-portal-like custom portal block used by Shroud
     public static final DeferredBlock<Block> SCULK_PORTAL = registerBlockWithoutItem("sculk_portal",
             () -> new ShroudPortalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL)));
 
-    // -------------------------------------------------------------------------
-    // Registration helpers
-    // -------------------------------------------------------------------------
-
-    // Registers a block and automatically creates its inventory BlockItem
+    // Registration helpers.
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
     }
 
-    // Registers a block without creating a matching BlockItem
     private static <T extends Block> DeferredBlock<T> registerBlockNoItem(String name, Supplier<T> block) {
         return BLOCKS.register(name, block);
     }
 
-    // Registers the BlockItem for a previously registered block
     private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block) {
         ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    // Registers a block without an item using the alternate helper name already present in this class
     private static <T extends Block> DeferredBlock<T> registerBlockWithoutItem(String name, Supplier<T> block) {
         return BLOCKS.register(name, block);
     }
 
-    // Attaches the block registry to the mod event bus
+    // Registers block entries to the mod event bus.
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }

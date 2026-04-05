@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -332,6 +333,83 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         if (ritualLocked) return false;
         if (stack.isEmpty()) return false;
         return items.get(slot).isEmpty();
+    }
+
+    // Consumes one item unit per expanded requirement selector and returns true on full success
+    public boolean consumeRequirements(java.util.List<RitualRecipe.ItemRequirement> requirements) {
+        java.util.List<RitualRecipe.ItemRequirement> expanded = new java.util.ArrayList<>();
+        for (RitualRecipe.ItemRequirement req : requirements) {
+            int count = Math.max(1, req.count());
+            for (int i = 0; i < count; i++) {
+                expanded.add(req);
+            }
+        }
+
+        int[] matchedSlots = new int[expanded.size()];
+        java.util.Arrays.fill(matchedSlots, -1);
+
+        boolean[] usedSlots = new boolean[MAX_SLOTS];
+        boolean ok = matchRequirementRecursive(expanded, 0, usedSlots, matchedSlots);
+        if (!ok) {
+            return false;
+        }
+
+        for (int slot : matchedSlots) {
+            if (slot >= 0 && slot < MAX_SLOTS) {
+                items.set(slot, ItemStack.EMPTY);
+            }
+        }
+
+        pruneInsertionOrderToExistingItems();
+        markChangedAndSync();
+        return true;
+    }
+
+    // Matches expanded selectors to unique occupied reliquary slots
+    private boolean matchRequirementRecursive(java.util.List<RitualRecipe.ItemRequirement> expanded,
+                                              int reqIndex,
+                                              boolean[] usedSlots,
+                                              int[] matchedSlots) {
+        if (reqIndex >= expanded.size()) {
+            return true;
+        }
+
+        RitualRecipe.ItemRequirement requirement = expanded.get(reqIndex);
+
+        for (int slot = 0; slot < MAX_SLOTS; slot++) {
+            if (usedSlots[slot]) continue;
+
+            ItemStack stack = items.get(slot);
+            if (stack.isEmpty()) continue;
+            if (!requirement.matches(stack)) continue;
+
+            usedSlots[slot] = true;
+            matchedSlots[reqIndex] = slot;
+
+            if (matchRequirementRecursive(expanded, reqIndex + 1, usedSlots, matchedSlots)) {
+                return true;
+            }
+
+            usedSlots[slot] = false;
+            matchedSlots[reqIndex] = -1;
+        }
+
+        return false;
+    }
+
+    // Removes stale insertion-order entries that now point to empty slots
+    private void pruneInsertionOrderToExistingItems() {
+        it.unimi.dsi.fastutil.ints.IntArrayList kept = new it.unimi.dsi.fastutil.ints.IntArrayList();
+
+        for (int i = 0; i < insertionOrder.size(); i++) {
+            int slot = insertionOrder.getInt(i);
+            if (slot >= 0 && slot < MAX_SLOTS && !items.get(slot).isEmpty()) {
+                kept.add(slot);
+            }
+        }
+
+        insertionOrder.clear();
+        insertionOrder.addAll(kept);
     }
 
     // ==================================

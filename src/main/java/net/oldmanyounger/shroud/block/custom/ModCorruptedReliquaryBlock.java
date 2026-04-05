@@ -3,6 +3,7 @@ package net.oldmanyounger.shroud.block.custom;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,6 +30,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.oldmanyounger.shroud.block.entity.ModCorruptedReliquaryBlockEntity;
+import net.oldmanyounger.shroud.ritual.RitualActivationHandler;
+import net.oldmanyounger.shroud.ritual.RitualExecutionService;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -35,12 +39,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>This block routes world interactions into reliquary storage behavior, including
  * single-item insertion on right click, shift-right-click LIFO removal, dropped-item
- * auto-insertion on top contact, and inventory item spill on block replacement. It also
- * defines a custom non-full-block footprint and horizontal facing for custom model usage.
+ * auto-insertion on top contact, and inventory item spill on block replacement.
  *
  * <p>In the broader context of the project, this class provides the physical world-facing
- * entry point for ritual crafting inputs and establishes the interaction contract that
- * later ritual validation and activation systems will consume.
+ * entry point for ritual crafting inputs and activation attempts before full ritual execution
+ * flow is added.
  */
 public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
@@ -69,19 +72,11 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
             Block.box(1.5D, 9.0D, 2.0D, 14.5D, 12.0D, 14.0D)
     );
 
-    // ==================================
-    //  CONSTRUCTOR
-    // ==================================
-
     // Creates a corrupted reliquary block with the supplied block properties
     public ModCorruptedReliquaryBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
-
-    // ==================================
-    //  BLOCK TYPE
-    // ==================================
 
     // Returns the codec for this block type
     @Override
@@ -133,16 +128,16 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         return getShape(state, level, pos, context);
     }
 
-    // ==================================
-    //  INTERACTIONS
-    // ==================================
-
-    // Handles right-click insertion when the player is holding an item
+    // Handles right-click insertion and ritual activation item use
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stackInHand, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof ModCorruptedReliquaryBlockEntity reliquary)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        if (isRitualActivator(stackInHand)) {
+            return handleRitualActivation(level, pos, player, reliquary);
         }
 
         if (player.isShiftKeyDown()) {
@@ -231,10 +226,6 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
     }
 
-    // ==================================
-    //  BLOCK ENTITY
-    // ==================================
-
     // Creates the corrupted reliquary block entity
     @Nullable
     @Override
@@ -257,5 +248,33 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    // Returns true when the held item is the current global ritual activator
+    private boolean isRitualActivator(ItemStack stackInHand) {
+        return !stackInHand.isEmpty() && stackInHand.is(Items.WOODEN_AXE);
+    }
+
+    // Handles ritual activation attempt and player feedback
+    private ItemInteractionResult handleRitualActivation(Level level, BlockPos pos, Player player, ModCorruptedReliquaryBlockEntity reliquary) {
+        if (level.isClientSide) {
+            return ItemInteractionResult.SUCCESS;
+        }
+
+        RitualActivationHandler.RitualActivationResult result =
+                RitualActivationHandler.tryActivate(level, pos, player, reliquary);
+
+        switch (result.status()) {
+            case RELIQUARY_LOCKED -> player.displayClientMessage(Component.literal("Reliquary is locked"), true);
+            case NO_MATCH -> player.displayClientMessage(Component.literal("No matching ritual"), true);
+            case EXECUTION_FAILED -> player.displayClientMessage(Component.literal(
+                    result.execution().map(RitualExecutionService.RitualExecutionResult::message).orElse("Ritual failed")
+            ), true);
+            case EXECUTED -> player.displayClientMessage(Component.literal("Ritual completed"), true);
+            default -> {
+            }
+        }
+
+        return ItemInteractionResult.SUCCESS;
     }
 }

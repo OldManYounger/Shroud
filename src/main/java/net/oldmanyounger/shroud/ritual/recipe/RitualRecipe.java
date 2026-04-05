@@ -5,15 +5,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.core.registries.Registries;
 
 /**
  * Immutable ritual recipe model loaded from datapack JSON.
  *
  * <p>This model stores unordered item requirements, entity-count pedestal requirements,
- * and a simple item output payload for the ritual system. It intentionally does not execute
- * ritual logic and is purely recipe data.
+ * a per-mob health damage value, and a simple item output payload for the ritual system.
  *
  * <p>In the broader context of the project, this class provides the canonical data contract
  * between JSON-authored ritual definitions and runtime ritual validation code.
@@ -22,6 +19,7 @@ public record RitualRecipe(
         ResourceLocation id,
         java.util.List<ItemRequirement> itemRequirements,
         java.util.List<MobRequirement> mobRequirements,
+        float mobDamagePerRequiredMob,
         ItemStack output
 ) {
 
@@ -29,7 +27,6 @@ public record RitualRecipe(
      * One item-side requirement entry for a ritual recipe.
      *
      * <p>A requirement can target either an exact item id or an item tag, with a required count.
-     * Matching is handled later by ritual validation logic.
      *
      * <p>In the broader context of the project, this class standardizes how reliquary-side
      * ingredients are described in data.
@@ -61,8 +58,7 @@ public record RitualRecipe(
     /**
      * One mob-side requirement entry for a ritual recipe.
      *
-     * <p>This defines an exact entity type and count requirement. Count semantics match your
-     * clarified rule where each required mob instance must be on its own pedestal.
+     * <p>This defines an exact entity type and count requirement.
      *
      * <p>In the broader context of the project, this class standardizes how pedestal-side
      * mob requirements are described in data.

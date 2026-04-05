@@ -5,15 +5,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.oldmanyounger.shroud.Shroud;
 
 import java.util.*;
@@ -60,9 +60,10 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
 
                 java.util.List<RitualRecipe.ItemRequirement> itemRequirements = parseItemRequirements(id, root);
                 java.util.List<RitualRecipe.MobRequirement> mobRequirements = parseMobRequirements(id, root);
+                float mobDamage = Math.max(0.0F, GsonHelper.getAsFloat(root, "mob_damage", 2.0F));
                 ItemStack output = parseOutput(id, root);
 
-                RitualRecipe recipe = new RitualRecipe(id, itemRequirements, mobRequirements, output);
+                RitualRecipe recipe = new RitualRecipe(id, itemRequirements, mobRequirements, mobDamage, output);
                 loaded.put(id, recipe);
             } catch (Exception ex) {
                 Shroud.LOGGER.error("Failed to parse ritual recipe {}", id, ex);
@@ -133,8 +134,6 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
             }
 
             int count = Math.max(1, GsonHelper.getAsInt(req, "count", 1));
-
-            // Count semantics match one-mob-per-pedestal validation planned in runtime matcher
             out.add(new RitualRecipe.MobRequirement(entityType, count));
         }
 

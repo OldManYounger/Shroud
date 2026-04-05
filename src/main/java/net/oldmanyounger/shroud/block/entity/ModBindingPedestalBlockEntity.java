@@ -2,10 +2,12 @@ package net.oldmanyounger.shroud.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +19,9 @@ import java.util.UUID;
  * Block entity that stores and manages one mob bound to a Binding Pedestal.
  *
  * <p>This block entity automatically captures a mob when one enters pedestal space, persists
- * the bound mob identity, and keeps the bound mob positioned on top of the pedestal each server
- * tick. It is intentionally focused on pedestal behavior and does not execute ritual crafting.
+ * the bound mob identity and snapshot metadata, and keeps the bound mob positioned on top of
+ * the pedestal each server tick. It intentionally focuses on pedestal behavior and does not
+ * execute ritual crafting.
  *
  * <p>In the broader context of the project, this class provides the mob-input anchor needed for
  * future ritual validation flows while remaining usable as a standalone world mechanic first.
@@ -32,18 +35,42 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
     // NBT key for persisted bound mob UUID
     private static final String TAG_BOUND_MOB_UUID = "BoundMobUuid";
 
+    // NBT key for persisted bound mob type id string
+    private static final String TAG_BOUND_MOB_TYPE_ID = "BoundMobTypeId";
+
+    // NBT key for persisted last known bound mob runtime entity id
+    private static final String TAG_LAST_KNOWN_ENTITY_ID = "LastKnownEntityId";
+
+    // NBT key for persisted last known bound mob health
+    private static final String TAG_LAST_KNOWN_HEALTH = "LastKnownHealth";
+
+    // NBT key for persisted last known bound mob max health
+    private static final String TAG_LAST_KNOWN_MAX_HEALTH = "LastKnownMaxHealth";
+
     // NBT key for persisted ritual lock state
     private static final String TAG_RITUAL_LOCKED = "RitualLocked";
 
     // Y offset where bound mobs are held above pedestal top
     private static final double HOLD_Y_OFFSET = 1.01D;
 
+    // Minimum change threshold before health sync updates are pushed
+    private static final float HEALTH_SYNC_EPSILON = 0.01F;
+
     // Runtime cached UUID of the bound mob
     @Nullable
     private UUID boundMobUuid = null;
 
-    // Runtime cached entity id for faster same-tick lookup
-    private int cachedBoundEntityId = -1;
+    // Persisted last known bound mob type id
+    private String boundMobTypeId = "";
+
+    // Persisted last known runtime entity id
+    private int lastKnownEntityId = -1;
+
+    // Persisted last known health snapshot
+    private float lastKnownHealth = 0.0F;
+
+    // Persisted last known max health snapshot
+    private float lastKnownMaxHealth = 0.0F;
 
     // Ritual lock scaffold for future integration
     private boolean ritualLocked = false;
@@ -66,23 +93,52 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         if (!mob.isAlive() || mob.isRemoved()) return false;
 
         this.boundMobUuid = mob.getUUID();
-        this.cachedBoundEntityId = mob.getId();
+        snapshotBoundEntity(mob);
         markChangedAndSync();
         return true;
     }
 
-    // Releases any currently bound mob
+    // Releases any currently bound mob and clears stored snapshot metadata
     public void releaseBoundMob() {
-        if (boundMobUuid == null) return;
+        if (boundMobUuid == null
+                && boundMobTypeId.isEmpty()
+                && lastKnownEntityId == -1
+                && lastKnownHealth == 0.0F
+                && lastKnownMaxHealth == 0.0F) {
+            return;
+        }
 
         this.boundMobUuid = null;
-        this.cachedBoundEntityId = -1;
+        this.boundMobTypeId = "";
+        this.lastKnownEntityId = -1;
+        this.lastKnownHealth = 0.0F;
+        this.lastKnownMaxHealth = 0.0F;
         markChangedAndSync();
     }
 
-    // Returns true when this pedestal currently has a bound mob
+    // Returns true when this pedestal currently has a bound mob UUID
     public boolean hasBoundMob() {
         return boundMobUuid != null;
+    }
+
+    // Returns last known bound mob type id string
+    public String getBoundMobTypeId() {
+        return boundMobTypeId;
+    }
+
+    // Returns last known runtime entity id
+    public int getLastKnownEntityId() {
+        return lastKnownEntityId;
+    }
+
+    // Returns last known bound mob health snapshot
+    public float getLastKnownHealth() {
+        return lastKnownHealth;
+    }
+
+    // Returns last known bound mob max health snapshot
+    public float getLastKnownMaxHealth() {
+        return lastKnownMaxHealth;
     }
 
     // Returns current ritual lock state scaffold
@@ -114,6 +170,11 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         }
 
         holdMobOnPedestal(mob);
+
+        boolean snapshotChanged = snapshotBoundEntity(mob);
+        if (snapshotChanged) {
+            markChangedAndSync();
+        }
     }
 
     // ==================================
@@ -145,7 +206,7 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
     //  PERSISTENCE
     // ==================================
 
-    // Saves pedestal state and bound mob reference
+    // Saves pedestal state and bound mob snapshot metadata
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -154,16 +215,23 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
             tag.putUUID(TAG_BOUND_MOB_UUID, boundMobUuid);
         }
 
+        tag.putString(TAG_BOUND_MOB_TYPE_ID, boundMobTypeId);
+        tag.putInt(TAG_LAST_KNOWN_ENTITY_ID, lastKnownEntityId);
+        tag.putFloat(TAG_LAST_KNOWN_HEALTH, lastKnownHealth);
+        tag.putFloat(TAG_LAST_KNOWN_MAX_HEALTH, lastKnownMaxHealth);
         tag.putBoolean(TAG_RITUAL_LOCKED, ritualLocked);
     }
 
-    // Loads pedestal state and bound mob reference
+    // Loads pedestal state and bound mob snapshot metadata
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
 
         this.boundMobUuid = tag.hasUUID(TAG_BOUND_MOB_UUID) ? tag.getUUID(TAG_BOUND_MOB_UUID) : null;
-        this.cachedBoundEntityId = -1;
+        this.boundMobTypeId = tag.getString(TAG_BOUND_MOB_TYPE_ID);
+        this.lastKnownEntityId = tag.contains(TAG_LAST_KNOWN_ENTITY_ID) ? tag.getInt(TAG_LAST_KNOWN_ENTITY_ID) : -1;
+        this.lastKnownHealth = tag.contains(TAG_LAST_KNOWN_HEALTH) ? tag.getFloat(TAG_LAST_KNOWN_HEALTH) : 0.0F;
+        this.lastKnownMaxHealth = tag.contains(TAG_LAST_KNOWN_MAX_HEALTH) ? tag.getFloat(TAG_LAST_KNOWN_MAX_HEALTH) : 0.0F;
         this.ritualLocked = tag.getBoolean(TAG_RITUAL_LOCKED);
     }
 
@@ -171,11 +239,11 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
     //  INTERNAL HELPERS
     // ==================================
 
-    // Resolves the currently bound entity from cache or UUID lookup
+    // Resolves the currently bound entity from cached id or UUID lookup
     @Nullable
     private Entity resolveBoundEntity(ServerLevel serverLevel) {
-        if (cachedBoundEntityId != -1) {
-            Entity byId = serverLevel.getEntity(cachedBoundEntityId);
+        if (lastKnownEntityId != -1) {
+            Entity byId = serverLevel.getEntity(lastKnownEntityId);
             if (byId != null && byId.getUUID().equals(boundMobUuid)) {
                 return byId;
             }
@@ -183,7 +251,7 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
 
         Entity byUuid = serverLevel.getEntity(boundMobUuid);
         if (byUuid != null) {
-            cachedBoundEntityId = byUuid.getId();
+            lastKnownEntityId = byUuid.getId();
         }
 
         return byUuid;
@@ -198,6 +266,37 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         mob.teleportTo(targetX, targetY, targetZ);
         mob.setDeltaMovement(0.0D, 0.0D, 0.0D);
         mob.fallDistance = 0.0F;
+    }
+
+    // Updates stored mob type id and health snapshot and returns true when values changed
+    private boolean snapshotBoundEntity(LivingEntity livingEntity) {
+        boolean changed = false;
+
+        String typeId = BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType()).toString();
+        if (!typeId.equals(this.boundMobTypeId)) {
+            this.boundMobTypeId = typeId;
+            changed = true;
+        }
+
+        int entityId = livingEntity.getId();
+        if (entityId != this.lastKnownEntityId) {
+            this.lastKnownEntityId = entityId;
+            changed = true;
+        }
+
+        float health = livingEntity.getHealth();
+        if (Math.abs(health - this.lastKnownHealth) > HEALTH_SYNC_EPSILON) {
+            this.lastKnownHealth = health;
+            changed = true;
+        }
+
+        float maxHealth = livingEntity.getMaxHealth();
+        if (Math.abs(maxHealth - this.lastKnownMaxHealth) > HEALTH_SYNC_EPSILON) {
+            this.lastKnownMaxHealth = maxHealth;
+            changed = true;
+        }
+
+        return changed;
     }
 
     // Marks block entity dirty and pushes client updates

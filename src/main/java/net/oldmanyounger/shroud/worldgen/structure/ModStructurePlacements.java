@@ -8,18 +8,22 @@ import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.worldgen.structure.placement.ModGridStructurePlacement;
 
 /**
- * Registers custom {@link StructurePlacementType} instances for the mod
+ * Registers custom structure placement types used by Shroud worldgen.
  *
- * <p>Placement types allow datapacks and registries to reference custom placement logic (e.g., grid-snapped spawning)
- * by name and ensure the correct codec is used for serialization</p>
+ * <p>Placement type registrations expose codec-backed placement implementations
+ * to datapack configuration and structure set deserialization.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * structure distribution layer that links custom placement logic into vanilla
+ * world generation registries.
  */
 public class ModStructurePlacements {
 
-    // Deferred register for structure placement types
+    // Deferred register for structure placement type entries
     public static final DeferredRegister<StructurePlacementType<?>> STRUCTURE_PLACEMENTS =
             DeferredRegister.create(Registries.STRUCTURE_PLACEMENT, Shroud.MOD_ID);
 
-    // Placement type for the grid-snapped placement implementation
+    // Placement type for grid-snapped placement logic
     public static final DeferredHolder<StructurePlacementType<?>, StructurePlacementType<ModGridStructurePlacement>> GRID =
             STRUCTURE_PLACEMENTS.register("grid", () -> () -> ModGridStructurePlacement.MAP_CODEC);
 }

@@ -175,7 +175,6 @@ public class ModCreativeModeTabs {
                         // Shroud spawn eggs.
                         output.accept(ModItems.LIVING_SCULK_SPAWN_EGG);
                         output.accept(ModItems.UMBRAL_HOWLER_SPAWN_EGG);
-                        output.accept(ModItems.RESONANT_HULK_SPAWN_EGG);
                         output.accept(ModItems.BLIGHTED_SHADE_SPAWN_EGG);
                     })
                     .build()

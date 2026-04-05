@@ -10,21 +10,27 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-// This class will not load on dedicated servers. Accessing client side code from here is safe.
+/**
+ * Provides client-only bootstrap wiring and setup callbacks for Shroud.
+ *
+ * <p>This class registers a config screen extension point and handles client setup
+ * lifecycle events for logging and client-side initialization tasks.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's client
+ * startup layer that binds NeoForge client hooks to mod-specific UI and setup behavior.
+ */
 @Mod(value = Shroud.MOD_ID, dist = Dist.CLIENT)
-// You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
 @EventBusSubscriber(modid = Shroud.MOD_ID, value = Dist.CLIENT)
 public class ExampleModClient {
+
+    // Registers NeoForge config screen factory for this mod container
     public ExampleModClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
+    // Runs client setup actions during mod lifecycle
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
         Shroud.LOGGER.info("HELLO FROM CLIENT SETUP");
         Shroud.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }

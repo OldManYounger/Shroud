@@ -11,58 +11,69 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
+/**
+ * Generates a tapered sculk spike mound with a hollow crater and root supports.
+ *
+ * <p>This feature finds a valid sculk surface anchor, builds a layered volcanic
+ * silhouette with noisy edge shaping, hollows the upper crater zone, and optionally
+ * extends short downward root structures for grounded integration.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's terrain
+ * feature generation layer that adds large corrupted landmarks to reinforce biome
+ * identity and environmental variation.
+ */
 public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
 
+    // Creates the feature with the provided no-config codec
     public SculkSpikeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
+    // Attempts to place one sculk spike structure at the configured origin
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> ctx) {
         BlockPos origin = ctx.origin();
         RandomSource random = ctx.random();
         WorldGenLevel level = ctx.level();
 
-        // Find the surface
+        // Scans downward to find nearby non-air surface
         BlockPos basePos = origin;
         while (level.isEmptyBlock(basePos) && basePos.getY() > level.getMinBuildHeight() + 2) {
             basePos = basePos.below();
         }
 
-        // Only generate on a sculk surface
+        // Requires sculk surface at the anchor position
         if (!level.getBlockState(basePos).is(Blocks.SCULK)) {
             return false;
         }
 
-        // Slight vertical offset for variety at the base
-        basePos = basePos.above(random.nextInt(3)); // 0–2 blocks above the surface
+        // Lifts base slightly for shape variation
+        basePos = basePos.above(random.nextInt(3));
 
-        // Volcano shape parameters
-        int height = 10 + random.nextInt(6);        // 10–15 blocks tall
-        int baseRadius = 6 + random.nextInt(4);     // 6–9 block base radius
-        int rimRadius = Mth.clamp(baseRadius / 2 + random.nextInt(2), 3, baseRadius - 1); // rim tighter than base
+        // Chooses overall spike profile parameters
+        int height = 10 + random.nextInt(6);
+        int baseRadius = 6 + random.nextInt(4);
+        int rimRadius = Mth.clamp(baseRadius / 2 + random.nextInt(2), 3, baseRadius - 1);
 
-        // Crater starts somewhere in the upper half
-        int craterStart = height / 2 + random.nextInt(height / 4 + 1); // between ~H/2 and ~3H/4
+        // Chooses crater start in upper half and clamps for stability
+        int craterStart = height / 2 + random.nextInt(height / 4 + 1);
         craterStart = Mth.clamp(craterStart, 2, height - 3);
 
         int craterRadius = Mth.clamp(rimRadius - 1, 1, rimRadius - 1);
 
-        // Build the volcano mound
+        // Builds layered tapered body from bottom to top
         for (int y = 0; y < height; y++) {
-            float layerT = (float) y / (float) (height - 1); // 0 at base, 1 at top
+            float layerT = (float) y / (float) (height - 1);
 
-            // Outer radius tapers from baseRadius at y=0 to rimRadius at y=height-1
             float idealOuterRadius = Mth.lerp(layerT, (float) baseRadius, (float) rimRadius);
 
-            // Slight per-layer noise to roughen the silhouette
-            float jitter = (random.nextFloat() - 0.5F) * 0.8F; // -0.4 to +0.4
+            // Applies slight per-layer jitter to reduce perfect symmetry
+            float jitter = (random.nextFloat() - 0.5F) * 0.8F;
             float outerRadius = Mth.clamp(idealOuterRadius + jitter, 1.5F, (float) baseRadius + 1.0F);
 
             int outerIntRadius = Mth.ceil(outerRadius);
             float outerRadiusSq = outerRadius * outerRadius;
 
-            // Crater: only in the upper part, with roughly constant radius
             boolean inCraterZone = (y >= craterStart);
             float craterRadiusF = inCraterZone ? (float) craterRadius : 0.0F;
             float craterRadiusSq = craterRadiusF * craterRadiusF;
@@ -71,23 +82,21 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
                 for (int dz = -outerIntRadius; dz <= outerIntRadius; dz++) {
                     float distSq = (float) (dx * dx + dz * dz);
 
-                    // Must be inside outer radius
+                    // Keeps only blocks inside current outer radius
                     if (distSq > outerRadiusSq) {
                         continue;
                     }
 
-                    // Inside crater region? Skip to make it hollow
+                    // Skips inner crater region for upper layers
                     if (inCraterZone && distSq < craterRadiusSq) {
                         continue;
                     }
 
-                    // Edge roughness: thin out blocks near outer shell
-                    // If this position is close to the outer rim, randomly remove some blocks
+                    // Randomly thins very outer rim for rough silhouette
                     float dist = Mth.sqrt(distSq);
                     float rimBand = outerRadius - dist;
                     if (rimBand >= 0.0F && rimBand < 1.0F) {
-                        // Within 1 block of the outer edge
-                        if (random.nextFloat() < 0.20F) { // 20% chance to skip
+                        if (random.nextFloat() < 0.20F) {
                             continue;
                         }
                     }
@@ -95,7 +104,7 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
                     BlockPos targetPos = basePos.offset(dx, y, dz);
                     BlockState state = level.getBlockState(targetPos);
 
-                    // Replace air / dirt-like / sculk / sculk_vein
+                    // Replaces allowed local materials with sculk
                     if (state.isAir()
                             || isDirt(state)
                             || state.is(Blocks.SCULK)
@@ -106,7 +115,7 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
 
-        // Optionally: short sculk "roots" under the volcano to tie it into the ground
+        // Adds optional short downward root supports near the base
         int rootRadius = Mth.clamp(baseRadius / 3, 1, 3);
         for (int dx = -rootRadius; dx <= rootRadius; dx++) {
             for (int dz = -rootRadius; dz <= rootRadius; dz++) {
@@ -116,7 +125,7 @@ public class SculkSpikeFeature extends Feature<NoneFeatureConfiguration> {
                 }
 
                 BlockPos downwardPos = basePos.offset(dx, -1, dz);
-                int maxRootDepth = 4 + random.nextInt(4); // roots 4–7 blocks deep
+                int maxRootDepth = 4 + random.nextInt(4);
 
                 for (int depth = 0; depth < maxRootDepth && downwardPos.getY() > level.getMinBuildHeight() + 4; depth++) {
                     BlockState state = level.getBlockState(downwardPos);

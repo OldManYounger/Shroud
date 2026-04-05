@@ -7,18 +7,22 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
 
 /**
- * Registers {@link StructureType} entries for this mod's custom worldgen structures
+ * Registers custom structure types declared by Shroud.
  *
- * <p>Each structure type provides a codec (via the structure class) so structures can be referenced from datapacks
- * and correctly serialized/deserialized during worldgen and world loads</p>
+ * <p>Each structure type points at a codec supplier used to decode structure
+ * settings from datapacks and to support worldgen serialization behavior.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * structure bootstrap layer that connects custom structure classes to the
+ * global world generation registry.
  */
 public class ModStructures {
 
-    // Deferred register for structure types
+    // Deferred register for structure type entries
     public static final DeferredRegister<StructureType<?>> STRUCTURES =
             DeferredRegister.create(Registries.STRUCTURE_TYPE, Shroud.MOD_ID);
 
-    // Template-backed Limbo structure type referencing ModLimboTemplateStructure.MAP_CODEC
+    // Structure type for Limbo template structure
     public static final DeferredHolder<StructureType<?>, StructureType<ModLimboTemplateStructure>> LIMBO_TEMPLATE =
             STRUCTURES.register("limbo_template", () -> () -> ModLimboTemplateStructure.MAP_CODEC);
 }

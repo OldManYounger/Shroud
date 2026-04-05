@@ -2,24 +2,50 @@ package net.oldmanyounger.shroud.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
-import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.block.ModBlocks;
-import net.oldmanyounger.shroud.entity.ModEntities;
 import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.block.ModBlocks;
+import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.item.custom.ModArmorItem;
 import net.oldmanyounger.shroud.item.custom.ModTotemOfLastBreathItem;
 
+/**
+ * Declares and registers all item entries used by Shroud.
+ *
+ * <p>This class contains registration for materials, utility items, consumables,
+ * tools, weapons, armor, smithing templates, and spawn eggs, and exposes a
+ * single event-bus registration hook.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * content bootstrap layer that binds item definitions into NeoForge registries
+ * so they can participate in crafting, loot, combat, and UI systems.
+ */
 public class ModItems {
+
+    // ==================================
+    //  FIELDS
+    // ==================================
+
+    // Deferred item register for the mod namespace
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Shroud.MOD_ID);
 
+    // ==================================
+    //  CORE MATERIALS / UTILITY ITEMS
+    // ==================================
+
+    // Core sculk material item
     public static final DeferredItem<Item> SCULK_PEARL = ITEMS.register("sculk_pearl",
             () -> new Item(new Item.Properties()));
+
+    // Custom totem item with rarity and single-stack behavior
     public static final DeferredItem<Item> TOTEM_OF_LAST_BREATH = ITEMS.register("totem_of_last_breath",
             () -> new ModTotemOfLastBreathItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+
+    // Consumable vine-based pulp block item
     public static final DeferredItem<Item> GLOOM_PULP = ITEMS.register("gloom_pulp",
             () -> new ItemNameBlockItem(
                     ModBlocks.SCULK_VINES.get(),
@@ -30,13 +56,26 @@ public class ModItems {
                                     .build()
                     )
             ));
+
+    // Crafting dust item from gloomstone
     public static final DeferredItem<Item> GLOOMSTONE_DUST = ITEMS.register("gloomstone_dust",
             () -> new Item(new Item.Properties()));
 
+    // ==================================
+    //  EVENTIDE MATERIALS
+    // ==================================
+
+    // Refined Eventide ingot
     public static final DeferredItem<Item> EVENTIDE_INGOT = ITEMS.register("eventide_ingot",
             () -> new Item(new Item.Properties()));
+
+    // Raw Eventide drop item
     public static final DeferredItem<Item> RAW_EVENTIDE = ITEMS.register("raw_eventide",
             () -> new Item(new Item.Properties()));
+
+    // ==================================
+    //  EVENTIDE TOOLS / WEAPONS
+    // ==================================
 
     // Eventide sword
     public static final DeferredItem<SwordItem> EVENTIDE_SWORD = ITEMS.register("eventide_sword",
@@ -67,7 +106,11 @@ public class ModItems {
     public static final DeferredItem<Item> EVENTIDE_BOW = ITEMS.register("eventide_bow",
             () -> new BowItem(new Item.Properties().durability(500)));
 
-    // Eventide helmet
+    // ==================================
+    //  EVENTIDE ARMOR
+    // ==================================
+
+    // Eventide helmet with custom armor item behavior
     public static final DeferredItem<ArmorItem> EVENTIDE_HELMET = ITEMS.register("eventide_helmet",
             () -> new ModArmorItem(ModArmorMaterials.EVENTIDE_ARMOR_MATERIAL, ArmorItem.Type.HELMET,
                     new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(19))));
@@ -87,7 +130,11 @@ public class ModItems {
             () -> new ArmorItem(ModArmorMaterials.EVENTIDE_ARMOR_MATERIAL, ArmorItem.Type.BOOTS,
                     new Item.Properties().durability(ArmorItem.Type.BOOTS.getDurability(19))));
 
-    // Armor trim
+    // ==================================
+    //  EVENTIDE SMITHING
+    // ==================================
+
+    // Armor trim smithing template item
     public static final DeferredItem<Item> EVENTIDE_SMITHING_TEMPLATE = ITEMS.register(
             "eventide_armor_trim_smithing_template",
             () -> SmithingTemplateItem.createArmorTrimTemplate(
@@ -95,21 +142,30 @@ public class ModItems {
             )
     );
 
-    // Spawn eggs
+    // ==================================
+    //  SPAWN EGGS
+    // ==================================
+
+    // Living Sculk spawn egg
     public static final DeferredItem<Item> LIVING_SCULK_SPAWN_EGG = ITEMS.register("living_sculk_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,
                     new Item.Properties()));
+
+    // Umbral Howler spawn egg
     public static final DeferredItem<Item> UMBRAL_HOWLER_SPAWN_EGG = ITEMS.register("umbral_howler_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 0x0A0A0A, 0x6A0DAD,
                     new Item.Properties()));
-    public static final DeferredItem<Item> RESONANT_HULK_SPAWN_EGG = ITEMS.register("resonant_hulk_spawn_egg",
-            () -> new DeferredSpawnEggItem(ModEntities.RESONANT_HULK, 0x1F2E2E, 0x8A6BFF,
-                    new Item.Properties()));
+
+    // Blighted Shade spawn egg
     public static final DeferredItem<Item> BLIGHTED_SHADE_SPAWN_EGG = ITEMS.register("blighted_shade_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntities.BLIGHTED_SHADE, 0x1B1B2E, 0x7B2CBF,
                     new Item.Properties()));
 
+    // ==================================
+    //  REGISTRATION
+    // ==================================
 
+    // Registers item deferred entries on the mod event bus
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

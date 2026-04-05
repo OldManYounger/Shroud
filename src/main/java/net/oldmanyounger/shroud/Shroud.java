@@ -30,17 +30,34 @@ import net.oldmanyounger.shroud.worldgen.structure.ModStructurePlacements;
 import net.oldmanyounger.shroud.worldgen.structure.ModStructures;
 import org.slf4j.Logger;
 
-/** Main entry point for the Shroud mod, responsible for all top-level initialization */
+/**
+ * Main mod entrypoint that wires registration and lifecycle hooks for Shroud.
+ *
+ * <p>This class registers deferred content registries, subscribes setup callbacks,
+ * binds client renderer setup, and installs custom spawn placement rules.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's core
+ * bootstrap layer that coordinates top-level initialization across gameplay,
+ * rendering, worldgen, and registry systems.
+ */
 @Mod(Shroud.MOD_ID)
 public class Shroud {
 
-    /** Unique namespace identifier for all Shroud mod content */
+    // ==================================
+    //  FIELDS
+    // ==================================
+
+    // Unique namespace id for all mod resources and registries
     public static final String MOD_ID = "shroud";
 
-    /** Logger instance used for diagnostic and debugging messages */
+    // Shared logger used for diagnostics
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    /** Registers blocks, items, and creative tabs when the mod loads */
+    // ==================================
+    //  CONSTRUCTOR / REGISTRATION
+    // ==================================
+
+    // Registers listeners and deferred registries on mod load
     public Shroud(IEventBus modEventBus) {
 
         modEventBus.addListener(this::commonSetup);
@@ -49,27 +66,29 @@ public class Shroud {
         ModCreativeModeTabs.register(modEventBus);
 
         ModBlocks.register(modEventBus);
-
         ModItems.register(modEventBus);
-
         ModEntities.register(modEventBus);
 
         ModSounds.SOUND_EVENTS.register(modEventBus);
-
         ModFeatures.FEATURES.register(modEventBus);
 
         ModStructures.STRUCTURES.register(modEventBus);
         ModStructurePieces.STRUCTURE_PIECES.register(modEventBus);
         ModStructurePlacements.STRUCTURE_PLACEMENTS.register(modEventBus);
+
         ModMobEffects.MOB_EFFECTS.register(modEventBus);
-
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
-
     }
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
+    // ==================================
+    //  CLIENT EVENT SUBSCRIBER
+    // ==================================
+
+    // Client-only event subscriber for renderer and item property setup
     @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
     public static class ClientModEvents {
+
+        // Registers entity renderers and client item property predicates
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
@@ -79,12 +98,16 @@ public class Shroud {
         }
     }
 
-    /** Runs common initialization after registry preparation on both client and server */
+    // ==================================
+    //  LIFECYCLE HOOKS
+    // ==================================
+
+    // Runs common setup logic for both logical sides
     private void commonSetup(FMLCommonSetupEvent event) {
 
     }
 
-    // Spawn placements for custom entities
+    // Registers spawn placement rules for custom entities
     private void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
         event.register(ModEntities.LIVING_SCULK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
@@ -92,6 +115,5 @@ public class Shroud {
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.BLIGHTED_SHADE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-
     }
 }

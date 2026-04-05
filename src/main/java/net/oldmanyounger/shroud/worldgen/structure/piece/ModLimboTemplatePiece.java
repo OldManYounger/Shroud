@@ -15,45 +15,31 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.oldmanyounger.shroud.worldgen.structure.ModStructurePieces;
 
 /**
- * Template-backed structure piece that places a single {@code .nbt} structure using a fixed anchor point.
+ * Places a Limbo template structure piece using a stable anchor-based origin strategy.
  *
- * <p><b>Core idea</b></p>
- * <ul>
- *   <li>{@code anchorWorld} is the in-world position that represents where the Structure Block anchor was during testing.</li>
- *   <li>The template placement origin (the template's NW/min corner) is computed by applying a rotation-specific offset:</li>
- * </ul>
+ * <p>This piece computes template origin from a fixed in-world anchor plus
+ * rotation-specific offsets captured from Structure Block testing, allowing
+ * consistent placement without dynamic pivot-size calculations.
  *
- * <pre>{@code
- * originWorld = anchorWorld + relativePosForRotation(rotation)
- * }</pre>
- *
- * <p><b>Rotation offsets</b></p>
- * <p>
- * Offsets are derived from Structure Block "relative position" values recorded during testing:
- * </p>
- * <ul>
- *   <li>{@link Rotation#NONE}: {@code (-23, 1, -23)}</li>
- *   <li>{@link Rotation#CLOCKWISE_90}: {@code (24, 1, -23)}</li>
- *   <li>{@link Rotation#CLOCKWISE_180} / {@link Rotation#COUNTERCLOCKWISE_90}: inferred for a {@code 48x48} footprint
- *       to keep the anchor stationary.</li>
- * </ul>
- *
- * <p>
- * This approach avoids template-size pivot math and relies on vanilla template origin semantics.
- * </p>
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * structure generation system that ensures Limbo room templates place reliably
+ * across rotations and save/load cycles.
  */
 public class ModLimboTemplatePiece extends TemplateStructurePiece {
 
-    // NBT keys used to persist the placed template and rotation.
+    // NBT key for persisted template identifier
     private static final String TAG_TEMPLATE = "Template";
+
+    // NBT key for persisted rotation enum name
     private static final String TAG_ROTATION = "Rotation";
 
-    // Template id used for saving/loading (and for debugging in NBT)
+    // Template id persisted and used for reconstruction
     private final ResourceLocation templateId;
 
-    // Rotation used when placing the template
+    // Rotation applied during placement
     private final Rotation rotation;
 
+    // Creates a new template piece from anchor world position and rotation
     public ModLimboTemplatePiece(
             StructureTemplateManager templateManager,
             ResourceLocation templateId,
@@ -74,7 +60,7 @@ public class ModLimboTemplatePiece extends TemplateStructurePiece {
         this.rotation = rotation;
     }
 
-    // Constructor used when loading this piece from disk (position is restored by TemplateStructurePiece)
+    // Reconstructs this template piece from saved NBT data
     public ModLimboTemplatePiece(StructureTemplateManager templateManager, CompoundTag tag) {
         super(
                 ModStructurePieces.LIMBO_TEMPLATE_PIECE.get(),
@@ -87,14 +73,14 @@ public class ModLimboTemplatePiece extends TemplateStructurePiece {
         this.rotation = Rotation.valueOf(tag.getString(TAG_ROTATION));
     }
 
-    // Builds the placement settings for this template (no mirroring, rotation applied)
+    // Builds placement settings with no mirror and selected rotation
     private static StructurePlaceSettings makeSettings(Rotation rotation) {
         return new StructurePlaceSettings()
                 .setMirror(Mirror.NONE)
                 .setRotation(rotation);
     }
 
-    // Returns the Structure Block-tested relative origin offset for a given rotation
+    // Returns tested relative origin offsets per rotation
     private static BlockPos relativePosForRotation(Rotation rotation) {
         return switch (rotation) {
             case NONE -> new BlockPos(-23, 1, -23);
@@ -104,20 +90,21 @@ public class ModLimboTemplatePiece extends TemplateStructurePiece {
         };
     }
 
-    // Converts the stable world anchor into the template origin used by vanilla template placement
+    // Computes template origin from stable anchor and rotation-specific offset
     private static BlockPos computeOriginFromAnchor(BlockPos anchorWorld, Rotation rotation) {
         return anchorWorld.offset(relativePosForRotation(rotation));
     }
 
+    // Persists template id and rotation for chunk save data
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
         super.addAdditionalSaveData(context, tag);
 
-        // Persist enough info to reconstruct this piece on world load.
         tag.putString(TAG_TEMPLATE, this.templateId.toString());
         tag.putString(TAG_ROTATION, this.rotation.name());
     }
 
+    // Handles structure data markers if present in template data
     @Override
     protected void handleDataMarker(
             String marker,
@@ -126,6 +113,6 @@ public class ModLimboTemplatePiece extends TemplateStructurePiece {
             RandomSource random,
             BoundingBox box
     ) {
-        // Optional hook for structure block data markers (currently unused)
+        // Marker hook currently unused
     }
 }

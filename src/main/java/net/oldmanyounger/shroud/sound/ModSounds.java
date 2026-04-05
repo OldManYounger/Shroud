@@ -7,14 +7,27 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
 
-/** Registers all custom sound events for the Shroud mod */
+/**
+ * Registers all custom sound events used by Shroud content.
+ *
+ * <p>This class declares entity vocalizations, portal and block utility sounds,
+ * and ambient loops through a deferred sound event registry bound to the mod ID.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's audio
+ * content layer that centralizes sound identifiers for entities, blocks, ambience,
+ * and gameplay feedback systems.
+ */
 public final class ModSounds {
 
-    /** Deferred register for all Shroud sound events */
+    // ==================================
+    //  FIELDS
+    // ==================================
+
+    // Deferred register for all Shroud sound events
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(Registries.SOUND_EVENT, Shroud.MOD_ID);
 
-    /** Sculk portal activation sound event used when activating the portal frame */
+    // Portal activation sound used when starting frame activation
     public static final DeferredHolder<SoundEvent, SoundEvent> SCULK_PORTAL_ACTIVATE =
             SOUND_EVENTS.register(
                     "sculk_portal_activate",
@@ -23,10 +36,11 @@ public final class ModSounds {
                     )
             );
 
-    // ============================================================
+    // ==================================
     //  LIVING SCULK
-    // ============================================================
+    // ==================================
 
+    // Living Sculk ambient sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_AMBIENT =
             SOUND_EVENTS.register(
                     "entity.living_sculk.ambient",
@@ -35,6 +49,7 @@ public final class ModSounds {
                     )
             );
 
+    // Living Sculk hurt sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_HURT =
             SOUND_EVENTS.register(
                     "entity.living_sculk.hurt",
@@ -43,6 +58,7 @@ public final class ModSounds {
                     )
             );
 
+    // Living Sculk death sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_DEATH =
             SOUND_EVENTS.register(
                     "entity.living_sculk.death",
@@ -51,6 +67,7 @@ public final class ModSounds {
                     )
             );
 
+    // Living Sculk step sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_STEP =
             SOUND_EVENTS.register(
                     "entity.living_sculk.step",
@@ -59,6 +76,7 @@ public final class ModSounds {
                     )
             );
 
+    // Living Sculk vibration reaction sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_LIVING_SCULK_VIBRATION_REACT =
             SOUND_EVENTS.register(
                     "entity.living_sculk.vibration_react",
@@ -67,10 +85,11 @@ public final class ModSounds {
                     )
             );
 
-    // ============================================================
+    // ==================================
     //  UMBRAL HOWLER
-    // ============================================================
+    // ==================================
 
+    // Umbral Howler ambient sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_AMBIENT =
             SOUND_EVENTS.register(
                     "entity.umbral_howler.ambient",
@@ -79,6 +98,7 @@ public final class ModSounds {
                     )
             );
 
+    // Umbral Howler hurt sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_HURT =
             SOUND_EVENTS.register(
                     "entity.umbral_howler.hurt",
@@ -87,6 +107,7 @@ public final class ModSounds {
                     )
             );
 
+    // Umbral Howler death sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_DEATH =
             SOUND_EVENTS.register(
                     "entity.umbral_howler.death",
@@ -95,6 +116,7 @@ public final class ModSounds {
                     )
             );
 
+    // Umbral Howler step sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_STEP =
             SOUND_EVENTS.register(
                     "entity.umbral_howler.step",
@@ -103,6 +125,7 @@ public final class ModSounds {
                     )
             );
 
+    // Umbral Howler vibration reaction sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_UMBRAL_HOWLER_VIBRATION_REACT =
             SOUND_EVENTS.register(
                     "entity.umbral_howler.vibration_react",
@@ -111,11 +134,11 @@ public final class ModSounds {
                     )
             );
 
-
-    // ============================================================
+    // ==================================
     //  BLIGHTED SHADE
-    // ============================================================
+    // ==================================
 
+    // Blighted Shade ambient sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_AMBIENT =
             SOUND_EVENTS.register(
                     "entity.blighted_shade.ambient",
@@ -124,6 +147,7 @@ public final class ModSounds {
                     )
             );
 
+    // Blighted Shade hurt sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_HURT =
             SOUND_EVENTS.register(
                     "entity.blighted_shade.hurt",
@@ -132,6 +156,7 @@ public final class ModSounds {
                     )
             );
 
+    // Blighted Shade death sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_DEATH =
             SOUND_EVENTS.register(
                     "entity.blighted_shade.death",
@@ -140,6 +165,7 @@ public final class ModSounds {
                     )
             );
 
+    // Blighted Shade step sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_STEP =
             SOUND_EVENTS.register(
                     "entity.blighted_shade.step",
@@ -148,6 +174,7 @@ public final class ModSounds {
                     )
             );
 
+    // Blighted Shade vibration reaction sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_BLIGHTED_SHADE_VIBRATION_REACT =
             SOUND_EVENTS.register(
                     "entity.blighted_shade.vibration_react",
@@ -156,19 +183,21 @@ public final class ModSounds {
                     )
             );
 
-    // ============================================================
+    // ==================================
     //  OTHER SOUNDS
-    // ============================================================
+    // ==================================
 
+    // Sculk emitter spew block sound with fixed hearing range
     public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_SCULK_EMITTER_SPEW =
             SOUND_EVENTS.register(
                     "block.sculk_emitter.spew",
                     () -> SoundEvent.createFixedRangeEvent(
                             ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block.sculk_emitter.spew"),
-                            40.0F // max audible range in blocks (tune: 32, 40, 48, etc.)
+                            40.0F
                     )
             );
 
+    // Limbo ambient loop
     public static final DeferredHolder<SoundEvent, SoundEvent> LIMBO_AMBIENT_LOOP =
             SOUND_EVENTS.register(
                     "limbo.ambient_loop",
@@ -177,7 +206,7 @@ public final class ModSounds {
                     )
             );
 
-    /** Private constructor to prevent instantiation of the registry holder class */
+    // Prevents instantiation of this static registry holder class
     private ModSounds() {
     }
 }

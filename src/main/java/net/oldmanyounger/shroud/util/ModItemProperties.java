@@ -5,14 +5,24 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.oldmanyounger.shroud.item.ModItems;
 
-/** Registers client-side item property predicates used by item model overrides */
+/**
+ * Registers client-side item property predicates for model override behavior.
+ *
+ * <p>This class configures custom property functions used by item models, such as
+ * bow pull and pulling states for animated model predicate switching.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's client
+ * rendering configuration layer that connects gameplay item state to visual model
+ * presentation in first-person and inventory views.
+ */
 public class ModItemProperties {
 
-    /** Call this during client setup (enqueueWork) */
+    // Registers all custom item model predicates during client setup
     public static void addCustomItemProperties() {
         makeCustomBow(ModItems.EVENTIDE_BOW.get());
     }
 
+    // Registers pull and pulling predicates for a custom bow item
     private static void makeCustomBow(Item item) {
         ItemProperties.register(
                 item,

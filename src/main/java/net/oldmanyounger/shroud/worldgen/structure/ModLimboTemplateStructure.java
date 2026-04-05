@@ -15,20 +15,18 @@ import net.oldmanyounger.shroud.worldgen.structure.piece.ModLimboTemplatePiece;
 import java.util.Optional;
 
 /**
- * Template-backed structure intended to be placed on a chunk-grid (via a custom {@code StructurePlacement}).
+ * Defines a template-backed Limbo structure with anchor-based placement.
  *
- * <p>This structure uses a world "anchor" concept that matches Structure Block placement behavior:</p>
- * <ul>
- *   <li>The anchor is the in-world position of the Structure Block (kept at a stable {@code (7,7)} inside the placement chunk).</li>
- *   <li>The template origin (NW/min corner) is computed as {@code anchorWorld + relativeOffset(rotation)}.</li>
- *   <li>Rotation-specific origin offsets are handled by {@link ModLimboTemplatePiece}.</li>
- * </ul>
+ * <p>This structure keeps a stable in-chunk anchor position and delegates
+ * rotation-aware origin offset handling to the template piece implementation.
  *
- * <p>This avoids template-size pivot math and instead mirrors offsets verified in-game using a Structure Block.</p>
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * structure generation layer that drives deterministic placement of Limbo
+ * template rooms through data-driven structure settings.
  */
 public class ModLimboTemplateStructure extends Structure {
 
-    // Codec used by datapacks/registries to deserialize this structure + its custom fields
+    // Codec used for datapack and registry deserialization
     public static final MapCodec<ModLimboTemplateStructure> MAP_CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Structure.settingsCodec(instance),
@@ -38,15 +36,16 @@ public class ModLimboTemplateStructure extends Structure {
             ).apply(instance, ModLimboTemplateStructure::new)
     );
 
-    // Template resource that this structure places (structure NBT id)
+    // Template resource id to place
     private final ResourceLocation templateId;
 
-    // Desired template origin Y (i.e., where the template's NW/min corner should land)
+    // Desired template origin Y level
     private final int originY;
 
-    // Whether to choose a random rotation at placement time
+    // Enables random rotation selection when true
     private final boolean randomRotation;
 
+    // Creates the structure with template and placement settings
     public ModLimboTemplateStructure(StructureSettings settings,
                                      ResourceLocation templateId,
                                      int originY,
@@ -57,15 +56,16 @@ public class ModLimboTemplateStructure extends Structure {
         this.randomRotation = randomRotation;
     }
 
+    // Resolves generation point and emits one template piece for this chunk placement
     @Override
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
         ChunkPos chunkPos = context.chunkPos();
 
-        // Anchor is fixed at (7,7) inside the placement chunk to match Structure Block testing
+        // Uses stable anchor inside chunk to mirror structure-block testing coordinates
         int anchorX = chunkPos.getMinBlockX() + 7;
         int anchorZ = chunkPos.getMinBlockZ() + 7;
 
-        // Pick rotation (either fixed NONE or random across all rotations)
+        // Chooses fixed or random rotation based on structure config
         Rotation rotation = Rotation.NONE;
         if (this.randomRotation) {
             RandomSource random = context.random();
@@ -73,13 +73,12 @@ public class ModLimboTemplateStructure extends Structure {
             rotation = rotations[random.nextInt(rotations.length)];
         }
 
-        // Structure Block-relative Y was verified as +1 from anchor -> template origin, so anchorY = originY - 1
+        // Converts configured origin Y to anchor Y expected by piece offsets
         int anchorY = this.originY - 1;
 
         BlockPos anchorWorld = new BlockPos(anchorX, anchorY, anchorZ);
         Rotation finalRotation = rotation;
 
-        // Use the anchor as the generation point; the piece computes the actual template origin from it
         return Optional.of(new GenerationStub(anchorWorld, builder ->
                 builder.addPiece(new ModLimboTemplatePiece(
                         context.structureTemplateManager(),
@@ -90,9 +89,9 @@ public class ModLimboTemplateStructure extends Structure {
         ));
     }
 
+    // Returns registered structure type for this structure class
     @Override
     public StructureType<?> type() {
-        // Links this structure to its registered structure type
         return ModStructures.LIMBO_TEMPLATE.get();
     }
 }

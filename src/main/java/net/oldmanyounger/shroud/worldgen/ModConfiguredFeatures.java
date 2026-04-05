@@ -33,23 +33,42 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 
 import java.util.List;
 
-/** Holds all configured features registered by the Shroud mod */
+/**
+ * Declares and bootstraps all configured features used by Shroud world generation.
+ *
+ * <p>This class defines configured trees, ores, and custom no-config features, then
+ * registers them into the configured feature registry through a single bootstrap path.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's worldgen
+ * configuration layer that converts block and feature design intent into reusable
+ * registry-backed feature definitions consumed by placed features and biomes.
+ */
 public class ModConfiguredFeatures {
 
+    // ==================================
+    //  RESOURCE KEYS
+    // ==================================
+
+    // Tree configured feature keys
     public static final ResourceKey<ConfiguredFeature<?, ?>> VIRELITH_TREE = registerKey("virelith_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCRAGGLE_TREE = registerKey("scraggle_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> UMBER_TREE = registerKey("umber_tree");
     public static final ResourceKey<ConfiguredFeature<?, ?>> BALDACHIN_TREE = registerKey("baldachin_tree");
 
+    // Ore configured feature keys
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_NETHERITE_BLOCK = registerKey("ore_netherite_block");
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_EVENTIDE = registerKey("ore_eventide");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_SCULK_GRAVEL_UPPER = registerKey("ore_sculk_gravel_upper");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_SCULK_GRAVEL_LOWER = registerKey("ore_sculk_gravel_lower");
 
+    // Custom feature keys
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SPIKE = registerKey("sculk_spike");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_ARCH = registerKey("sculk_arch");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_EMITTER = registerKey("sculk_emitter");
 
+    // ==================================
+    //  BOOTSTRAP
+    // ==================================
+
+    // Registers all configured feature entries
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         register(context, VIRELITH_TREE, Feature.TREE, buildVirelithTree());
         register(context, SCRAGGLE_TREE, Feature.TREE, buildScraggleTree());
@@ -64,6 +83,11 @@ public class ModConfiguredFeatures {
         register(context, SCULK_EMITTER, ModFeatures.SCULK_EMITTER.get(), NoneFeatureConfiguration.INSTANCE);
     }
 
+    // ==================================
+    //  TREE CONFIGURATIONS
+    // ==================================
+
+    // Builds Virelith tree configuration
     private static TreeConfiguration buildVirelithTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()),
@@ -76,15 +100,13 @@ public class ModConfiguredFeatures {
                 .build();
     }
 
+    // Builds Scraggle tree configuration
     private static TreeConfiguration buildScraggleTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()),
-                // Short trunk, occasional fork-ish behavior
                 new ForkingTrunkPlacer(3, 1, 2),
                 BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()),
-                // Small, sparse canopy similar in spirit to acacia
                 new AcaciaFoliagePlacer(ConstantInt.of(1), ConstantInt.of(0)),
-                // Keeps canopy compact and low
                 new TwoLayersFeatureSize(0, 0, 1)
         )
                 .dirt(BlockStateProvider.simple(Blocks.SCULK))
@@ -92,49 +114,47 @@ public class ModConfiguredFeatures {
                 .build();
     }
 
+    // Builds Baldachin tree configuration
     private static TreeConfiguration buildBaldachinTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
-                BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()), // Trunk block provider (all trunk/branch logs use SCULK_LOG)
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LOG.get()),
                 new CherryTrunkPlacer(
-                        9,                 // baseHeight: minimum trunk height before random additions
-                        3,                 // heightRandA: first random height add (0..1)
-                        0,                 // heightRandB: second random height add (0..0, so no extra from this term)
-                        UniformInt.of(1, 3), // branchCount: number of side branches generated (always 1 here)
-                        UniformInt.of(2, 4), // branchHorizontalLength: horizontal branch reach (random 2..4)
-                        UniformInt.of(-4, -3), // branchStartOffsetFromTop: where branch starts relative to top of trunk (higher negative = starts lower)
-                        ConstantInt.of(-1) // branchEndOffsetFromTop: target branch end height offset from trunk top (always -1)
+                        9,
+                        3,
+                        0,
+                        UniformInt.of(1, 3),
+                        UniformInt.of(2, 4),
+                        UniformInt.of(-4, -3),
+                        ConstantInt.of(-1)
                 ),
-                BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()), // Foliage block provider (all generated leaves use SCULK_LEAVES)
+                BlockStateProvider.simple(ModBlocks.VIRELITH_LEAVES.get()),
                 new CherryFoliagePlacer(
-                        ConstantInt.of(4), // radius: base canopy radius
-                        ConstantInt.of(0), // offset: vertical shift of foliage attachment center
-                        ConstantInt.of(5), // height: foliage stack height (number of foliage layers)
-                        0.25F,             // wideBottomLayerHoleChance: chance to carve holes on wide bottom edge layer
-                        0.5F,              // cornerHoleChance: chance to remove corner leaves (more ragged canopy outline)
-                        0.16666667F,       // hangingLeavesChance: chance to place hanging leaves beneath canopy edge
-                        0.33333334F        // hangingLeavesExtensionChance: chance hanging leaves extend one more block downward
+                        ConstantInt.of(4),
+                        ConstantInt.of(0),
+                        ConstantInt.of(5),
+                        0.25F,
+                        0.5F,
+                        0.16666667F,
+                        0.33333334F
                 ),
-                new TwoLayersFeatureSize(
-                        1, // limit: upper size limit where trunk taper logic changes
-                        0, // lowerSize: lower trunk thickness size parameter
-                        2  // upperSize: upper trunk thickness size parameter
-                )
+                new TwoLayersFeatureSize(1, 0, 2)
         )
-                .dirt(BlockStateProvider.simple(Blocks.SCULK)) // Replaces/uses this block as valid dirt base under generated trunk
+                .dirt(BlockStateProvider.simple(Blocks.SCULK))
                 .decorators(List.of(
                         new AttachedToLeavesDecorator(
-                                0.02F, // probability: chance per foliage position to attempt placing attached block
-                                1,     // exclusionRadiusXZ: avoids clustering too close in X/Z
-                                1,     // exclusionRadiusY: avoids clustering too close vertically
-                                BlockStateProvider.simple(ModBlocks.GHOST_BLOOM.get()), // block provider for attached decorative block
-                                2,     // requiredEmptyBlocks: air-space requirement from leaf before placement succeeds
-                                List.of(Direction.DOWN) // allowed directions from leaves (DOWN = hangs under leaves)
+                                0.02F,
+                                1,
+                                1,
+                                BlockStateProvider.simple(ModBlocks.GHOST_BLOOM.get()),
+                                2,
+                                List.of(Direction.DOWN)
                         )
                 ))
-                .ignoreVines() // Allows tree generation to ignore vine obstruction checks
+                .ignoreVines()
                 .build();
     }
 
+    // Builds Umber tree configuration
     private static TreeConfiguration buildUmberTree() {
         return new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.UMBER_LOG.get()),
@@ -153,6 +173,11 @@ public class ModConfiguredFeatures {
                 .build();
     }
 
+    // ==================================
+    //  ORE CONFIGURATIONS
+    // ==================================
+
+    // Builds multi-target netherite block ore configuration
     private static OreConfiguration buildNetheriteBlockOre() {
         BlockState netherite = Blocks.NETHERITE_BLOCK.defaultBlockState();
 
@@ -165,6 +190,7 @@ public class ModConfiguredFeatures {
         return new OreConfiguration(List.of(smoothBasaltTarget, deepslateTarget), 9, 0.0F);
     }
 
+    // Builds eventide ore configuration across vanilla and sculk hosts
     private static OreConfiguration buildEventideOre() {
         BlockState eventideOre = ModBlocks.EVENTIDE_ORE.get().defaultBlockState();
         BlockState deepslateEventideOre = ModBlocks.EVENTIDE_DEEPSLATE_ORE.get().defaultBlockState();
@@ -187,10 +213,16 @@ public class ModConfiguredFeatures {
         return new OreConfiguration(List.of(sculkStoneTarget, sculkDeepslateTarget, stoneTarget, deepslateTarget), 8, 0.0F);
     }
 
+    // ==================================
+    //  REGISTRY HELPERS
+    // ==================================
+
+    // Creates configured feature resource key from local name
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, name));
     }
 
+    // Registers configured feature entry into bootstrap context
     private static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
             BootstrapContext<ConfiguredFeature<?, ?>> context,
             ResourceKey<ConfiguredFeature<?, ?>> key,

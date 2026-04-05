@@ -9,17 +9,22 @@ import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.worldgen.structure.piece.ModLimboTemplatePiece;
 
 /**
- * Holds registrations for this mod's {@link StructurePieceType} instances.
+ * Registers custom structure piece types used by Shroud structures.
  *
- * <p>Piece types must be registered so structure pieces can be serialized/deserialized correctly during world saves/loads.</p>
+ * <p>Structure piece types are required so template pieces can be reconstructed
+ * correctly from saved NBT during chunk and world loading.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * structure serialization layer that binds custom piece constructors to the
+ * registry system used by world generation and persistence.
  */
 public class ModStructurePieces {
 
-    // Deferred register for structure piece types
+    // Deferred register for structure piece type entries
     public static final DeferredRegister<StructurePieceType> STRUCTURE_PIECES =
             DeferredRegister.create(Registries.STRUCTURE_PIECE, Shroud.MOD_ID);
 
-    // Piece type for the Limbo template-based structure piece
+    // Piece type for Limbo template pieces
     public static final DeferredHolder<StructurePieceType, StructurePieceType> LIMBO_TEMPLATE_PIECE =
             STRUCTURE_PIECES.register("limbo_template_piece",
                     () -> (StructurePieceType.StructureTemplateType) (StructureTemplateManager templateManager, net.minecraft.nbt.CompoundTag tag) ->

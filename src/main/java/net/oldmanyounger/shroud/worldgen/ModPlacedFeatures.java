@@ -16,20 +16,43 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 
 import java.util.List;
 
+/**
+ * Declares and registers all placed feature entries for Shroud worldgen.
+ *
+ * <p>This class maps configured features to placement modifiers such as count,
+ * rarity, spread, height range, and biome filtering, then registers them into
+ * the placed feature bootstrap context.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * worldgen placement layer that controls where and how frequently configured
+ * terrain, vegetation, and custom features appear.
+ */
 public class ModPlacedFeatures {
 
+    // ==================================
+    //  RESOURCE KEYS
+    // ==================================
+
+    // Tree placed feature keys
     public static final ResourceKey<PlacedFeature> VIRELITH_TREE_PLACED = registerKey("virelith_tree_placed");
     public static final ResourceKey<PlacedFeature> SCRAGGLE_TREE_PLACED = registerKey("scraggle_tree_placed");
     public static final ResourceKey<PlacedFeature> UMBER_TREE_PLACED = registerKey("umber_tree_placed");
     public static final ResourceKey<PlacedFeature> BALDACHIN_TREE_PLACED = registerKey("baldachin_tree_placed");
 
+    // Ore placed feature keys
     public static final ResourceKey<PlacedFeature> ORE_NETHERITE_BLOCK_PLACED = registerKey("ore_netherite_block_placed");
     public static final ResourceKey<PlacedFeature> ORE_EVENTIDE_PLACED = registerKey("ore_eventide_placed");
 
+    // Custom feature placed keys
     public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED = registerKey("sculk_spike_placed");
     public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED = registerKey("sculk_arch_placed");
     public static final ResourceKey<PlacedFeature> SCULK_EMITTER_PLACED = registerKey("sculk_emitter_placed");
 
+    // ==================================
+    //  BOOTSTRAP
+    // ==================================
+
+    // Registers all placed features with their placement modifier stacks
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         var configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
@@ -43,7 +66,7 @@ public class ModPlacedFeatures {
                 )
         );
 
-        // Much sparser than SCULK_TREE
+        // Uses sparser density than Virelith trees
         register(
                 context,
                 SCRAGGLE_TREE_PLACED,
@@ -138,10 +161,16 @@ public class ModPlacedFeatures {
         );
     }
 
+    // ==================================
+    //  REGISTRY HELPERS
+    // ==================================
+
+    // Creates placed feature resource key from local name
     private static ResourceKey<PlacedFeature> registerKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, name));
     }
 
+    // Registers one placed feature entry into bootstrap context
     private static void register(
             BootstrapContext<PlacedFeature> context,
             ResourceKey<PlacedFeature> key,

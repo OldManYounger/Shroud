@@ -7,9 +7,9 @@
 - Version 0.4.2
     Additions
     Changes
-        - Continued back-end refinements of code, formatting and comments
+        - Finished back-end refinements of code, formatting and comments to updated standards
     Removals
-        - Removed references to 'Resonant Hulk' entity
+        - Removed references to 'Resonant Hulk' entity and spawn egg; mob is not yet implemented
     Bug Fixes
 
 - Version 0.4.1

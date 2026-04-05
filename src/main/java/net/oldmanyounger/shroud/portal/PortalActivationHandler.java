@@ -26,45 +26,57 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Handles activation of Shroud portals by tracking delayed activations and
- * wiring player interaction into the Shroud portal creation logic.
- * <p>
- * Player interaction flow:
- * <ul>
- *     <li>Player right-clicks a valid frame block with an echo shard.</li>
- *     <li>Immediately apply Darkness and play a custom activation sound.</li>
- *     <li>After a fixed delay, attempt to light the portal and play a Warden roar.</li>
- * </ul>
+ * Handles delayed Shroud portal activation from player frame interactions.
+ *
+ * <p>This class listens for valid right-click activation attempts, applies immediate
+ * activation feedback, queues pending activations, and processes countdown completion
+ * on server ticks to attempt final portal creation.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's world
+ * transition systems that gate custom dimension travel behind themed interaction and
+ * delayed ritual-style activation behavior.
  */
 @EventBusSubscriber(modid = Shroud.MOD_ID)
 public final class PortalActivationHandler {
 
-    /** Number of ticks to wait after activation before attempting to light the portal */
+    // ==================================
+    //  FIELDS
+    // ==================================
+
+    // Ticks to wait before attempting portal creation
     private static final int PORTAL_ACTIVATION_DELAY_TICKS = 230;
 
-    /** Duration of the Darkness status effect applied to the activating player */
+    // Darkness duration applied to the activating player
     private static final int DARKNESS_DURATION_TICKS = 235;
 
-    /** Pending portal activations that are counted down and processed on server ticks */
+    // Pending activation queue processed during server ticks
     private static final List<PendingActivation> PENDING_ACTIVATIONS = new ArrayList<>();
 
-    /** Private constructor to prevent instantiation of this static utility handler */
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
+
+    // Prevents instantiation of this static event handler class
     private PortalActivationHandler() {
     }
 
-    /** Handles right-click interactions on blocks and queues a delayed portal activation for valid frames */
+    // ==================================
+    //  INTERACTION HANDLER
+    // ==================================
+
+    // Queues delayed activation when a valid frame block is clicked with an echo shard
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Level level = event.getLevel();
 
-        // Only perform activation logic on the logical server
+        // Runs activation logic only on the logical server
         if (level.isClientSide()) {
             return;
         }
 
         ItemStack stack = event.getItemStack();
 
-        // Require the activation item to be an echo shard
+        // Requires echo shard activation item
         if (!stack.is(Items.ECHO_SHARD)) {
             return;
         }
@@ -72,29 +84,29 @@ public final class PortalActivationHandler {
         BlockPos clickedPos = event.getPos();
         BlockState clickedState = level.getBlockState(clickedPos);
 
-        // Only allow activation on the configured frame materials
+        // Requires approved frame materials
         if (!(clickedState.is(Blocks.DEEPSLATE_BRICKS) || clickedState.is(Blocks.REINFORCED_DEEPSLATE))) {
             return;
         }
 
-        // Ensure we are working with a ServerLevel instance
+        // Requires server level instance
         if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
 
-        // Avoid creating duplicate pending activations for the same frame position and level
+        // Skips duplicate pending activation entries for same level and frame position
         if (isAlreadyPending(serverLevel, clickedPos)) {
             return;
         }
 
-        // Only proceed if a valid Shroud portal frame can actually be created here
+        // Requires valid frame geometry before queueing activation
         if (!ShroudPortalHelper.canCreatePortal(serverLevel, clickedPos)) {
             return;
         }
 
         Player player = event.getEntity();
 
-        // Apply the Darkness effect to the activating player if present
+        // Applies Darkness feedback to activating player
         if (player != null) {
             player.addEffect(
                     new MobEffectInstance(
@@ -107,7 +119,7 @@ public final class PortalActivationHandler {
             );
         }
 
-        // Play a custom activation sound at the frame position to signal portal activation start
+        // Plays activation-start sound at frame
         serverLevel.playSound(
                 null,
                 clickedPos,
@@ -117,40 +129,43 @@ public final class PortalActivationHandler {
                 1.0F
         );
 
-
-        // Queue a delayed activation entry for this frame position
+        // Adds delayed activation entry
         PENDING_ACTIVATIONS.add(new PendingActivation(serverLevel, clickedPos, PORTAL_ACTIVATION_DELAY_TICKS));
 
-        // Mark the interaction as handled and prevent further processing by other handlers or vanilla
+        // Marks interaction handled and cancels further processing
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
     }
 
-    /** Processes all pending portal activations once per server tick, counting down and lighting portals when ready */
+    // ==================================
+    //  SERVER TICK PROCESSING
+    // ==================================
+
+    // Processes pending activation countdowns and attempts portal creation when ready
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
         MinecraftServer server = event.getServer();
 
         Iterator<PendingActivation> iterator = PENDING_ACTIVATIONS.iterator();
 
-        // Walk through all queued activations and update their countdown state
+        // Updates all queued entries each server tick
         while (iterator.hasNext()) {
             PendingActivation pending = iterator.next();
 
-            // Only process activations that belong to the current server instance
+            // Processes only entries that belong to this server instance
             if (pending.level().getServer() != server) {
                 continue;
             }
 
             int remaining = pending.ticksRemaining() - 1;
 
-            // If there is still time remaining, update the countdown and continue
+            // Continues countdown until activation time is reached
             if (remaining > 0) {
                 pending.setTicksRemaining(remaining);
                 continue;
             }
 
-            // When the countdown reaches zero, attempt to create the portal around this frame and play a Warden roar
+            // Attempts portal creation and plays completion roar at frame position
             ServerLevel level = pending.level();
             BlockPos framePos = pending.framePos();
 
@@ -165,12 +180,16 @@ public final class PortalActivationHandler {
                     1.0F
             );
 
-            // Remove the activation entry regardless of whether portal creation succeeded
+            // Removes processed entry regardless of success result
             iterator.remove();
         }
     }
 
-    /** Returns true if there is already a pending activation for the given frame position in the given level */
+    // ==================================
+    //  HELPERS
+    // ==================================
+
+    // Returns true when a matching pending activation already exists
     private static boolean isAlreadyPending(ServerLevel level, BlockPos framePos) {
         for (PendingActivation pending : PENDING_ACTIVATIONS) {
             if (pending.level() == level && pending.framePos().equals(framePos)) {
@@ -181,35 +200,45 @@ public final class PortalActivationHandler {
         return false;
     }
 
-    /** Represents a single pending portal activation with an associated countdown timer */
+    // ==================================
+    //  INNER TYPES
+    // ==================================
+
+    // Represents a queued portal activation with countdown state
     private static final class PendingActivation {
+
+        // Target level for activation
         private final ServerLevel level;
+
+        // Frame position used for portal creation attempt
         private final BlockPos framePos;
+
+        // Remaining countdown ticks before processing
         private int ticksRemaining;
 
-        /** Creates a new pending activation associated with a specific level, frame position, and delay */
+        // Creates a pending activation entry
         private PendingActivation(ServerLevel level, BlockPos framePos, int ticksRemaining) {
             this.level = level;
             this.framePos = framePos.immutable();
             this.ticksRemaining = ticksRemaining;
         }
 
-        /** Returns the level in which this activation will attempt to light the portal */
+        // Returns the target level
         public ServerLevel level() {
             return level;
         }
 
-        /** Returns the frame position that this activation will use when creating the portal */
+        // Returns the frame position
         public BlockPos framePos() {
             return framePos;
         }
 
-        /** Returns the remaining ticks before this activation will attempt to light the portal */
+        // Returns remaining countdown ticks
         public int ticksRemaining() {
             return ticksRemaining;
         }
 
-        /** Updates the remaining ticks before this activation is processed */
+        // Updates remaining countdown ticks
         public void setTicksRemaining(int ticksRemaining) {
             this.ticksRemaining = ticksRemaining;
         }

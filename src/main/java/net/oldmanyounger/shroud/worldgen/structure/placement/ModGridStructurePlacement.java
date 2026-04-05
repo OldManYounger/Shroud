@@ -12,22 +12,18 @@ import net.oldmanyounger.shroud.worldgen.structure.ModStructurePlacements;
 import java.util.Optional;
 
 /**
- * Structure placement that snaps generation to a fixed chunk grid.
+ * Implements structure placement snapped to a fixed chunk grid.
  *
- * <p>Parameters:</p>
- * <ul>
- *   <li>{@code spacing}: size of the grid cell in chunks (e.g., {@code 3} means a 3x3 chunk cell).</li>
- *   <li>{@code offset}: which chunk within that cell is eligible (e.g., {@code 1} is the center when {@code spacing=3}).</li>
- * </ul>
+ * <p>This placement allows structure attempts only at chunk coordinates that match
+ * configured spacing and offset modulo conditions on both X and Z axes.
  *
- * <p>A chunk is a valid placement chunk when both X and Z satisfy:</p>
- * <pre>{@code
- * floorMod(chunkCoord, spacing) == offset
- * }</pre>
+ * <p>In the broader context of the project, this class is part of Shroud's structure
+ * distribution layer that controls deterministic large-scale placement patterns for
+ * custom structures.
  */
 public class ModGridStructurePlacement extends StructurePlacement {
 
-    // Primary codec used by the structure placement registry/datapack system
+    // Codec used by datapack and registry deserialization for this placement type
     public static final MapCodec<ModGridStructurePlacement> MAP_CODEC = RecordCodecBuilder.mapCodec(instance ->
             StructurePlacement.placementCodec(instance).and(instance.group(
                     Codec.INT.fieldOf("spacing").forGetter(p -> p.spacing),
@@ -35,14 +31,16 @@ public class ModGridStructurePlacement extends StructurePlacement {
             )).apply(instance, ModGridStructurePlacement::new)
     );
 
-    // Convenience wrapper codec
+    // Convenience full codec wrapper
     public static final Codec<ModGridStructurePlacement> CODEC = MAP_CODEC.codec();
 
-    // Grid parameters in chunk units
+    // Grid cell size in chunks
     private final int spacing;
+
+    // Eligible chunk index within each grid cell
     private final int offset;
 
-    // Full constructor used by MAP_CODEC/CODEC (includes the base StructurePlacement fields)
+    // Full constructor used by codec-driven deserialization
     public ModGridStructurePlacement(
             Vec3i locateOffset,
             FrequencyReductionMethod frequencyReductionMethod,
@@ -57,21 +55,21 @@ public class ModGridStructurePlacement extends StructurePlacement {
         this.offset = offset;
     }
 
-    // Convenience ctor for simple code-driven construction (defaults to "always attempt" placement)
+    // Convenience constructor for simple code usage with default base placement settings
     public ModGridStructurePlacement(int spacing, int offset) {
         this(Vec3i.ZERO, FrequencyReductionMethod.DEFAULT, 1.0F, 0, Optional.empty(), spacing, offset);
     }
 
+    // Returns true when chunk matches configured grid offset on both axes
     @Override
     protected boolean isPlacementChunk(ChunkGeneratorStructureState state, int chunkX, int chunkZ) {
-        // Only allow generation on the chosen chunk inside each spacing x spacing grid cell
         return Math.floorMod(chunkX, this.spacing) == this.offset
                 && Math.floorMod(chunkZ, this.spacing) == this.offset;
     }
 
+    // Returns registered placement type for this custom placement implementation
     @Override
     public StructurePlacementType<?> type() {
-        // Links this placement to its registered placement type
         return ModStructurePlacements.GRID.get();
     }
 }

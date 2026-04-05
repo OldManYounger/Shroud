@@ -6,15 +6,24 @@ import net.oldmanyounger.shroud.worldgen.ModConfiguredFeatures;
 
 import java.util.Optional;
 
-/** Defines all custom TreeGrower instances used by the Shroud mod */
+/**
+ * Declares custom sapling grower mappings for Shroud tree types.
+ *
+ * <p>This class provides static {@link TreeGrower} instances that map sapling
+ * growth behavior to configured tree features used during natural growth.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's flora
+ * growth integration layer that connects custom saplings to worldgen-backed tree
+ * generation logic.
+ */
 public class ModTreeGrowers {
 
-    /** TreeGrower for the Sculk tree, linking it to the SCULK_TREE configured feature */
+    // Tree grower for Virelith saplings
     public static final TreeGrower VIRELITH =
             new TreeGrower(Shroud.MOD_ID + ":sculk", Optional.empty(),
                     Optional.of(ModConfiguredFeatures.VIRELITH_TREE), Optional.empty());
 
-    /** TreeGrower for the Umber tree, linking it to the UMBER_TREE configured feature */
+    // Tree grower for Umber saplings
     public static final TreeGrower UMBER =
             new TreeGrower(Shroud.MOD_ID + ":umber", Optional.empty(),
                     Optional.of(ModConfiguredFeatures.UMBER_TREE), Optional.empty());

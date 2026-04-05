@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-02T15:58:27.3460452	Item Models: shroud
+// 1.21.1	2026-04-05T00:05:34.2857489	Item Models: shroud
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/blighted_shade_spawn_egg.json
 76cb297e6925ba5128a26e499f05889ba4a2a9c0 assets/shroud/models/item/cobbled_sculk_deepslate_wall.json
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
@@ -57,7 +57,6 @@ c12fb95120e7c055fb55ccdc9e14ec8d0a2dbd63 assets/shroud/models/item/eventide_legg
 5766e32a655014e5b607cd3e5870d787ea46e0df assets/shroud/models/item/gloom_pulp.json
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/living_sculk_spawn_egg.json
 06abd13f186482f4dba24cf12ff4d291d0c539b2 assets/shroud/models/item/raw_eventide.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/resonant_hulk_spawn_egg.json
 be53bec61602838abcbb9b55ac91e8b24535eb0f assets/shroud/models/item/sculk_bulb.json
 3830bdceac9a723a56275eedb6b8ef320e0ceefc assets/shroud/models/item/sculk_cobblestone_wall.json
 eb052b1646305500d8c0fe1e06e6089b8139463e assets/shroud/models/item/sculk_deepslate_brick_wall.json

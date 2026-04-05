@@ -7,25 +7,32 @@ import net.minecraft.world.level.Level;
 import net.oldmanyounger.shroud.Shroud;
 
 /**
- * Centralizes dimension keys and routing logic for Shroud portals.
+ * Defines dimension keys and portal destination routing for Shroud travel.
+ *
+ * <p>This class centralizes the custom Shroud dimension key, references the
+ * Overworld key, and provides helper logic to resolve bidirectional transitions.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * dimension traversal infrastructure that keeps portal destination decisions
+ * consistent across teleportation and portal systems.
  */
 public final class ShroudDimensions {
 
-    /** Resource key for the shroud:shroud dimension declared in data/shroud/dimension/shroud.json */
+    // Resource key for the shroud:shroud custom dimension
     public static final ResourceKey<Level> SHROUD_LEVEL =
             ResourceKey.create(
                     Registries.DIMENSION,
                     ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "shroud")
             );
 
-    /** Resource key for the vanilla overworld dimension */
+    // Resource key for the vanilla overworld dimension
     public static final ResourceKey<Level> OVERWORLD_LEVEL = Level.OVERWORLD;
 
-    /** Hidden constructor to prevent instantiation */
+    // Prevents instantiation of this static utility class
     private ShroudDimensions() {
     }
 
-    /** Resolves the destination dimension for a portal transition. Overworld -> Shroud, Shroud -> Overworld. */
+    // Resolves target dimension for portal travel between Overworld and Shroud
     public static ResourceKey<Level> getTargetDimension(ResourceKey<Level> current) {
         if (current.equals(SHROUD_LEVEL)) {
             return OVERWORLD_LEVEL;

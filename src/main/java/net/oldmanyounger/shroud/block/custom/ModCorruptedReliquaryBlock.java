@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -88,6 +89,12 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         return CODEC;
     }
 
+    // Uses the normal baked block model renderer for in-world block rendering
+    @Override
+    protected RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
     // Returns the placement state with facing opposite the player
     @Nullable
     @Override
@@ -147,9 +154,13 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         if (level.isClientSide) {
-            return reliquary.canAcceptInsert()
-                    ? ItemInteractionResult.SUCCESS
-                    : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            if (!reliquary.canAcceptInsert()) {
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            }
+
+            // Predicts local visual insertion so ring rendering updates immediately
+            reliquary.tryInsertSingle(stackInHand.copyWithCount(1));
+            return ItemInteractionResult.SUCCESS;
         }
 
         boolean inserted = reliquary.tryInsertSingle(stackInHand);
@@ -177,6 +188,8 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         if (level.isClientSide) {
+            // Predicts local visual removal so ring rendering updates immediately
+            reliquary.popMostRecentItem();
             return InteractionResult.SUCCESS;
         }
 

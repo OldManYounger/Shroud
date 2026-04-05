@@ -6,12 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Core persistent state holder for the Corrupted Reliquary block.
@@ -79,7 +81,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         ItemStack inserted = sourceStack.copyWithCount(1);
         items.set(slot, inserted);
         insertionOrder.add(slot);
-        setChanged();
+        markChangedAndSync();
         return true;
     }
 
@@ -121,7 +123,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             ItemStack stack = items.get(slot);
             if (!stack.isEmpty()) {
                 items.set(slot, ItemStack.EMPTY);
-                setChanged();
+                markChangedAndSync();
                 return stack;
             }
         }
@@ -174,7 +176,32 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     public void setRitualLocked(boolean ritualLocked) {
         if (this.ritualLocked == ritualLocked) return;
         this.ritualLocked = ritualLocked;
-        setChanged();
+        markChangedAndSync();
+    }
+
+    // ==================================
+    //  NETWORK SYNC
+    // ==================================
+
+    // Sends block entity update packets to clients for renderer-visible state updates
+    @Nullable
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    // Provides update tag data for client-side block entity synchronization
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag, registries);
+        return tag;
+    }
+
+    // Applies update tag data on client so renderer sees current inventory state
+    @Override
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
+        this.loadAdditional(tag, registries);
     }
 
     // ==================================
@@ -243,7 +270,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             items.set(slot, ItemStack.EMPTY);
         }
 
-        setChanged();
+        markChangedAndSync();
         return taken;
     }
 
@@ -266,14 +293,14 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
         if (stack.isEmpty()) {
             items.set(slot, ItemStack.EMPTY);
-            setChanged();
+            markChangedAndSync();
             return;
         }
 
         ItemStack single = stack.copyWithCount(1);
         items.set(slot, single);
         insertionOrder.add(slot);
-        setChanged();
+        markChangedAndSync();
     }
 
     // Returns whether a player can still use this container
@@ -295,7 +322,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             items.set(i, ItemStack.EMPTY);
         }
         insertionOrder.clear();
-        setChanged();
+        markChangedAndSync();
     }
 
     // Returns whether a stack may be placed in the given slot
@@ -329,20 +356,19 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         return false;
     }
 
-    // Marks data dirty and pushes block updates so clients can refresh item display rendering
-    @Override
-    public void setChanged() {
+    // ==================================
+    //  INTERNAL HELPERS
+    // ==================================
+
+    // Marks data dirty and pushes a full client update so renderer state refreshes after inventory changes
+    private void markChangedAndSync() {
         super.setChanged();
 
         if (level == null || level.isClientSide) return;
 
         BlockState state = getBlockState();
-        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
-
-    // ==================================
-    //  INTERNAL HELPERS
-    // ==================================
 
     // Builds the static slot index list used for automation access
     private static int[] buildAutomationSlots() {

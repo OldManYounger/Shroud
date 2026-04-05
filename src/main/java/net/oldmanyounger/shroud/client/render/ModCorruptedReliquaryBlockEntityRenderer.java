@@ -1,25 +1,30 @@
 package net.oldmanyounger.shroud.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.oldmanyounger.shroud.block.entity.ModCorruptedReliquaryBlockEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Client-side renderer for visualizing Corrupted Reliquary inventory contents above the block.
  *
- * <p>This renderer reads the reliquary block entity slot contents and draws each occupied item
- * as a small display object arranged in a compact top-surface grid. It is purely visual and does
- * not change gameplay state.
+ * <p>This renderer draws only occupied reliquary slots as an evenly spaced circular ring that
+ * rotates around the center of the block. Empty slots are ignored so spacing always adapts to
+ * the actual number of displayed items.
  *
- * <p>In the broader context of the project, this class provides the first world-space feedback
- * layer for ritual input buildup, allowing players to visually inspect stored items before any
- * future ritual systems are activated.
+ * <p>In the broader context of the project, this class provides world-space visual feedback for
+ * ritual input buildup, letting players quickly read reliquary contents before ritual systems
+ * are fully wired.
  */
 public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRenderer<ModCorruptedReliquaryBlockEntity> {
 
@@ -27,46 +32,65 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     //  FIELDS
     // ==================================
 
-    // Number of display columns across the reliquary top
-    private static final int DISPLAY_COLUMNS = 8;
+    // Base Y height above the reliquary top for item display
+    private static final float RING_Y = 1.05F;
 
-    // Spacing between displayed items
-    private static final float DISPLAY_SPACING = 0.11F;
+    // Minimum ring radius for smaller item counts
+    private static final float MIN_RING_RADIUS = 0.20F;
 
-    // Vertical offset above block top for displayed items
-    private static final float DISPLAY_Y = 1.02F;
+    // Maximum ring radius cap for larger item counts
+    private static final float MAX_RING_RADIUS = 0.34F;
 
-    // Uniform item scale used for top display rendering
-    private static final float DISPLAY_SCALE = 0.20F;
+    // Per-item radius growth factor used to spread larger rings
+    private static final float RING_RADIUS_PER_ITEM = 0.010F;
+
+    // Uniform item scale used for ring rendering
+    private static final float ITEM_SCALE = 0.24F;
+
+    // Rotation speed in degrees per tick
+    private static final float RING_ROTATION_DEG_PER_TICK = 1.6F;
 
     // Creates the renderer instance
     public ModCorruptedReliquaryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
-    // Renders stored item stacks above the reliquary in an 8x8 grid
+    // Renders occupied reliquary items in a rotating circular ring
     @Override
     public void render(ModCorruptedReliquaryBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+        List<ItemStack> occupiedItems = collectOccupiedItems(blockEntity);
+        int count = occupiedItems.size();
+
+        if (count <= 0) {
+            return;
+        }
+
         var itemRenderer = Minecraft.getInstance().getItemRenderer();
-        var items = blockEntity.copyItems();
 
-        float start = 0.5F - DISPLAY_SPACING * ((DISPLAY_COLUMNS - 1) * 0.5F);
+        float gameTime = blockEntity.getLevel() != null
+                ? blockEntity.getLevel().getGameTime() + partialTick
+                : partialTick;
 
-        for (int slot = 0; slot < items.size(); slot++) {
-            ItemStack stack = items.get(slot);
-            if (stack.isEmpty()) {
-                continue;
-            }
+        float baseAngleDeg = gameTime * RING_ROTATION_DEG_PER_TICK;
+        float ringRadius = computeRingRadius(count);
+        float stepDeg = 360.0F / count;
 
-            int col = slot % DISPLAY_COLUMNS;
-            int row = slot / DISPLAY_COLUMNS;
+        for (int i = 0; i < count; i++) {
+            ItemStack stack = occupiedItems.get(i);
 
-            float x = start + (col * DISPLAY_SPACING);
-            float z = start + (row * DISPLAY_SPACING);
+            float angleDeg = baseAngleDeg + (stepDeg * i);
+            float angleRad = angleDeg * Mth.DEG_TO_RAD;
+
+            float x = 0.5F + (Mth.cos(angleRad) * ringRadius);
+            float z = 0.5F + (Mth.sin(angleRad) * ringRadius);
 
             poseStack.pushPose();
-            poseStack.translate(x, DISPLAY_Y, z);
-            poseStack.scale(DISPLAY_SCALE, DISPLAY_SCALE, DISPLAY_SCALE);
+            poseStack.translate(x, RING_Y, z);
+
+            // Rotates each item to face outward from the ring center
+            poseStack.mulPose(Axis.YP.rotationDegrees(-angleDeg + 90.0F));
+
+            poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
 
             itemRenderer.renderStatic(
                     stack,
@@ -76,10 +100,31 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
                     poseStack,
                     buffer,
                     blockEntity.getLevel(),
-                    slot
+                    i
             );
 
             poseStack.popPose();
         }
+    }
+
+    // ==================================
+    //  HELPERS
+    // ==================================
+
+    // Collects only non-empty item stacks from reliquary storage
+    private List<ItemStack> collectOccupiedItems(ModCorruptedReliquaryBlockEntity blockEntity) {
+        List<ItemStack> occupied = new ArrayList<>();
+        for (ItemStack stack : blockEntity.copyItems()) {
+            if (!stack.isEmpty()) {
+                occupied.add(stack);
+            }
+        }
+        return occupied;
+    }
+
+    // Computes ring radius based on occupied item count
+    private float computeRingRadius(int count) {
+        float raw = MIN_RING_RADIUS + (count * RING_RADIUS_PER_ITEM);
+        return Mth.clamp(raw, MIN_RING_RADIUS, MAX_RING_RADIUS);
     }
 }

@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Executes ritual transactions after a successful recipe match.
  *
- * <p>This service applies lock state, consumes reliquary inputs, damages selected bound mobs,
- * emits output, and guarantees unlock cleanup.
+ * <p>This service applies lock state, performs commit-time revalidation, consumes reliquary inputs,
+ * damages selected bound mobs, emits output, and guarantees unlock cleanup.
  *
  * <p>In the broader context of the project, this class is the transactional execution layer
  * for ritual crafting.
@@ -35,6 +35,14 @@ public final class RitualExecutionService {
                                                 RitualRecipeMatcher.RitualMatchContext matchContext) {
         RitualRecipe recipe = matchContext.recipe();
 
+        // Revalidates before any lock or mutation
+        RitualCommitValidator.ValidationResult preLockValidation =
+                RitualCommitValidator.validateMatchStillHolds(level, reliquaryPos, reliquaryBe, recipe.id());
+
+        if (!preLockValidation.isSuccess()) {
+            return RitualExecutionResult.fail(preLockValidation.message());
+        }
+
         List<ModBindingPedestalBlockEntity> participantPedestals = new ArrayList<>();
         for (RitualRecipeMatcher.PedestalSelection selection : matchContext.selectedPedestals()) {
             var be = level.getBlockEntity(selection.pos());
@@ -50,6 +58,14 @@ public final class RitualExecutionService {
         }
 
         try {
+            // Revalidates again after lock acquisition just before mutation
+            RitualCommitValidator.ValidationResult preCommitValidation =
+                    RitualCommitValidator.validateMatchStillHolds(level, reliquaryPos, reliquaryBe, recipe.id());
+
+            if (!preCommitValidation.isSuccess()) {
+                return RitualExecutionResult.fail(preCommitValidation.message());
+            }
+
             boolean consumed = reliquaryBe.consumeRequirements(recipe.itemRequirements());
             if (!consumed) {
                 return RitualExecutionResult.fail("Failed to consume reliquary items");
@@ -71,7 +87,7 @@ public final class RitualExecutionService {
                 net.minecraft.world.level.block.Block.popResource(level, reliquaryPos.above(), output);
             }
 
-            return RitualExecutionResult.success();
+            return RitualExecutionResult.success("Ritual completed");
         } finally {
             reliquaryBe.setRitualLocked(false);
             for (ModBindingPedestalBlockEntity pedestal : participantPedestals) {
@@ -86,18 +102,34 @@ public final class RitualExecutionService {
      * <p>In the broader context of the project, this keeps activation UX and telemetry
      * decoupled from low-level execution details.
      */
-    public record RitualExecutionResult(
-            boolean success,
-            String message
-    ) {
+    public static final class RitualExecutionResult {
+        private final boolean success;
+        private final String message;
+
+        // Creates an execution result
+        private RitualExecutionResult(boolean success, String message) {
+            this.success = success;
+            this.message = message;
+        }
+
         // Creates a success result
-        public static RitualExecutionResult success() {
-            return new RitualExecutionResult(true, "Ritual completed");
+        public static RitualExecutionResult success(String message) {
+            return new RitualExecutionResult(true, message);
         }
 
         // Creates a failure result
         public static RitualExecutionResult fail(String message) {
             return new RitualExecutionResult(false, message);
+        }
+
+        // Returns true when execution succeeded
+        public boolean isSuccess() {
+            return success;
+        }
+
+        // Returns execution message
+        public String message() {
+            return message;
         }
     }
 }

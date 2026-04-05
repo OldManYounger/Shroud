@@ -48,7 +48,7 @@ public final class RitualActivationHandler {
         RitualExecutionService.RitualExecutionResult execution =
                 RitualExecutionService.execute(serverLevel, reliquaryPos, player, reliquaryBe, match.get());
 
-        if (!execution.success()) {
+        if (execution.isSuccess() == false) {
             return new RitualActivationResult(RitualActivationStatus.EXECUTION_FAILED, match, Optional.of(execution));
         }
 

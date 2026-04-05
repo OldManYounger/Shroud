@@ -6,6 +6,7 @@
 
 - Version 0.4.2
     Additions
+        - Ritual crafting system v1
     Changes
         - Finished back-end refinements of code, formatting and comments to updated standards
     Removals

@@ -1,5 +1,7 @@
 package net.oldmanyounger.shroud;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.Mob;
@@ -52,6 +54,9 @@ public class Shroud {
 
     // Shared logger used for diagnostics
     public static final Logger LOGGER = LogUtils.getLogger();
+
+    // Shared Gson parser for datapack json loaders and other json parsing tasks
+    public static final Gson GSON = new GsonBuilder().create();
 
     // ==================================
     //  CONSTRUCTOR / REGISTRATION

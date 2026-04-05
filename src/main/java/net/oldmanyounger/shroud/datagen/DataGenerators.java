@@ -79,5 +79,8 @@ public class DataGenerators {
 
         // Built-in datapack generation for worldgen and trim content
         generator.addProvider(event.includeServer(), new ModDatapackProvider(packOutput, lookupProvider));
+
+        // Corrupted reliquary ritual recipe json generation
+        generator.addProvider(event.includeServer(), new ModCorruptedReliquaryRecipeProvider(packOutput));
     }
 }

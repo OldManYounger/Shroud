@@ -1,10 +1,15 @@
 package net.oldmanyounger.shroud.ritual;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.oldmanyounger.shroud.block.entity.ModBindingPedestalBlockEntity;
 import net.oldmanyounger.shroud.block.entity.ModCorruptedReliquaryBlockEntity;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
@@ -75,18 +80,15 @@ public final class RitualExecutionService {
             float mobDamage = recipe.mobDamagePerRequiredMob();
             if (mobDamage > 0.0F) {
                 for (ModBindingPedestalBlockEntity pedestal : participantPedestals) {
-                    boolean damaged = pedestal.damageBoundMob(mobDamage);
-                    if (!damaged) {
-                        return RitualExecutionResult.fail("Failed to damage one or more required mobs");
+                    boolean damagedAndAlive = pedestal.damageBoundMob(mobDamage);
+                    if (!damagedAndAlive) {
+                        return RitualExecutionResult.fail("A required mob died or could not be damaged");
                     }
                 }
             }
 
             ItemStack output = recipe.output().copy();
-            boolean added = player.addItem(output);
-            if (!added) {
-                net.minecraft.world.level.block.Block.popResource(level, reliquaryPos.above(), output);
-            }
+            routeOutput(level, reliquaryPos, output);
 
             emitCompletionParticles(level, reliquaryPos);
             return RitualExecutionResult.success("Ritual completed");
@@ -98,12 +100,97 @@ public final class RitualExecutionService {
         }
     }
 
+    // Routes ritual output to adjacent chest or north-side drop fallback
+    private static void routeOutput(ServerLevel level, BlockPos reliquaryPos, ItemStack output) {
+        if (output.isEmpty()) return;
+
+        ItemStack remainder = output.copy();
+
+        boolean insertedIntoChest = tryInsertIntoAdjacentChest(level, reliquaryPos, remainder);
+        if (insertedIntoChest) {
+            return;
+        }
+
+        dropNorthOfReliquary(level, reliquaryPos, remainder);
+    }
+
+    // Tries to insert output stack into any chest on the four cardinal sides
+    private static boolean tryInsertIntoAdjacentChest(ServerLevel level, BlockPos reliquaryPos, ItemStack stack) {
+        Direction[] directions = new Direction[]{
+                Direction.NORTH,
+                Direction.EAST,
+                Direction.SOUTH,
+                Direction.WEST
+        };
+
+        for (Direction direction : directions) {
+            BlockPos chestPos = reliquaryPos.relative(direction);
+            BlockEntity be = level.getBlockEntity(chestPos);
+            if (!(be instanceof ChestBlockEntity chest)) continue;
+
+            insertIntoContainer(chest, stack);
+            chest.setChanged();
+
+            if (stack.isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Inserts as much as possible from stack into a container
+    private static void insertIntoContainer(Container container, ItemStack stack) {
+        for (int slot = 0; slot < container.getContainerSize(); slot++) {
+            if (stack.isEmpty()) return;
+
+            ItemStack existing = container.getItem(slot);
+
+            if (existing.isEmpty()) {
+                if (!container.canPlaceItem(slot, stack)) continue;
+
+                int move = Math.min(stack.getCount(), Math.min(container.getMaxStackSize(), stack.getMaxStackSize()));
+                ItemStack moved = stack.copyWithCount(move);
+                container.setItem(slot, moved);
+                stack.shrink(move);
+                continue;
+            }
+
+            if (!ItemStack.isSameItemSameComponents(existing, stack)) continue;
+            if (!container.canPlaceItem(slot, stack)) continue;
+
+            int slotLimit = Math.min(container.getMaxStackSize(), existing.getMaxStackSize());
+            int room = slotLimit - existing.getCount();
+            if (room <= 0) continue;
+
+            int move = Math.min(room, stack.getCount());
+            existing.grow(move);
+            stack.shrink(move);
+            container.setItem(slot, existing);
+        }
+    }
+
+    // Drops output one block north of reliquary and one block up
+    private static void dropNorthOfReliquary(ServerLevel level, BlockPos reliquaryPos, ItemStack output) {
+        if (output.isEmpty()) return;
+
+        BlockPos dropPos = reliquaryPos.relative(Direction.NORTH).above();
+
+        double x = dropPos.getX() + 0.5D;
+        double y = dropPos.getY() + 0.05D;
+        double z = dropPos.getZ() + 0.5D;
+
+        ItemEntity itemEntity = new ItemEntity(level, x, y, z, output);
+        itemEntity.setDefaultPickUpDelay();
+        level.addFreshEntity(itemEntity);
+    }
+
     // Emits completion particles at the reliquary after a successful ritual
     private static void emitCompletionParticles(ServerLevel level, BlockPos reliquaryPos) {
         level.sendParticles(
                 ParticleTypes.SCULK_SOUL,
                 reliquaryPos.getX() + 0.5D,
-                reliquaryPos.getY() + 1.05D,
+                reliquaryPos.getY() + 1.20D,
                 reliquaryPos.getZ() + 0.5D,
                 16,
                 0.30D,

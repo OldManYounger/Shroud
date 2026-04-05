@@ -2,6 +2,7 @@ package net.oldmanyounger.shroud.ritual;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -10,7 +11,15 @@ import net.oldmanyounger.shroud.block.entity.ModBindingPedestalBlockEntity;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Runtime matcher that selects a ritual recipe from reliquary items and nearby bound pedestals.
@@ -66,6 +75,35 @@ public final class RitualRecipeMatcher {
         }
 
         return Optional.empty();
+    }
+
+    // Builds a concise debug reason when no ritual match is found
+    public static String debugNoMatch(Level level, BlockPos reliquaryPos, NonNullList<ItemStack> reliquaryItems) {
+        Collection<RitualRecipe> recipes = RitualRecipeManager.INSTANCE.getAll();
+        if (recipes.isEmpty()) {
+            return "No ritual recipes loaded";
+        }
+
+        List<ItemStack> normalizedItems = normalizeReliquaryItems(reliquaryItems);
+        List<PedestalSnapshot> pedestals = collectNearbyPedestals(level, reliquaryPos);
+
+        String actualItems = summarizeActualItems(normalizedItems);
+        String actualMobs = summarizePedestalMobs(pedestals);
+
+        for (RitualRecipe recipe : recipes) {
+            if (!matchesItems(recipe, normalizedItems)) {
+                String expectedItems = summarizeExpectedItems(recipe);
+                return "Item mismatch for " + recipe.id() + " | expected=" + expectedItems + " | actual=" + actualItems;
+            }
+
+            Optional<List<PedestalSelection>> pedestalSelection = matchPedestals(recipe, pedestals);
+            if (pedestalSelection.isEmpty()) {
+                String expectedMobs = summarizeExpectedMobs(recipe);
+                return "Mob mismatch for " + recipe.id() + " | expected=" + expectedMobs + " | actual=" + actualMobs;
+            }
+        }
+
+        return "No recipe matched current state";
     }
 
     // ==================================
@@ -178,7 +216,7 @@ public final class RitualRecipeMatcher {
 
         for (RitualRecipe.MobRequirement req : requirements) {
             ResourceLocation wantedTypeId = Objects.requireNonNull(
-                    net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(req.entityType())
+                    BuiltInRegistries.ENTITY_TYPE.getKey(req.entityType())
             );
 
             int remaining = Math.max(1, req.count());
@@ -199,6 +237,67 @@ public final class RitualRecipeMatcher {
         }
 
         return Optional.of(List.copyOf(selections));
+    }
+
+    // ==================================
+    //  DEBUG HELPERS
+    // ==================================
+
+    // Summarizes expected recipe item requirements for diagnostics
+    private static String summarizeExpectedItems(RitualRecipe recipe) {
+        List<RitualRecipe.ItemRequirement> expanded = expandItemRequirements(recipe.itemRequirements());
+        Map<String, Integer> counts = new HashMap<>();
+
+        for (RitualRecipe.ItemRequirement req : expanded) {
+            String key;
+            if (req.isItemRequirement()) {
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(req.item());
+                key = "item:" + id;
+            } else if (req.isTagRequirement()) {
+                key = "tag:" + req.tag().location();
+            } else {
+                key = "unknown";
+            }
+
+            counts.merge(key, 1, Integer::sum);
+        }
+
+        return counts.toString();
+    }
+
+    // Summarizes actual reliquary items for diagnostics
+    private static String summarizeActualItems(List<ItemStack> actualItems) {
+        Map<String, Integer> counts = new HashMap<>();
+
+        for (ItemStack stack : actualItems) {
+            ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+            counts.merge(String.valueOf(id), 1, Integer::sum);
+        }
+
+        return counts.toString();
+    }
+
+    // Summarizes expected recipe mobs for diagnostics
+    private static String summarizeExpectedMobs(RitualRecipe recipe) {
+        Map<String, Integer> counts = new HashMap<>();
+
+        for (RitualRecipe.MobRequirement req : recipe.mobRequirements()) {
+            ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(req.entityType());
+            counts.merge(String.valueOf(id), Math.max(1, req.count()), Integer::sum);
+        }
+
+        return counts.toString();
+    }
+
+    // Summarizes available pedestal bound mobs for diagnostics
+    private static String summarizePedestalMobs(List<PedestalSnapshot> pedestals) {
+        Map<String, Integer> counts = new HashMap<>();
+
+        for (PedestalSnapshot snapshot : pedestals) {
+            counts.merge(String.valueOf(snapshot.boundMobTypeId()), 1, Integer::sum);
+        }
+
+        return counts.toString();
     }
 
     // ==================================

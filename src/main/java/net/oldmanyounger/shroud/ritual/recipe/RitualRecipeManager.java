@@ -1,6 +1,7 @@
 package net.oldmanyounger.shroud.ritual.recipe;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,7 +17,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.oldmanyounger.shroud.Shroud;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Datapack JSON loader for ritual recipes under data/<namespace>/ritual_recipe.
@@ -33,11 +39,11 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
     //  FIELDS
     // ==================================
 
+    // Gson parser used for ritual recipe JSON documents
+    private static final Gson GSON = new GsonBuilder().create();
+
     // Shared singleton instance used by reload registration and lookup callers
     public static final RitualRecipeManager INSTANCE = new RitualRecipeManager();
-
-    // Gson parser used for ritual recipe JSON documents
-    private static final Gson GSON = Shroud.GSON;
 
     // In-memory map of loaded ritual recipes by id
     private Map<ResourceLocation, RitualRecipe> recipes = Map.of();
@@ -58,8 +64,8 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
             try {
                 JsonObject root = GsonHelper.convertToJsonObject(entry.getValue(), "ritual_recipe");
 
-                java.util.List<RitualRecipe.ItemRequirement> itemRequirements = parseItemRequirements(id, root);
-                java.util.List<RitualRecipe.MobRequirement> mobRequirements = parseMobRequirements(id, root);
+                List<RitualRecipe.ItemRequirement> itemRequirements = parseItemRequirements(id, root);
+                List<RitualRecipe.MobRequirement> mobRequirements = parseMobRequirements(id, root);
                 float mobDamage = Math.max(0.0F, GsonHelper.getAsFloat(root, "mob_damage", 2.0F));
                 ItemStack output = parseOutput(id, root);
 
@@ -85,8 +91,8 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
     }
 
     // Parses item requirement list from JSON
-    private java.util.List<RitualRecipe.ItemRequirement> parseItemRequirements(ResourceLocation id, JsonObject root) {
-        java.util.List<RitualRecipe.ItemRequirement> out = new ArrayList<>();
+    private List<RitualRecipe.ItemRequirement> parseItemRequirements(ResourceLocation id, JsonObject root) {
+        List<RitualRecipe.ItemRequirement> out = new ArrayList<>();
 
         JsonArray items = GsonHelper.getAsJsonArray(root, "items", new JsonArray());
         for (JsonElement element : items) {
@@ -120,8 +126,8 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
     }
 
     // Parses mob requirement list from JSON
-    private java.util.List<RitualRecipe.MobRequirement> parseMobRequirements(ResourceLocation id, JsonObject root) {
-        java.util.List<RitualRecipe.MobRequirement> out = new ArrayList<>();
+    private List<RitualRecipe.MobRequirement> parseMobRequirements(ResourceLocation id, JsonObject root) {
+        List<RitualRecipe.MobRequirement> out = new ArrayList<>();
 
         JsonArray mobs = GsonHelper.getAsJsonArray(root, "mobs", new JsonArray());
         for (JsonElement element : mobs) {

@@ -149,13 +149,10 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         if (level.isClientSide) {
-            if (!reliquary.canAcceptInsert()) {
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            }
-
-            // Predicts local visual insertion so ring rendering updates immediately
-            reliquary.tryInsertSingle(stackInHand.copyWithCount(1));
-            return ItemInteractionResult.SUCCESS;
+            // Defers all inventory mutation to server to avoid client ghost render state
+            return reliquary.canAcceptInsert()
+                    ? ItemInteractionResult.SUCCESS
+                    : ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
         boolean inserted = reliquary.tryInsertSingle(stackInHand);
@@ -183,8 +180,7 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         if (level.isClientSide) {
-            // Predicts local visual removal so ring rendering updates immediately
-            reliquary.popMostRecentItem();
+            // Defers all inventory mutation to server to avoid client ghost render state
             return InteractionResult.SUCCESS;
         }
 
@@ -266,7 +262,10 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
         switch (result.status()) {
             case RELIQUARY_LOCKED -> player.displayClientMessage(Component.literal("Reliquary is locked"), true);
-            case NO_MATCH -> player.displayClientMessage(Component.literal("No matching ritual"), true);
+            case NO_MATCH -> player.displayClientMessage(
+                    Component.literal(result.debugMessage().orElse("No matching ritual")),
+                    false
+            );
             case EXECUTION_FAILED -> player.displayClientMessage(Component.literal(
                     result.execution().map(RitualExecutionService.RitualExecutionResult::message).orElse("Ritual failed")
             ), true);

@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
@@ -38,14 +39,14 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // Total number of one-item slots supported by the reliquary
     public static final int MAX_SLOTS = 32;
 
-    // NBT key for stored slot items
-    private static final String TAG_ITEMS = "Items";
-
     // NBT key for insertion order tracking
     private static final String TAG_INSERTION_ORDER = "InsertionOrder";
 
     // NBT key for ritual lock state
     private static final String TAG_RITUAL_LOCKED = "RitualLocked";
+
+    // NBT key for inventory revision used to force renderer-visible sync transitions
+    private static final String TAG_INVENTORY_REVISION = "InventoryRevision";
 
     // All slot indexes exposed for insertion checks by automation
     private static final int[] AUTOMATION_SLOTS = buildAutomationSlots();
@@ -58,6 +59,9 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
     // Runtime lock state placeholder for future ritual integration
     private boolean ritualLocked = false;
+
+    // Monotonic revision that increments on every inventory mutation
+    private int inventoryRevision = 0;
 
     // ==================================
     //  CONSTRUCTOR
@@ -84,7 +88,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         ItemStack inserted = sourceStack.copyWithCount(1);
         items.set(slot, inserted);
         insertionOrder.add(slot);
-        markChangedAndSync();
+        markChangedAndSync(true);
         return true;
     }
 
@@ -126,7 +130,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             ItemStack stack = items.get(slot);
             if (!stack.isEmpty()) {
                 items.set(slot, ItemStack.EMPTY);
-                markChangedAndSync();
+                markChangedAndSync(true);
                 return stack;
             }
         }
@@ -166,6 +170,11 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         return count;
     }
 
+    // Returns current inventory revision number
+    public int getInventoryRevision() {
+        return inventoryRevision;
+    }
+
     // ==================================
     //  LOCK STATE
     // ==================================
@@ -179,7 +188,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     public void setRitualLocked(boolean ritualLocked) {
         if (this.ritualLocked == ritualLocked) return;
         this.ritualLocked = ritualLocked;
-        markChangedAndSync();
+        markChangedAndSync(false);
     }
 
     // ==================================
@@ -191,6 +200,15 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    // Applies packet update data on client
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registries) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            this.loadAdditional(tag, registries);
+        }
     }
 
     // Provides update tag data for client-side block entity synchronization
@@ -218,6 +236,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         ContainerHelper.saveAllItems(tag, this.items, registries);
         tag.putIntArray(TAG_INSERTION_ORDER, this.insertionOrder.toIntArray());
         tag.putBoolean(TAG_RITUAL_LOCKED, this.ritualLocked);
+        tag.putInt(TAG_INVENTORY_REVISION, this.inventoryRevision);
     }
 
     // Loads reliquary inventory and state from NBT
@@ -235,6 +254,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         }
 
         this.ritualLocked = tag.getBoolean(TAG_RITUAL_LOCKED);
+        this.inventoryRevision = tag.contains(TAG_INVENTORY_REVISION) ? tag.getInt(TAG_INVENTORY_REVISION) : 0;
     }
 
     // ==================================
@@ -273,7 +293,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             items.set(slot, ItemStack.EMPTY);
         }
 
-        markChangedAndSync();
+        markChangedAndSync(true);
         return taken;
     }
 
@@ -285,6 +305,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         if (existing.isEmpty()) return ItemStack.EMPTY;
 
         items.set(slot, ItemStack.EMPTY);
+        bumpInventoryRevision();
         return existing;
     }
 
@@ -296,7 +317,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
         if (stack.isEmpty()) {
             items.set(slot, ItemStack.EMPTY);
-            markChangedAndSync();
+            markChangedAndSync(true);
             return;
         }
 
@@ -305,7 +326,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         ItemStack single = stack.copyWithCount(1);
         items.set(slot, single);
         insertionOrder.add(slot);
-        markChangedAndSync();
+        markChangedAndSync(true);
     }
 
     // Returns whether a player can still use this container
@@ -327,7 +348,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             items.set(i, ItemStack.EMPTY);
         }
         insertionOrder.clear();
-        markChangedAndSync();
+        markChangedAndSync(true);
     }
 
     // Returns whether a stack may be placed in the given slot
@@ -366,7 +387,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         }
 
         pruneInsertionOrderToExistingItems();
-        markChangedAndSync();
+        markChangedAndSync(true);
         return true;
     }
 
@@ -404,7 +425,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
     // Removes stale insertion-order entries that now point to empty slots
     private void pruneInsertionOrderToExistingItems() {
-        it.unimi.dsi.fastutil.ints.IntArrayList kept = new it.unimi.dsi.fastutil.ints.IntArrayList();
+        IntArrayList kept = new IntArrayList();
 
         for (int i = 0; i < insertionOrder.size(); i++) {
             int slot = insertionOrder.getInt(i);
@@ -444,13 +465,25 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // ==================================
 
     // Marks data dirty and pushes a full client update so renderer state refreshes after inventory changes
-    private void markChangedAndSync() {
+    private void markChangedAndSync(boolean inventoryMutated) {
+        if (inventoryMutated) {
+            bumpInventoryRevision();
+        }
+
         super.setChanged();
 
         if (level == null || level.isClientSide) return;
 
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
+    }
+
+    // Increments inventory revision
+    private void bumpInventoryRevision() {
+        this.inventoryRevision++;
+        if (this.inventoryRevision == Integer.MAX_VALUE) {
+            this.inventoryRevision = 1;
+        }
     }
 
     // Builds the static slot index list used for automation access

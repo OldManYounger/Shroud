@@ -309,7 +309,7 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
 
-    // Damages the currently bound living mob and updates snapshot metadata
+    // Damages the currently bound living mob using generic damage and fails if mob dies
     public boolean damageBoundMob(float amount) {
         if (amount <= 0.0F) return true;
         if (!(level instanceof ServerLevel serverLevel)) return false;
@@ -321,9 +321,19 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
             return false;
         }
 
-        boolean hurt = living.hurt(serverLevel.damageSources().magic(), amount);
+        boolean hurt = living.hurt(serverLevel.damageSources().generic(), amount);
         snapshotBoundEntity(living);
         markChangedAndSync();
-        return hurt || living.isAlive();
+
+        if (!hurt) {
+            return false;
+        }
+
+        if (!living.isAlive() || living.isRemoved()) {
+            releaseBoundMob();
+            return false;
+        }
+
+        return true;
     }
 }

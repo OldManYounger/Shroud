@@ -9,51 +9,59 @@ import java.util.EnumSet;
 import java.util.Objects;
 
 /**
- * AI goal that moves a {@link PathfinderMob} toward the last known vibration location
- * <p>
- * This goal is intended to be used with entities that implement a {@code VibrationListener}
- * interface exposing a vibration target position. When a vibration position is available,
- * the goal:
- * <ul>
- *   <li>Begins pathfinding toward that block position</li>
- *   <li>Continues pathing while the navigation remains valid and the position is unchanged</li>
- *   <li>Stops when the entity is within a configurable radius of the vibration target</li>
- *   <li>Clears the vibration location when reached or when pathing fails</li>
- * </ul>
- * The concept and behavior are inspired by KyaniteMods' Deeper And Darker implementation,
- * adapted here for the Shroud mod to allow custom mobs to home in on sound-based cues
+ * Moves a {@link PathfinderMob} toward its last stored vibration location.
+ *
+ * <p>This goal is designed for mobs implementing {@link VibrationListener}. It
+ * starts when a vibration position exists, pathfinds toward that position, and
+ * stops once the target is reached, invalid, or no longer actively navigated.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's
+ * sensory-AI behavior layer that lets custom hostile entities react to nearby
+ * game events and pressure players through sound-driven pursuit.
  */
 public class VibrationGoal extends Goal {
 
-    // Mob instance that will be moved by this goal
+    // ============================================================
+    //  FIELDS / CONSTANTS
+    // ============================================================
+
+    // Mob instance controlled by this goal
     private final PathfinderMob mob;
 
-    // Movement speed modifier used when pathing toward the vibration
+    // Movement speed modifier used while pathing to vibration positions
     private final double speedModifier;
 
-    // How close is "close enough" to the vibration source
+    // Distance threshold considered "close enough" to the vibration source
     private static final double STOP_RADIUS = 1.5D;
 
-    // Precomputed squared stop radius to avoid repeated square root operations
+    // Squared stop threshold to avoid repeated square roots.
     private static final double STOP_RADIUS_SQR = STOP_RADIUS * STOP_RADIUS;
 
-    // Constructs a new vibration goal for the given mob at the specified movement speed
+    // ============================================================
+    //  CONSTRUCTOR
+    // ============================================================
+
+    // Creates a vibration pursuit goal for the given mob and movement speed
     public VibrationGoal(PathfinderMob mob, double speedModifier) {
         this.mob = mob;
         this.speedModifier = speedModifier;
 
-        // This goal only affects movement
+        // This goal only controls movement.
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
-    // Determines whether the goal can start based on the presence of a vibration location
+    // ============================================================
+    //  GOAL STATE
+    // ============================================================
+
+    // Starts when the mob has a non-null vibration location
     @Override
     public boolean canUse() {
         return mob instanceof VibrationListener listener
                 && listener.getVibrationLocation() != null;
     }
 
-    // Determines whether the goal should continue running while pathing toward the vibration
+    // Continues while target remains valid, unreached, and actively navigated
     @Override
     public boolean canContinueToUse() {
         if (!(mob instanceof VibrationListener listener)) {
@@ -65,30 +73,34 @@ public class VibrationGoal extends Goal {
             return false;
         }
 
-        // Distance from mob to the vibration location
+        // Computes squared distance from mob center to vibration block center
         double dx = (vibration.getX() + 0.5D) - this.mob.getX();
         double dy = (double) vibration.getY() - this.mob.getY();
         double dz = (vibration.getZ() + 0.5D) - this.mob.getZ();
         double distSq = dx * dx + dy * dy + dz * dz;
 
-        // If within STOP_RADIUS, we consider the vibration "reached"
+        // Clears vibration and stops when close enough to target
         if (distSq <= STOP_RADIUS_SQR) {
             listener.setVibrationLocation(null);
             return false;
         }
 
-        // If navigation finished and we still aren't close enough, stop and clear
+        // Clears vibration and stops when navigation has ended prematurely
         if (this.mob.getNavigation().isDone()) {
             listener.setVibrationLocation(null);
             return false;
         }
 
-        // Otherwise, keep going as long as we're still pathing toward that same block
+        // Continues only when navigation is still aimed at the same vibration block
         BlockPos navTarget = this.mob.getNavigation().getTargetPos();
         return navTarget != null && Objects.equals(navTarget, vibration);
     }
 
-    // Starts moving toward the current vibration location when the goal begins
+    // ============================================================
+    //  LIFECYCLE
+    // ============================================================
+
+    // Builds and starts a path to the current vibration position
     @Override
     public void start() {
         if (!(mob instanceof VibrationListener listener)) {
@@ -100,17 +112,17 @@ public class VibrationGoal extends Goal {
             return;
         }
 
-        // Attempt to create a path toward the vibration position
+        // Attempts path creation and movement toward vibration source
         Path path = this.mob.getNavigation().createPath(vibration, 0);
         if (path != null) {
             this.mob.getNavigation().moveTo(path, this.speedModifier);
         } else {
-            // Could not path there; clear vibration so we don't get stuck
+            // Clears vibration target when pathing fails
             listener.setVibrationLocation(null);
         }
     }
 
-    // Stops navigation when the goal ends
+    // Stops mob navigation when the goal ends
     @Override
     public void stop() {
         this.mob.getNavigation().stop();

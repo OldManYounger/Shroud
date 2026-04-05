@@ -19,7 +19,6 @@ import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeRenderer;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
-import net.oldmanyounger.shroud.entity.client.ResonantHulkRenderer;
 import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
@@ -75,7 +74,6 @@ public class Shroud {
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
             EntityRenderers.register(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerRenderer::new);
-            EntityRenderers.register(ModEntities.RESONANT_HULK.get(), ResonantHulkRenderer::new);
             EntityRenderers.register(ModEntities.BLIGHTED_SHADE.get(), BlightedShadeRenderer::new);
             ModItemProperties.addCustomItemProperties();
         }
@@ -91,8 +89,6 @@ public class Shroud {
         event.register(ModEntities.LIVING_SCULK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.UMBRAL_HOWLER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.RESONANT_HULK.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.BLIGHTED_SHADE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);

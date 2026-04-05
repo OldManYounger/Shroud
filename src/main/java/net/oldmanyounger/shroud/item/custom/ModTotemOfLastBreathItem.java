@@ -8,8 +8,8 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class TotemOfLastBreathItem extends Item {
-    public TotemOfLastBreathItem(Properties properties) {
+public class ModTotemOfLastBreathItem extends Item {
+    public ModTotemOfLastBreathItem(Properties properties) {
         super(properties);
     }
 

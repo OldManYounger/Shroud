@@ -2,7 +2,6 @@ package net.oldmanyounger.shroud.item;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.food.FoodProperties;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.entity.ModEntities;
@@ -12,9 +11,7 @@ import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.item.custom.ModArmorItem;
-import net.oldmanyounger.shroud.item.custom.TotemOfLastBreathItem;
-
-import java.util.List;
+import net.oldmanyounger.shroud.item.custom.ModTotemOfLastBreathItem;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Shroud.MOD_ID);
@@ -22,7 +19,7 @@ public class ModItems {
     public static final DeferredItem<Item> SCULK_PEARL = ITEMS.register("sculk_pearl",
             () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> TOTEM_OF_LAST_BREATH = ITEMS.register("totem_of_last_breath",
-            () -> new TotemOfLastBreathItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
+            () -> new ModTotemOfLastBreathItem(new Item.Properties().stacksTo(1).rarity(Rarity.RARE)));
     public static final DeferredItem<Item> GLOOM_PULP = ITEMS.register("gloom_pulp",
             () -> new ItemNameBlockItem(
                     ModBlocks.SCULK_VINES.get(),

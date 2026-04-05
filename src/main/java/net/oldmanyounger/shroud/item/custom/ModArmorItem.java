@@ -1,7 +1,6 @@
 package net.oldmanyounger.shroud.item.custom;
 
 import com.google.common.collect.ImmutableMap;
-import net.oldmanyounger.shroud.item.ModArmorMaterials;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -11,38 +10,47 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.oldmanyounger.shroud.item.ModArmorMaterials;
 
 import java.util.List;
 import java.util.Map;
 
-// Custom armor item that grants special effects when a full matching set is worn
-// Credit to KaupenJoe for the majority of the class
+/**
+ * Defines custom armor item behavior for full-set bonus effects.
+ *
+ * <p>This armor item checks player equipment state on a timed tick cadence and
+ * applies configured potion effects when a full matching armor set is equipped.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's item
+ * progression layer that gives custom armor materials identity through set-based
+ * gameplay bonuses.
+ */
 public class ModArmorItem extends ArmorItem {
 
-    // Maps armor materials to the list of potion effects they should grant when a full set is equipped
+    // Maps armor materials to effect lists granted when a full set is worn
     private static final Map<Holder<ArmorMaterial>, List<MobEffectInstance>> MATERIAL_TO_EFFECT_MAP =
             (new ImmutableMap.Builder<Holder<ArmorMaterial>, List<MobEffectInstance>>())
                     .put(ModArmorMaterials.EVENTIDE_ARMOR_MATERIAL,
                             List.of(
-                                    // Jump-boost and glowing for wearing full Eventide armor
+                                    // Eventide full-set effects
                                     new MobEffectInstance(MobEffects.JUMP, 200, 1, false, false),
                                     new MobEffectInstance(MobEffects.GLOWING, 200, 1, false, false)
                             ))
                     .build();
 
-    // Standard armor item constructor delegating to ArmorItem
+    // Creates a custom armor item with the provided material, type, and properties
     public ModArmorItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
         super(material, type, properties);
     }
 
-    // Called every tick while the armor piece is in a player inventory slot
+    // Evaluates armor-set effects on server-side player inventory ticks
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!(entity instanceof Player player) || level.isClientSide()) {
             return;
         }
 
-        // Run every 20 ticks (1 second)
+        // Runs once per second
         if (player.tickCount % 20 != 0) {
             return;
         }
@@ -52,28 +60,27 @@ public class ModArmorItem extends ArmorItem {
         }
     }
 
-    // Checks the player's armor material against the map and applies the corresponding effects
+    // Applies effect groups for any matching full armor material set
     private void evaluateArmorEffects(Player player) {
-        for(Map.Entry<Holder<ArmorMaterial>, List<MobEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
+        for (Map.Entry<Holder<ArmorMaterial>, List<MobEffectInstance>> entry : MATERIAL_TO_EFFECT_MAP.entrySet()) {
             Holder<ArmorMaterial> mapArmorMaterial = entry.getKey();
             List<MobEffectInstance> mapEffect = entry.getValue();
 
-            // If the player is wearing a full set of this material, grant its configured effects
-            if(hasPlayerCorrectArmorOn(mapArmorMaterial, player)) {
+            if (hasPlayerCorrectArmorOn(mapArmorMaterial, player)) {
                 addEffectToPlayer(player, mapEffect);
             }
         }
     }
 
-    // Adds all configured effects to the player if they do not already have them
+    // Applies missing effects from the configured list to the player
     private void addEffectToPlayer(Player player, List<MobEffectInstance> mapEffect) {
-        // Check if the player already has every effect in the list
+        // Checks whether all effects are already active
         boolean hasPlayerEffect = mapEffect.stream().allMatch(effect -> player.hasEffect(effect.getEffect()));
 
-        // Only re-apply effects if one or more are missing
-        if(!hasPlayerEffect) {
+        // Reapplies only when one or more effects are absent
+        if (!hasPlayerEffect) {
             for (MobEffectInstance effect : mapEffect) {
-                // Create new instances to avoid mutating shared MobEffectInstance objects
+                // Copies each effect into a new instance before applying
                 player.addEffect(new MobEffectInstance(
                         effect.getEffect(),
                         effect.getDuration(),
@@ -85,34 +92,33 @@ public class ModArmorItem extends ArmorItem {
         }
     }
 
-    // Verifies that every armor slot is filled with an ArmorItem of the given material
+    // Verifies all armor slots contain armor pieces of the requested material
     private boolean hasPlayerCorrectArmorOn(Holder<ArmorMaterial> mapArmorMaterial, Player player) {
-        // First ensure all armor slots actually contain an ArmorItem
-        for(ItemStack armorStack : player.getArmorSlots()) {
-            if(!(armorStack.getItem() instanceof ArmorItem)) {
+        // Ensures every equipped armor slot is an ArmorItem
+        for (ItemStack armorStack : player.getArmorSlots()) {
+            if (!(armorStack.getItem() instanceof ArmorItem)) {
                 return false;
             }
         }
 
-        // Extract each armor piece as an ArmorItem from the inventory armor slots (0–3: boots → helmet)
+        // Reads armor slots in inventory order 0..3 as boots to helmet
         ArmorItem boots = ((ArmorItem) player.getInventory().getArmor(0).getItem());
         ArmorItem leggings = ((ArmorItem) player.getInventory().getArmor(1).getItem());
         ArmorItem chestplate = ((ArmorItem) player.getInventory().getArmor(2).getItem());
         ArmorItem helmet = ((ArmorItem) player.getInventory().getArmor(3).getItem());
 
-        // True only if all four pieces share the same armor material as the map key
+        // Returns true only when all four pieces share the same material
         return boots.getMaterial() == mapArmorMaterial && leggings.getMaterial() == mapArmorMaterial
                 && chestplate.getMaterial() == mapArmorMaterial && helmet.getMaterial() == mapArmorMaterial;
     }
 
-    // Simple check that all four armor slots are non-empty (does not validate material)
+    // Checks whether all four armor slots are occupied
     private boolean hasFullSuitOfArmorOn(Player player) {
         ItemStack boots = player.getInventory().getArmor(0);
         ItemStack leggings = player.getInventory().getArmor(1);
         ItemStack chestplate = player.getInventory().getArmor(2);
         ItemStack helmet = player.getInventory().getArmor(3);
 
-        // Returns true if all armor slots are occupied by some item
         return !boots.isEmpty() && !leggings.isEmpty() && !chestplate.isEmpty() && !helmet.isEmpty();
     }
 }

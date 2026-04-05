@@ -6,21 +6,18 @@ import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 import software.bernie.geckolib.model.GeoModel;
 
 /**
- * GeckoLib model definition for the {@link UmbralHowlerEntity}
- * <p>
- * This class provides the resource locations for:
- * <ul>
- *   <li>The entity's geometric model file ({@code .geo.json})</li>
- *   <li>The entity's texture file ({@code .png})</li>
- *   <li>The entity's GeckoLib animation file ({@code .animation.json})</li>
- * </ul>
- * These resources define the Umbral Howler’s 3D structure, appearance, and
- * animation timelines, and are automatically consumed by GeckoLib’s renderer
- * during rendering and animation evaluation
+ * Supplies GeckoLib model, texture, and animation resources for Umbral Howler.
+ *
+ * <p>This model class maps {@link UmbralHowlerEntity} to its geometry, texture,
+ * and animation files used by GeckoLib during render and animation evaluation.
+ *
+ * <p>In the broader context of the project, this class is part of the client
+ * asset-binding layer that connects entity runtime rendering to Shroud's authored
+ * model and animation resource files.
  */
 public class UmbralHowlerModel extends GeoModel<UmbralHowlerEntity> {
 
-    // Returns the geometry resource used to build the entity’s model
+    // Returns the geometry resource used to build the Umbral Howler model
     @SuppressWarnings("Depreciated")
     @Override
     public ResourceLocation getModelResource(UmbralHowlerEntity animatable) {
@@ -30,7 +27,7 @@ public class UmbralHowlerModel extends GeoModel<UmbralHowlerEntity> {
         );
     }
 
-    // Returns the texture applied to the model during rendering
+    // Returns the texture resource applied to the Umbral Howler model
     @Override
     public ResourceLocation getTextureResource(UmbralHowlerEntity animatable) {
         return ResourceLocation.fromNamespaceAndPath(
@@ -39,7 +36,7 @@ public class UmbralHowlerModel extends GeoModel<UmbralHowlerEntity> {
         );
     }
 
-    // Returns the animation definition used by GeckoLib for this entity
+    // Returns the animation resource used by GeckoLib for Umbral Howler
     @Override
     public ResourceLocation getAnimationResource(UmbralHowlerEntity animatable) {
         return ResourceLocation.fromNamespaceAndPath(

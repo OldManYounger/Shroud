@@ -5,26 +5,23 @@ import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 /**
- * Client-side renderer for the {@link LivingSculkEntity}
- * <p>
- * This renderer uses GeckoLib's {@link GeoEntityRenderer} to provide:
- * <ul>
- *   <li>Model-based rendering driven by the {@code LivingSculkModel}</li>
- *   <li>Automatic animation integration with the entity's GeckoLib controllers</li>
- *   <li>Shadow sizing appropriate for the entity's physical footprint</li>
- * </ul>
- * The renderer is registered on the client and is responsible for drawing the entity
- * each frame, including its animated geometry, textures, and shadow. No custom render
- * layers or behaviors are implemented here, making this a clean and minimal render
- * definition that delegates animation and geometry to the GeckoLib model system
+ * Client-side GeckoLib renderer for {@link LivingSculkEntity}.
+ *
+ * <p>This renderer binds {@link LivingSculkModel} and applies renderer-level
+ * visual settings such as shadow radius while delegating animated geometry and
+ * texture handling to GeckoLib.
+ *
+ * <p>In the broader context of the project, this class is part of the entity
+ * client-render registration layer that makes custom Shroud mobs visible and
+ * correctly animated in-game.
  */
 public class LivingSculkRenderer extends GeoEntityRenderer<LivingSculkEntity> {
 
-    // Creates the renderer, supplying the model and configuring visual properties
+    // Creates the renderer with the Living Sculk model and shadow configuration
     public LivingSculkRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new LivingSculkModel());
 
-        // Adjust shadow size to match entity proportions
+        // Matches shadow size to the entity footprint
         this.shadowRadius = 0.6f;
     }
 }

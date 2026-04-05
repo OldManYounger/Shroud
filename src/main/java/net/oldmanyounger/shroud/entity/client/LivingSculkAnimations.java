@@ -3,29 +3,23 @@ package net.oldmanyounger.shroud.entity.client;
 import software.bernie.geckolib.animation.RawAnimation;
 
 /**
- * Central repository of GeckoLib {@link RawAnimation} definitions
- * for the {@code LivingSculkEntity}
- * <p>
- * This class defines all animation sequences used by the Living Sculk,
- * including idle loops, walk cycles, attack animations, and vibration
- * reaction cues. Each animation is referenced by its controller inside
- * the entity class and is built using GeckoLib's fluent
- * {@link RawAnimation} builder API.
- * <p>
- * The class is declared {@code final} and provides a private constructor
- * to prevent instantiation, serving solely as a static animation container
+ * Centralizes reusable GeckoLib animation definitions for Living Sculk.
+ *
+ * <p>This class exposes static {@link RawAnimation} entries for idle, locomotion,
+ * attack, and vibration-reaction states so controller code can reference a single,
+ * consistent source of animation keys.
+ *
+ * <p>In the broader context of the project, this class is part of the client
+ * animation coordination layer that keeps runtime animation selection aligned with
+ * authored GeckoLib animation assets.
  */
 public final class LivingSculkAnimations {
-
-    // Prevent instantiation
-    private LivingSculkAnimations() {
-    }
 
     // Looped idle animation
     public static final RawAnimation IDLE =
             RawAnimation.begin().thenLoop("animation.living_sculk.idle");
 
-    // Idle alternative animation (non-looping)
+    // One-shot alternate idle variation
     public static final RawAnimation IDLE_HEAD_SPLIT =
             RawAnimation.begin().thenPlay("animation.living_sculk.idle_head_split");
 
@@ -40,4 +34,8 @@ public final class LivingSculkAnimations {
     // One-shot reaction animation for vibration events
     public static final RawAnimation VIBRATION_REACT =
             RawAnimation.begin().thenPlay("animation.living_sculk.vibration_react");
+
+    // Prevents instantiation of this animation constants holder.
+    private LivingSculkAnimations() {
+    }
 }

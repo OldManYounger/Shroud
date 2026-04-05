@@ -20,16 +20,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Manages delayed corruption of offhand Totems of Undying into modded corrupted totems.
+ *
+ * <p>This class schedules short delayed conversions, emits corruption buildup particles,
+ * swaps the offhand item when the delay expires, and cleans up pending state as needed.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's combat
+ * consequence systems that transform defensive vanilla mechanics into thematic
+ * corruption outcomes tied to hostile mob interactions.
+ */
 @EventBusSubscriber(modid = Shroud.MOD_ID)
 public final class ModTotemCorruption {
-    private static final int MIN_DELAY_TICKS = 2;  // 0.2s
-    private static final int MAX_DELAY_TICKS = 2; // 0.2s
 
+    // ==================================
+    //  FIELDS
+    // ==================================
+
+    // Minimum conversion delay in ticks
+    private static final int MIN_DELAY_TICKS = 2;
+
+    // Maximum conversion delay in ticks
+    private static final int MAX_DELAY_TICKS = 2;
+
+    // Pending corruption state keyed by player UUID
     private static final Map<UUID, PendingCorruption> PENDING = new HashMap<>();
 
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
+
+    // Prevents instantiation of this static event handler class
     private ModTotemCorruption() {
     }
 
+    // ==================================
+    //  SCHEDULING
+    // ==================================
+
+    // Schedules an offhand totem corruption if one is not already pending
     public static void schedule(Player player) {
         if (!(player.level() instanceof ServerLevel serverLevel)) {
             return;
@@ -58,6 +87,11 @@ public final class ModTotemCorruption {
         });
     }
 
+    // ==================================
+    //  TICK HANDLER
+    // ==================================
+
+    // Advances pending corruption state and performs conversion when timer elapses
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
@@ -131,6 +165,11 @@ public final class ModTotemCorruption {
         PENDING.remove(player.getUUID());
     }
 
+    // ==================================
+    //  PARTICLES / POSITION HELPERS
+    // ==================================
+
+    // Spawns interim corruption particles near the player's offhand
     private static void spawnCorruptionBlob(ServerLevel serverLevel, Player player) {
         Vec3 offhandPos = getOffhandPosition(player);
 
@@ -171,6 +210,7 @@ public final class ModTotemCorruption {
         );
     }
 
+    // Computes an approximate world-space offhand position relative to facing direction
     private static Vec3 getOffhandPosition(Player player) {
         Vec3 look = player.getLookAngle();
         Vec3 flatLook = new Vec3(look.x, 0.0D, look.z).normalize();
@@ -190,6 +230,11 @@ public final class ModTotemCorruption {
                 .add(forward);
     }
 
+    // ==================================
+    //  RECORDS
+    // ==================================
+
+    // Stores conversion deadline game time for a pending corruption
     private record PendingCorruption(long convertGameTime) {
     }
 }

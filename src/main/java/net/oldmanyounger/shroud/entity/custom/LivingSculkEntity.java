@@ -59,15 +59,15 @@ import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
- * Represents the custom Living Sculk hostile entity for the Shroud mod.
- * <p>
- * This entity:
- * <ul>
- *   <li>Extends {@link Monster} to participate in vanilla hostile mob AI and combat systems</li>
- *   <li>Implements {@link GeoEntity} to drive animations through GeckoLib</li>
- *   <li>Implements {@link VibrationListener} and {@link VibrationSystem} to react to
- *       in-world game events such as footsteps and projectiles via the vibration system</li>
- * </ul>
+ * Defines the Living Sculk hostile entity and its gameplay behavior.
+ *
+ * <p>This entity combines monster combat AI, GeckoLib-driven animation control,
+ * vibration-based sensing, kill-triggered zombie conversion, and custom combat
+ * interactions such as offhand totem corruption pressure.
+ *
+ * <p>In the broader context of the project, this class is part of Shroud's core
+ * hostile-mob systems, connecting custom AI, conversion mechanics, sensory
+ * reactions, and synchronized client animation cues.
  */
 public class LivingSculkEntity extends Monster implements GeoEntity, VibrationListener, VibrationSystem {
 
@@ -75,19 +75,28 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  CONSTANTS
     // ============================================================
 
+    // Cooldown between accepted vibration events.
     private static final int VIBRATION_COOLDOWN_TICKS = 80;
+
+    // Cooldown between zombie conversion attempts.
     private static final int CONVERSION_COOLDOWN_TICKS = 40;
 
+    // Passive proximity needed for player targeting without vibration.
     private static final double PASSIVE_PLAYER_DETECT_RANGE = 2.0D;
+
+    // Max distance for acquiring player targets from vibration events.
     private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
 
+    // Entity event IDs for client animation triggers.
     private static final byte EVENT_ATTACK_ANIM = 60;
     private static final byte EVENT_VIBRATION_REACT_ANIM = 5;
 
+    // GeckoLib animation controller names.
     private static final String CTRL_LOCOMOTION = "living_sculk_locomotion_controller";
     private static final String CTRL_VIBRATION = "living_sculk_vibration_controller";
     private static final String CTRL_ATTACK = "living_sculk_attack_controller";
 
+    // GeckoLib trigger names.
     private static final String TRIG_ATTACK = "attack";
     private static final String TRIG_VIBRATION_REACT = "vibration_react";
 
@@ -95,26 +104,39 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  FIELDS
     // ============================================================
 
+    // Per-entity GeckoLib cache.
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    // Vibration system state and listener plumbing.
     private final VibrationSystem.Data vibrationData = new VibrationSystem.Data();
     private final VibrationSystem.User vibrationUser;
     private final DynamicGameEventListener<VibrationSystem.Listener> dynamicGameEventListener;
 
+    // Earliest game time at which a new vibration can be accepted.
     private long nextVibrationGameTime = 0L;
+
+    // Earliest game time at which a new conversion can occur.
     private long nextConversionGameTime = 0L;
 
+    // Most recent vibration location used by vibration-aware goals.
     @Nullable
     private BlockPos vibrationLocation;
 
+    // ============================================================
+    //  STATIC HELPERS
+    // ============================================================
+
+    // Returns true if the entity is a creative-mode player.
     private static boolean isCreativePlayer(@javax.annotation.Nullable Entity entity) {
         return entity instanceof Player p && p.isCreative();
     }
 
+    // Returns true when this entity type is marked vibration-friendly.
     private boolean isVibrationFriendlySelf() {
         return this.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
     }
 
+    // Returns true when the source entity type is marked vibration-friendly.
     private static boolean isVibrationFriendlyEntity(@javax.annotation.Nullable Entity entity) {
         return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
     }
@@ -123,10 +145,11 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  CONSTRUCTOR
     // ============================================================
 
+    // Creates the entity and wires vibration listener state.
     public LivingSculkEntity(EntityType<? extends LivingSculkEntity> type, Level level) {
         super(type, level);
 
-        // Vibration system wiring
+        // Initializes vibration listener integration.
         this.vibrationUser = new LivingSculkVibrationUser();
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
     }
@@ -135,6 +158,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  ATTRIBUTES
     // ============================================================
 
+    // Declares baseline combat and movement attributes.
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 30.0D)
@@ -148,22 +172,23 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  AI GOALS
     // ============================================================
 
+    // Registers AI and target goals.
     @Override
     protected void registerGoals() {
-        // Movement and combat
+        // Movement and combat goals.
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.8D, 20));
 
-        // Pursue the most recent vibration location
+        // Navigation toward recently detected vibration locations.
         this.goalSelector.addGoal(4, new VibrationGoal(this, 0.8D));
 
-        // Idle behavior
+        // Idle and awareness behavior.
         this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
-        // Retaliation and target selection
+        // Retaliation and proximity-based player targeting.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(
                 2,
@@ -177,7 +202,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 )
         );
 
-        // Hostile to vanilla zombies and variants via tag
+        // Hostility toward vanilla zombie family entities.
         this.targetSelector.addGoal(
                 3,
                 new NearestAttackableTargetGoal<>(
@@ -195,9 +220,10 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  TICKING / LIFECYCLE
     // ============================================================
 
+    // Ticks vibration state each update.
     @Override
     public void tick() {
-        // Advance vibration system state only on the server side
+        // Runs vibration logic on the server only.
         if (this.level() instanceof ServerLevel serverLevel) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
         }
@@ -205,11 +231,12 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
         super.tick();
     }
 
+    // Runs death-side effects including sculk spread, particles, and drop.
     @Override
     public void die(DamageSource damageSource) {
         super.die(damageSource);
 
-        // Skip server-side effects when on the client
+        // Skips server-only death effects on the client.
         if (this.level().isClientSide()) {
             return;
         }
@@ -217,10 +244,10 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
         ServerLevel serverLevel = (ServerLevel) this.level();
         BlockPos pos = this.blockPosition();
 
-        // Sculk spread charge based on XP reward
+        // Spreads sculk charge derived from XP reward.
         this.spreadSculkOnDeath(serverLevel, pos, damageSource);
 
-        // Soul-like sculk particles at the death position
+        // Emits thematic death particles.
         serverLevel.sendParticles(
                 ParticleTypes.SCULK_SOUL,
                 this.getX(),
@@ -233,15 +260,16 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 0.02
         );
 
-        // Thematic drop
+        // Drops echo shard on death.
         this.spawnAtLocation(Items.ECHO_SHARD);
     }
 
+    // Spreads sculk using charge derived from experience reward.
     private void spreadSculkOnDeath(ServerLevel level, BlockPos pos, DamageSource damageSource) {
-        // Convert XP reward into sculk spread charge
         Entity attacker = damageSource.getEntity();
         int charge = this.getExperienceReward(level, attacker);
 
+        // Ensures at least one charge is applied.
         if (charge <= 0) {
             charge = 1;
         }
@@ -255,23 +283,26 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  COMBAT / ENTITY EVENTS
     // ============================================================
 
+    // Broadcasts attack animation event when swinging main hand on server.
     @Override
     public void swing(InteractionHand hand, boolean updateSelf) {
         super.swing(hand, updateSelf);
 
-        // Sync attack animation to clients when main-hand swinging on server
         if (!this.level().isClientSide() && hand == InteractionHand.MAIN_HAND) {
             this.level().broadcastEntityEvent(this, EVENT_ATTACK_ANIM);
         }
     }
 
+    // Processes successful melee hits with extra effects.
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean result = super.doHurtTarget(target);
 
         if (result) {
+            // Attempts offhand totem corruption behavior.
             this.tryCorruptOffhandTotem(target);
 
+            // Plays catalyst-like hit feedback sound.
             this.level().playSound(
                     null,
                     this.getX(),
@@ -287,61 +318,63 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
         return result;
     }
 
+    // Tries zombie conversion after kill resolution.
     @Override
     public boolean killedEntity(ServerLevel level, LivingEntity victim) {
         boolean result = super.killedEntity(level, victim);
 
-        // Attempt zombie conversion after a successful kill
         this.tryConvertZombieOnHit(victim);
 
         return result;
     }
 
+    // Converts dead zombie-tagged victims into Living Sculk when allowed.
     private void tryConvertZombieOnHit(Entity target) {
-        // Server-only conversion logic
+        // Runs only on the server.
         if (!(this.level() instanceof ServerLevel serverLevel)) {
             return;
         }
 
-        // Per-attacker cooldown gate
+        // Enforces per-attacker conversion cooldown.
         long gameTime = serverLevel.getGameTime();
         if (gameTime < this.nextConversionGameTime) {
             return;
         }
 
-        // Only living entities are convertible
+        // Requires a living target.
         if (!(target instanceof LivingEntity livingTarget)) {
             return;
         }
 
-        // Only zombies (and variants) via tag
+        // Requires a zombie family target.
         if (!livingTarget.getType().is(EntityTypeTags.ZOMBIES)) {
             return;
         }
 
-        // Only convert when the victim is actually dying/removed state is consistent with killedEntity flow
+        // Requires target to be in valid post-kill state.
         if (!livingTarget.isDeadOrDying() || livingTarget.isRemoved()) {
             return;
         }
 
-        // Exclusions
+        // Prevents converting players.
         if (livingTarget instanceof Player) {
             return;
         }
 
+        // Prevents converting already-converted variants.
         if (livingTarget instanceof LivingSculkEntity) {
             return;
         }
 
         this.nextConversionGameTime = gameTime + CONVERSION_COOLDOWN_TICKS;
 
-        // Create replacement entity
+        // Creates replacement entity.
         LivingSculkEntity replacement = ModEntities.LIVING_SCULK.get().create(serverLevel);
         if (replacement == null) {
             return;
         }
 
-        // Copy position and rotation
+        // Copies position and rotation.
         replacement.moveTo(
                 livingTarget.getX(),
                 livingTarget.getY(),
@@ -350,21 +383,21 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 livingTarget.getXRot()
         );
 
-        // Spawn at full health
+        // Initializes replacement at full health.
         replacement.setHealth(replacement.getMaxHealth());
 
-        // Copy name and visibility
+        // Copies custom name and visibility.
         if (livingTarget.hasCustomName()) {
             replacement.setCustomName(livingTarget.getCustomName());
             replacement.setCustomNameVisible(livingTarget.isCustomNameVisible());
         }
 
-        // Preserve persistence requirement when applicable
+        // Preserves persistence flag when applicable.
         if (livingTarget instanceof Mob mobTarget && mobTarget.isPersistenceRequired()) {
             replacement.setPersistenceRequired();
         }
 
-        // Copy equipment
+        // Copies equipment from victim to replacement.
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack stack = livingTarget.getItemBySlot(slot);
             if (!stack.isEmpty()) {
@@ -372,7 +405,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
             }
         }
 
-        // Finalize spawn as a conversion
+        // Finalizes spawn as a conversion event.
         replacement.finalizeSpawn(
                 serverLevel,
                 serverLevel.getCurrentDifficultyAt(replacement.blockPosition()),
@@ -380,7 +413,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 null
         );
 
-        // Visual conversion effect at the victim's location
+        // Emits conversion particles at the victim location.
         serverLevel.sendParticles(
                 ParticleTypes.SCULK_SOUL,
                 livingTarget.getX(),
@@ -393,19 +426,21 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 0.02D
         );
 
-        // Add replacement and remove old entity
+        // Adds replacement and removes original victim.
         serverLevel.addFreshEntity(replacement);
         livingTarget.discard();
     }
 
+    // Routes entity event IDs into GeckoLib trigger calls.
     @Override
     public void handleEntityEvent(byte id) {
-        // GeckoLib triggers are routed through entity events
+        // Triggers attack animation.
         if (id == EVENT_ATTACK_ANIM) {
             this.triggerAnim(CTRL_ATTACK, TRIG_ATTACK);
             return;
         }
 
+        // Triggers vibration reaction animation.
         if (id == EVENT_VIBRATION_REACT_ANIM) {
             this.triggerAnim(CTRL_VIBRATION, TRIG_VIBRATION_REACT);
             return;
@@ -418,26 +453,31 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  SOUND OVERRIDES
     // ============================================================
 
+    // Returns ambient sound event.
     @Override
     protected SoundEvent getAmbientSound() {
         return ModSounds.ENTITY_LIVING_SCULK_AMBIENT.get();
     }
 
+    // Returns ambient sound interval in ticks.
     @Override
     public int getAmbientSoundInterval() {
         return 180;
     }
 
+    // Returns hurt sound event.
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
         return ModSounds.ENTITY_LIVING_SCULK_HURT.get();
     }
 
+    // Returns death sound event.
     @Override
     protected SoundEvent getDeathSound() {
         return ModSounds.ENTITY_LIVING_SCULK_DEATH.get();
     }
 
+    // Plays custom step sound.
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(ModSounds.ENTITY_LIVING_SCULK_STEP.get(), 0.15F, 1.0F);
@@ -447,34 +487,39 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  VIBRATION SYSTEM IMPLEMENTATION
     // ============================================================
 
+    // Exposes vibration data for vibration system ticking.
     @Override
     public VibrationSystem.Data getVibrationData() {
         return this.vibrationData;
     }
 
+    // Exposes vibration user implementation for vibration system ticking.
     @Override
     public VibrationSystem.User getVibrationUser() {
         return this.vibrationUser;
     }
 
+    // Registers or unregisters the dynamic game event listener against the current server level.
     @Override
     public void updateDynamicGameEventListener(BiConsumer<DynamicGameEventListener<?>, ServerLevel> listenerConsumer) {
-        // Register or unregister the dynamic game event listener on the server level
         if (this.level() instanceof ServerLevel level) {
             listenerConsumer.accept(this.dynamicGameEventListener, level);
         }
     }
 
+    // Returns the most recently stored vibration location.
     @Override
     public BlockPos getVibrationLocation() {
         return this.vibrationLocation;
     }
 
+    // Stores the most recently received vibration location.
     @Override
     public void setVibrationLocation(BlockPos pos) {
         this.vibrationLocation = pos;
     }
 
+    // Indicates this entity dampens vibration propagation.
     @Override
     public boolean dampensVibrations() {
         return true;
@@ -484,10 +529,11 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  GECKOLIB ANIMATION
     // ============================================================
 
+    // Registers GeckoLib animation controllers.
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                // Base locomotion controller
+                // Locomotion controller for idle/walk selection.
                 new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
                     boolean moving = this.getNavigation().isInProgress()
                             || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
@@ -507,16 +553,17 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                     return state.setAndContinue(LivingSculkAnimations.IDLE);
                 }),
 
-                // Vibration react overlay controller
+                // Overlay controller for one-shot vibration reaction.
                 new AnimationController<>(this, CTRL_VIBRATION, 2, state -> PlayState.STOP)
                         .triggerableAnim(TRIG_VIBRATION_REACT, LivingSculkAnimations.VIBRATION_REACT),
 
-                // Attack overlay controller
+                // Overlay controller for one-shot attack animation.
                 new AnimationController<>(this, CTRL_ATTACK, 2, state -> PlayState.STOP)
                         .triggerableAnim(TRIG_ATTACK, LivingSculkAnimations.ATTACK)
         );
     }
 
+    // Returns the entity's GeckoLib animatable cache.
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
@@ -526,62 +573,73 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     //  VIBRATION USER (INNER CLASS)
     // ============================================================
 
+    // Implements vibration system behavior for this entity.
     private class LivingSculkVibrationUser implements VibrationSystem.User {
 
-        // Listener position is tracked at eye height
+        // Position source tracks entity listener position at eye height.
         private final PositionSource positionSource =
                 new EntityPositionSource(LivingSculkEntity.this, LivingSculkEntity.this.getEyeHeight());
 
+        // Returns vibration listener source position.
         @Override
         public PositionSource getPositionSource() {
             return this.positionSource;
         }
 
+        // Returns vibration listening radius in blocks.
         @Override
         public int getListenerRadius() {
             return 12;
         }
 
+        // Returns game event tag set this listener can react to.
         @Override
         public TagKey<GameEvent> getListenableEvents() {
             return GameEventTags.WARDEN_CAN_LISTEN;
         }
 
+        // Allows this listener to trigger vibration avoidance checks.
         @Override
         public boolean canTriggerAvoidVibration() {
             return true;
         }
 
+        // Filters whether an incoming vibration should be accepted.
         @Override
         public boolean canReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> gameEvent, GameEvent.Context context) {
-            // Basic validity checks
+            // Rejects events when AI is disabled or entity is dead.
             if (LivingSculkEntity.this.isNoAi() || LivingSculkEntity.this.isDeadOrDying()) {
                 return false;
             }
 
+            // Rejects events outside the world border.
             if (!level.getWorldBorder().isWithinBounds(pos)) {
                 return false;
             }
 
             Entity source = context.sourceEntity();
-            if (source == LivingSculkEntity.this) { // class-specific in each file
+
+            // Rejects self-generated vibrations.
+            if (source == LivingSculkEntity.this) {
                 return false;
             }
 
-            // If both listener and source are tagged, ignore this vibration
+            // Rejects same-faction tagged vibration sources.
             if (LivingSculkEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
                 return false;
             }
 
+            // Ignores vibrations produced by creative players.
             if (isCreativePlayer(source)) {
                 return false;
             }
 
-            // Cooldown gate
+            // Applies cooldown gating.
             long gameTime = level.getGameTime();
             return gameTime >= LivingSculkEntity.this.nextVibrationGameTime;
         }
 
+        // Handles accepted vibration events and updates behavior/animation.
         @Override
         public void onReceiveVibration(ServerLevel level,
                                        BlockPos pos,
@@ -590,21 +648,23 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                                        Entity projectileOwner,
                                        float distance) {
 
+            // Ignores creative-mode sources and owners.
             if (isCreativePlayer(sourceEntity) || isCreativePlayer(projectileOwner)) {
                 return;
             }
 
+            // Ignores friendly-tagged sources when this entity is also friendly-tagged.
             if (LivingSculkEntity.this.isVibrationFriendlySelf()
                     && (isVibrationFriendlyEntity(sourceEntity) || isVibrationFriendlyEntity(projectileOwner))) {
                 return;
             }
 
-            // Ignore late events while dying
+            // Ignores events if the entity is already dying.
             if (LivingSculkEntity.this.isDeadOrDying()) {
                 return;
             }
 
-            // Cooldown gate
+            // Enforces vibration cooldown.
             long gameTime = level.getGameTime();
             if (gameTime < LivingSculkEntity.this.nextVibrationGameTime) {
                 return;
@@ -612,10 +672,10 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
 
             LivingSculkEntity.this.nextVibrationGameTime = gameTime + VIBRATION_COOLDOWN_TICKS;
 
-            // Store vibration location for AI goals
+            // Stores vibration location for downstream AI behavior.
             LivingSculkEntity.this.setVibrationLocation(pos);
 
-            // Acquire a player target if the source is a player or their projectile owner
+            // Tries to resolve a player source from direct source or projectile owner.
             Player playerToTarget = null;
 
             if (sourceEntity instanceof Player p) {
@@ -624,6 +684,7 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 playerToTarget = p;
             }
 
+            // Acquires nearby player as target when within vibration acquire range.
             if (playerToTarget != null) {
                 double maxDistSqr = VIBRATION_PLAYER_ACQUIRE_RANGE * VIBRATION_PLAYER_ACQUIRE_RANGE;
                 if (LivingSculkEntity.this.distanceToSqr(playerToTarget) <= maxDistSqr) {
@@ -631,10 +692,10 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                 }
             }
 
-            // Sync vibration reaction animation to clients
+            // Broadcasts vibration reaction animation trigger.
             LivingSculkEntity.this.level().broadcastEntityEvent(LivingSculkEntity.this, EVENT_VIBRATION_REACT_ANIM);
 
-            // Play vibration react sound on server if not silent
+            // Plays vibration reaction sound if not silent.
             if (!LivingSculkEntity.this.isSilent()) {
                 level.playSound(
                         null,
@@ -648,6 +709,11 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
         }
     }
 
+    // ============================================================
+    //  CUSTOM INTERACTIONS
+    // ============================================================
+
+    // Schedules totem corruption when a valid player target has an offhand totem.
     private void tryCorruptOffhandTotem(Entity target) {
         if (!(target instanceof Player player)) {
             return;

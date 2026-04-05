@@ -4,6 +4,14 @@
     Removals
     Bug Fixes
 
+- Version 0.4.2
+    Additions
+    Changes
+        - Continued back-end refinements of code, formatting and comments
+    Removals
+        - Removed references to 'Resonant Hulk' entity
+    Bug Fixes
+
 - Version 0.4.1
     Additions
     Changes

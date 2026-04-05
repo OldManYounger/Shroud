@@ -1,6 +1,7 @@
 package net.oldmanyounger.shroud.ritual;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -87,6 +88,7 @@ public final class RitualExecutionService {
                 net.minecraft.world.level.block.Block.popResource(level, reliquaryPos.above(), output);
             }
 
+            emitCompletionParticles(level, reliquaryPos);
             return RitualExecutionResult.success("Ritual completed");
         } finally {
             reliquaryBe.setRitualLocked(false);
@@ -94,6 +96,21 @@ public final class RitualExecutionService {
                 pedestal.setRitualLocked(false);
             }
         }
+    }
+
+    // Emits completion particles at the reliquary after a successful ritual
+    private static void emitCompletionParticles(ServerLevel level, BlockPos reliquaryPos) {
+        level.sendParticles(
+                ParticleTypes.SCULK_SOUL,
+                reliquaryPos.getX() + 0.5D,
+                reliquaryPos.getY() + 1.05D,
+                reliquaryPos.getZ() + 0.5D,
+                16,
+                0.30D,
+                0.20D,
+                0.30D,
+                0.01D
+        );
     }
 
     /**

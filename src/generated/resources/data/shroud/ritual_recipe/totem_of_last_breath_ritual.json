@@ -1,0 +1,27 @@
+{
+  "items": [
+    {
+      "count": 1,
+      "item": "minecraft:echo_shard"
+    },
+    {
+      "count": 1,
+      "item": "shroud:sculk_pearl"
+    },
+    {
+      "count": 1,
+      "item": "shroud:gloomstone_dust"
+    }
+  ],
+  "mob_damage": 2.0,
+  "mobs": [
+    {
+      "count": 4,
+      "entity": "shroud:living_sculk"
+    }
+  ],
+  "output": {
+    "count": 1,
+    "item": "shroud:totem_of_last_breath"
+  }
+}

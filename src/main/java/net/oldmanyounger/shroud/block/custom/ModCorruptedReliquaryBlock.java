@@ -252,7 +252,7 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
     // Returns true when the held item is the current global ritual activator
     private boolean isRitualActivator(ItemStack stackInHand) {
-        return !stackInHand.isEmpty() && stackInHand.is(Items.WOODEN_AXE);
+        return !stackInHand.isEmpty() && stackInHand.is(Items.STONE_AXE);
     }
 
     // Handles ritual activation attempt and player feedback

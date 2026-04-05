@@ -11,6 +11,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
@@ -75,6 +76,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     public boolean tryInsertSingle(ItemStack sourceStack) {
         if (sourceStack.isEmpty()) return false;
         if (ritualLocked) return false;
+        if (isBlockedInsertItem(sourceStack)) return false;
 
         int slot = findFirstEmptySlot();
         if (slot < 0) return false;
@@ -298,6 +300,8 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             return;
         }
 
+        if (isBlockedInsertItem(stack)) return;
+
         ItemStack single = stack.copyWithCount(1);
         items.set(slot, single);
         insertionOrder.add(slot);
@@ -332,6 +336,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         if (!isValidSlot(slot)) return false;
         if (ritualLocked) return false;
         if (stack.isEmpty()) return false;
+        if (isBlockedInsertItem(stack)) return false;
         return items.get(slot).isEmpty();
     }
 
@@ -465,6 +470,11 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
             }
         }
         return -1;
+    }
+
+    // Returns true when a stack is disallowed from reliquary insertion
+    private boolean isBlockedInsertItem(ItemStack stack) {
+        return stack.is(Items.STONE_AXE);
     }
 
     // Returns true when the slot index is valid

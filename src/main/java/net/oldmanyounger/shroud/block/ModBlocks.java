@@ -458,13 +458,7 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> SCULK_PORTAL = registerBlockWithoutItem("sculk_portal",
             () -> new ShroudPortalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL)));
-
-    public static final DeferredBlock<Block> CORRUPTED_RELIQUARY = registerBlock("corrupted_reliquary",
-            () -> new ModCorruptedReliquaryBlock(BlockBehaviour.Properties.of()
-                    .strength(3.5F)
-                    .requiresCorrectToolForDrops()
-                    .sound(SoundType.SCULK)
-                    .lightLevel(state -> 6)));
+    
 
     // Registration helpers.
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

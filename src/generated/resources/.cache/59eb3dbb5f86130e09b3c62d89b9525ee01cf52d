@@ -1,9 +1,10 @@
-// 1.21.1	2026-04-03T19:47:53.4595088	Loot Tables
+// 1.21.1	2026-04-05T12:36:34.4847084	Loot Tables
 e9bf82aea1ba268dea679101d20ab81ed6eda304 data/shroud/loot_table/blocks/chiseled_sculk_stone_bricks.json
 223c87792749534a1c050cd158888f7c91f2bfca data/shroud/loot_table/blocks/cobbled_sculk_deepslate.json
 05e75e85bfb2fb339679423340d694b00d26470a data/shroud/loot_table/blocks/cobbled_sculk_deepslate_slab.json
 3a6b53e45d10f9a9d6177b26082495cf2a8b15db data/shroud/loot_table/blocks/cobbled_sculk_deepslate_stairs.json
 8957f5b8b8a75e3d223e01e0e139d0fa5f8b3945 data/shroud/loot_table/blocks/cobbled_sculk_deepslate_wall.json
+6a2d7fe6ae427ebf25556add9c7c25343444b2c3 data/shroud/loot_table/blocks/corrupted_reliquary.json
 2a77001681d0948da2739d3666187f6bc7454bb0 data/shroud/loot_table/blocks/cracked_sculk_deepslate_bricks.json
 e851d5bf8f7d03e55a4dd7a90f135795211ab715 data/shroud/loot_table/blocks/cracked_sculk_deepslate_tiles.json
 1dfe2eafe9cd10719faa4005e5a0cd9ac63c7b17 data/shroud/loot_table/blocks/cracked_sculk_stone_bricks.json

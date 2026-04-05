@@ -96,6 +96,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Technical and resource blocks
         emitterBlock(ModBlocks.SCULK_EMITTER.get());
         blockItem(ModBlocks.SCULK_EMITTER);
+        corruptedReliquaryBlock(ModBlocks.CORRUPTED_RELIQUARY);
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);
         blockWithItem(ModBlocks.EVENTIDE_ORE);
         blockWithItem(ModBlocks.EVENTIDE_DEEPSLATE_ORE);
@@ -171,9 +172,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.UMBER_PRESSURE_PLATE);
         blockItem(ModBlocks.UMBER_FENCE_GATE);
         blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
-
-        // Reliquary and pedestal for ritual crafting
-        blockWithItem(ModBlocks.CORRUPTED_RELIQUARY);
 
         // Limbo blocks
         stackingWallpaperBlock(
@@ -321,6 +319,53 @@ public class ModBlockStateProvider extends BlockStateProvider {
                     .rotationY(yRot)
                     .build();
         });
+    }
+
+    // Creates a custom non-full reliquary model with top side and bottom textures and horizontal facing variants
+    private void corruptedReliquaryBlock(DeferredBlock<Block> blockRegistryObject) {
+        String path = blockRegistryObject.getId().getPath();
+
+        var model = models().withExistingParent(path, mcLoc("block/block"))
+                .texture("top", modLoc("block/" + path + "_top"))
+                .texture("side", modLoc("block/" + path + "_side"))
+                .texture("bottom", modLoc("block/" + path + "_bottom"))
+                .texture("particle", modLoc("block/" + path + "_side"));
+
+        // Lower base
+        model.element()
+                .from(3.0F, 0.0F, 2.0F).to(13.0F, 4.0F, 14.0F)
+                .face(Direction.DOWN).texture("#bottom").end()
+                .face(Direction.UP).texture("#side").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        // Mid body
+        model.element()
+                .from(4.0F, 4.0F, 3.5F).to(12.0F, 9.0F, 12.5F)
+                .face(Direction.DOWN).texture("#side").end()
+                .face(Direction.UP).texture("#top").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        // Upper plate
+        model.element()
+                .from(2.0F, 9.0F, 1.5F).to(14.0F, 12.0F, 14.5F)
+                .face(Direction.DOWN).texture("#side").end()
+                .face(Direction.UP).texture("#top").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        horizontalBlock(blockRegistryObject.get(), model);
+        simpleBlockItem(blockRegistryObject.get(), model);
     }
 
     // Creates the normal and stacked variants for a wallpaper block that changes appearance when vertically stacked

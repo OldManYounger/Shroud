@@ -2,25 +2,30 @@ package net.oldmanyounger.shroud.block.entity;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Core persistent state holder for the Corrupted Reliquary block.
  *
  * <p>This block entity owns the reliquary's internal one-item-slot inventory model and exposes
- * focused methods for manual insertion, LIFO removal, and read-only slot inspection. It intentionally
- * avoids ritual execution logic so the block can be implemented and validated independently first.
+ * focused methods for manual insertion, dropped-item insertion, LIFO removal, and automation-facing
+ * insertion-only container behavior. It intentionally avoids ritual execution logic so the block can
+ * be implemented and validated independently first.
  *
  * <p>In the broader context of the project, this class is the foundation of ritual item intake,
  * serving as the canonical source of reliquary contents that future ritual validation and activation
  * systems will consume.
  */
-public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.block.entity.BlockEntity {
+public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.block.entity.BlockEntity implements WorldlyContainer {
 
     // ==================================
     //  FIELDS
@@ -28,15 +33,6 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
     // Total number of one-item slots supported by the reliquary
     public static final int MAX_SLOTS = 64;
-
-    // Backing slot list where each slot holds at most one item
-    private final NonNullList<ItemStack> items = NonNullList.withSize(MAX_SLOTS, ItemStack.EMPTY);
-
-    // Insertion order stack used for shift-right-click LIFO removal
-    private final IntArrayList insertionOrder = new IntArrayList();
-
-    // Runtime lock state placeholder for future ritual integration
-    private boolean ritualLocked = false;
 
     // NBT key for stored slot items
     private static final String TAG_ITEMS = "Items";
@@ -46,6 +42,18 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
     // NBT key for ritual lock state
     private static final String TAG_RITUAL_LOCKED = "RitualLocked";
+
+    // All slot indexes exposed for insertion checks by automation
+    private static final int[] AUTOMATION_SLOTS = buildAutomationSlots();
+
+    // Backing slot list where each slot holds at most one item
+    private final NonNullList<ItemStack> items = NonNullList.withSize(MAX_SLOTS, ItemStack.EMPTY);
+
+    // Insertion order stack used for shift-right-click LIFO removal
+    private final IntArrayList insertionOrder = new IntArrayList();
+
+    // Runtime lock state placeholder for future ritual integration
+    private boolean ritualLocked = false;
 
     // ==================================
     //  CONSTRUCTOR
@@ -73,6 +81,25 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         insertionOrder.add(slot);
         setChanged();
         return true;
+    }
+
+    // Tries to insert as many items as possible from the given stack
+    public int tryInsertAsMany(ItemStack sourceStack) {
+        if (sourceStack.isEmpty()) return 0;
+        if (ritualLocked) return 0;
+
+        int inserted = 0;
+        while (!sourceStack.isEmpty()) {
+            boolean ok = tryInsertSingle(sourceStack);
+            if (!ok) {
+                break;
+            }
+
+            sourceStack.shrink(1);
+            inserted++;
+        }
+
+        return inserted;
     }
 
     // Returns true if an insert is currently allowed
@@ -107,6 +134,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // ==================================
 
     // Returns the item stack currently stored in the given slot
+    @Override
     public ItemStack getItem(int slot) {
         if (!isValidSlot(slot)) return ItemStack.EMPTY;
         return items.get(slot);
@@ -133,16 +161,6 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         return count;
     }
 
-    // Returns true if every slot is empty
-    public boolean isEmpty() {
-        for (ItemStack stack : items) {
-            if (!stack.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     // ==================================
     //  LOCK STATE
     // ==================================
@@ -158,6 +176,10 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         this.ritualLocked = ritualLocked;
         setChanged();
     }
+
+    // ==================================
+    //  PERSISTENCE
+    // ==================================
 
     // Saves reliquary inventory and state to NBT
     @Override
@@ -186,8 +208,150 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     }
 
     // ==================================
+    //  CONTAINER API
+    // ==================================
+
+    // Returns total number of container slots
+    @Override
+    public int getContainerSize() {
+        return MAX_SLOTS;
+    }
+
+    // Returns true if every slot is empty
+    @Override
+    public boolean isEmpty() {
+        for (ItemStack stack : items) {
+            if (!stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Removes up to the requested amount from a slot
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        if (!isValidSlot(slot)) return ItemStack.EMPTY;
+        if (amount <= 0) return ItemStack.EMPTY;
+        if (ritualLocked) return ItemStack.EMPTY;
+
+        ItemStack existing = items.get(slot);
+        if (existing.isEmpty()) return ItemStack.EMPTY;
+
+        ItemStack taken = existing.split(Math.min(amount, existing.getCount()));
+        if (existing.isEmpty()) {
+            items.set(slot, ItemStack.EMPTY);
+        }
+
+        setChanged();
+        return taken;
+    }
+
+    // Removes the whole stack from a slot without additional validation
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        if (!isValidSlot(slot)) return ItemStack.EMPTY;
+        ItemStack existing = items.get(slot);
+        if (existing.isEmpty()) return ItemStack.EMPTY;
+
+        items.set(slot, ItemStack.EMPTY);
+        return existing;
+    }
+
+    // Sets the stack in a slot with one-item slot enforcement
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        if (!isValidSlot(slot)) return;
+        if (ritualLocked) return;
+
+        if (stack.isEmpty()) {
+            items.set(slot, ItemStack.EMPTY);
+            setChanged();
+            return;
+        }
+
+        ItemStack single = stack.copyWithCount(1);
+        items.set(slot, single);
+        insertionOrder.add(slot);
+        setChanged();
+    }
+
+    // Returns whether a player can still use this container
+    @Override
+    public boolean stillValid(Player player) {
+        if (level == null) return false;
+        if (level.getBlockEntity(worldPosition) != this) return false;
+        return player.distanceToSqr(
+                worldPosition.getX() + 0.5D,
+                worldPosition.getY() + 0.5D,
+                worldPosition.getZ() + 0.5D
+        ) <= 64.0D;
+    }
+
+    // Clears all stored items
+    @Override
+    public void clearContent() {
+        for (int i = 0; i < MAX_SLOTS; i++) {
+            items.set(i, ItemStack.EMPTY);
+        }
+        insertionOrder.clear();
+        setChanged();
+    }
+
+    // Returns whether a stack may be placed in the given slot
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        if (!isValidSlot(slot)) return false;
+        if (ritualLocked) return false;
+        if (stack.isEmpty()) return false;
+        return items.get(slot).isEmpty();
+    }
+
+    // ==================================
+    //  WORLDLY CONTAINER
+    // ==================================
+
+    // Exposes all slots for sided automation insertion attempts
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return AUTOMATION_SLOTS;
+    }
+
+    // Allows sided insertion into empty slots only
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
+        return canPlaceItem(slot, stack);
+    }
+
+    // Blocks sided extraction from all faces
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
+        return false;
+    }
+
+    // Marks data dirty and pushes block updates so clients can refresh item display rendering
+    @Override
+    public void setChanged() {
+        super.setChanged();
+
+        if (level == null || level.isClientSide) return;
+
+        BlockState state = getBlockState();
+        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_CLIENTS);
+    }
+
+    // ==================================
     //  INTERNAL HELPERS
     // ==================================
+
+    // Builds the static slot index list used for automation access
+    private static int[] buildAutomationSlots() {
+        int[] slots = new int[MAX_SLOTS];
+        for (int i = 0; i < MAX_SLOTS; i++) {
+            slots[i] = i;
+        }
+        return slots;
+    }
 
     // Finds the first empty slot index or -1 if full
     private int findFirstEmptySlot() {

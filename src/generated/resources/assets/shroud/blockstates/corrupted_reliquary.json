@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "shroud:block/corrupted_reliquary",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "shroud:block/corrupted_reliquary"
+    },
+    "facing=south": {
+      "model": "shroud:block/corrupted_reliquary",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "shroud:block/corrupted_reliquary",
+      "y": 270
+    }
+  }
+}

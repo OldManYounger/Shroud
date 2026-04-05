@@ -464,7 +464,8 @@ public class ModBlocks {
             () -> new ModCorruptedReliquaryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)
                     .strength(4.0F, 6.0F)
                     .requiresCorrectToolForDrops()
-                    .sound(SoundType.DEEPSLATE)));
+                    .sound(SoundType.DEEPSLATE)
+                    .noOcclusion()));
 
     // Registration helpers.
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

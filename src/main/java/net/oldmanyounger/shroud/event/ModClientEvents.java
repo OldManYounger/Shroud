@@ -6,6 +6,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.oldmanyounger.shroud.Shroud;
+import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
+import net.oldmanyounger.shroud.client.render.ModCorruptedReliquaryBlockEntityRenderer;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.item.ModItems;
@@ -27,6 +29,7 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.CORRUPTED_RELIQUARY.get(), ModCorruptedReliquaryBlockEntityRenderer::new);
     }
 
     // Adjusts FOV while drawing the Eventide bow

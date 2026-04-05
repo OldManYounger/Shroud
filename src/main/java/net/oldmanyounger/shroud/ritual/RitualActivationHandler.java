@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.entity.ModCorruptedReliquaryBlockEntity;
 
 import java.util.Optional;
@@ -28,34 +27,32 @@ public final class RitualActivationHandler {
     // Attempts ritual activation from a reliquary interaction context
     public static RitualActivationResult tryActivate(Level level, BlockPos reliquaryPos, Player player, ModCorruptedReliquaryBlockEntity reliquaryBe) {
         if (level.isClientSide) {
-            return new RitualActivationResult(RitualActivationStatus.CLIENT_SIDE, Optional.empty(), Optional.empty(), Optional.empty());
+            return new RitualActivationResult(RitualActivationStatus.CLIENT_SIDE, Optional.empty(), Optional.empty());
         }
 
         if (!(level instanceof ServerLevel serverLevel)) {
-            return new RitualActivationResult(RitualActivationStatus.NO_MATCH, Optional.empty(), Optional.empty(), Optional.of("Server level unavailable"));
+            return new RitualActivationResult(RitualActivationStatus.NO_MATCH, Optional.empty(), Optional.empty());
         }
 
         if (reliquaryBe.isRitualLocked()) {
-            return new RitualActivationResult(RitualActivationStatus.RELIQUARY_LOCKED, Optional.empty(), Optional.empty(), Optional.empty());
+            return new RitualActivationResult(RitualActivationStatus.RELIQUARY_LOCKED, Optional.empty(), Optional.empty());
         }
 
         Optional<RitualRecipeMatcher.RitualMatchContext> match =
                 RitualRecipeMatcher.findFirstMatch(level, reliquaryPos, reliquaryBe.copyItems());
 
         if (match.isEmpty()) {
-            String debugReason = RitualRecipeMatcher.debugNoMatch(level, reliquaryPos, reliquaryBe.copyItems());
-            Shroud.LOGGER.info("Ritual no-match at {} by {} -> {}", reliquaryPos, player.getName().getString(), debugReason);
-            return new RitualActivationResult(RitualActivationStatus.NO_MATCH, Optional.empty(), Optional.empty(), Optional.of(debugReason));
+            return new RitualActivationResult(RitualActivationStatus.NO_MATCH, Optional.empty(), Optional.empty());
         }
 
         RitualExecutionService.RitualExecutionResult execution =
                 RitualExecutionService.execute(serverLevel, reliquaryPos, player, reliquaryBe, match.get());
 
         if (execution.isSuccess() == false) {
-            return new RitualActivationResult(RitualActivationStatus.EXECUTION_FAILED, match, Optional.of(execution), Optional.empty());
+            return new RitualActivationResult(RitualActivationStatus.EXECUTION_FAILED, match, Optional.of(execution));
         }
 
-        return new RitualActivationResult(RitualActivationStatus.EXECUTED, match, Optional.of(execution), Optional.empty());
+        return new RitualActivationResult(RitualActivationStatus.EXECUTED, match, Optional.of(execution));
     }
 
     /**
@@ -67,8 +64,7 @@ public final class RitualActivationHandler {
     public record RitualActivationResult(
             RitualActivationStatus status,
             Optional<RitualRecipeMatcher.RitualMatchContext> match,
-            Optional<RitualExecutionService.RitualExecutionResult> execution,
-            Optional<String> debugMessage
+            Optional<RitualExecutionService.RitualExecutionResult> execution
     ) {
 
     }

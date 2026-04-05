@@ -243,6 +243,12 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+
+        // Clears local slot state first so missing empty inventory tags do not leave stale client render items
+        for (int i = 0; i < MAX_SLOTS; i++) {
+            this.items.set(i, ItemStack.EMPTY);
+        }
+
         ContainerHelper.loadAllItems(tag, this.items, registries);
 
         this.insertionOrder.clear();

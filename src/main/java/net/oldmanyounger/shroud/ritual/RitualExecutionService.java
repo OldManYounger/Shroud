@@ -79,11 +79,18 @@ public final class RitualExecutionService {
 
             float mobDamage = recipe.mobDamagePerRequiredMob();
             if (mobDamage > 0.0F) {
+                // Applies damage to all participating mobs before evaluating ritual failure
+                boolean anyMobFailedDamage = false;
+
                 for (ModBindingPedestalBlockEntity pedestal : participantPedestals) {
                     boolean damagedAndAlive = pedestal.damageBoundMob(mobDamage);
                     if (!damagedAndAlive) {
-                        return RitualExecutionResult.fail("A required mob died or could not be damaged");
+                        anyMobFailedDamage = true;
                     }
+                }
+
+                if (anyMobFailedDamage) {
+                    return RitualExecutionResult.fail("One or more required mobs died or could not be damaged");
                 }
             }
 

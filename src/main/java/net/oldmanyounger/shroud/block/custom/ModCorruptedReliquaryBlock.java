@@ -262,10 +262,7 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
         switch (result.status()) {
             case RELIQUARY_LOCKED -> player.displayClientMessage(Component.literal("Reliquary is locked"), true);
-            case NO_MATCH -> player.displayClientMessage(
-                    Component.literal(result.debugMessage().orElse("No matching ritual")),
-                    false
-            );
+            case NO_MATCH -> player.displayClientMessage(Component.literal("No matching ritual"), false);
             case EXECUTION_FAILED -> player.displayClientMessage(Component.literal(
                     result.execution().map(RitualExecutionService.RitualExecutionResult::message).orElse("Ritual failed")
             ), true);

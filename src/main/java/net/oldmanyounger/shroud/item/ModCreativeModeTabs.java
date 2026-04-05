@@ -125,6 +125,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.UMBER_PRESSURE_PLATE.get());
                         output.accept(ModBlocks.UMBER_BUTTON.get());
 
+                        // Reliquary and pedestal for ritual crafting
+                        output.accept(ModBlocks.CORRUPTED_RELIQUARY.get());
+
                         // Limbo structural set.
                         output.accept(ModBlocks.LIMBO_WALLPAPER_DIAMOND.get());
                         output.accept(ModBlocks.LIMBO_WALLPAPER_SEGMENTED.get());

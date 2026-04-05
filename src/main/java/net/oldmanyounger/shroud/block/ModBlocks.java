@@ -458,7 +458,13 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> SCULK_PORTAL = registerBlockWithoutItem("sculk_portal",
             () -> new ShroudPortalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_PORTAL)));
-    
+
+    // Ritual crafting input block that stores up to 64 single-item entries
+    public static final DeferredBlock<Block> CORRUPTED_RELIQUARY = registerBlock("corrupted_reliquary",
+            () -> new ModCorruptedReliquaryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)
+                    .strength(4.0F, 6.0F)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.DEEPSLATE)));
 
     // Registration helpers.
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

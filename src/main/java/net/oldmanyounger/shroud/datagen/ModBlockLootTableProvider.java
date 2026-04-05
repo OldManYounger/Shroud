@@ -146,6 +146,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.UMBER_WALL.get());
         dropSelf(ModBlocks.UMBER_TRAPDOOR.get());
         add(ModBlocks.UMBER_DOOR.get(), block -> createDoorTable(ModBlocks.UMBER_DOOR.get()));
+
+        // Reliquary and pedestal for ritual crafting
+        dropSelf(ModBlocks.CORRUPTED_RELIQUARY.get());
     }
 
     // Creates the special drop table for sculk gravel, with support for a future rare-drop path

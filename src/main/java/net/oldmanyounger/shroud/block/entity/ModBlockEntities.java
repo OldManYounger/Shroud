@@ -45,6 +45,14 @@ public class ModBlockEntities {
                             ModBlocks.SCULK_EMITTER.get()
                     ).build(null));
 
+    // Block entity for the corrupted reliquary block that stores ritual item inputs
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ModCorruptedReliquaryBlockEntity>> CORRUPTED_RELIQUARY =
+            BLOCK_ENTITIES.register("corrupted_reliquary",
+                    () -> BlockEntityType.Builder.of(
+                            ModCorruptedReliquaryBlockEntity::new,
+                            ModBlocks.CORRUPTED_RELIQUARY.get()
+                    ).build(null));
+
     // ==================================
     //  REGISTRATION
     // ==================================

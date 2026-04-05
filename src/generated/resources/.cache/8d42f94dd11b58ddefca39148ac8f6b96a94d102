@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-02T15:58:27.340045	Tags for minecraft:block mod id shroud
+// 1.21.1	2026-04-05T14:54:57.5905676	Tags for minecraft:block mod id shroud
 5665328f17f217fd8bd9813b1a8453cbec6ab042 data/minecraft/tags/block/air.json
 c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/base_stone_overworld.json
 ef4343255d18fac253af2e850c8e618b32d614a3 data/minecraft/tags/block/buttons.json
@@ -13,7 +13,7 @@ bf159f515576416668bb0442787cd0f27a353fef data/minecraft/tags/block/doors.json
 d5219b193bdd56d89de16d3fca00337ec968ae06 data/minecraft/tags/block/logs.json
 d5219b193bdd56d89de16d3fca00337ec968ae06 data/minecraft/tags/block/logs_that_burn.json
 11336a10467606540b5085f3cab48cf5386925e4 data/minecraft/tags/block/mineable/axe.json
-8b029fb32c9cffaae6be514d336844da9e88bafe data/minecraft/tags/block/mineable/pickaxe.json
+8ebcb31fc3987db59084cfb2d141801128059adc data/minecraft/tags/block/mineable/pickaxe.json
 59215d1e783f37938b4329a22f78b750dc7d7a8e data/minecraft/tags/block/mineable/shovel.json
 01cc8508369ffefc5e24cec2e531b5840b778613 data/minecraft/tags/block/needs_iron_tool.json
 c8081364d81b14ba56ff062d0497dd10a0cc86cd data/minecraft/tags/block/needs_stone_tool.json

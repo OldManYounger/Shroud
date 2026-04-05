@@ -97,6 +97,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         emitterBlock(ModBlocks.SCULK_EMITTER.get());
         blockItem(ModBlocks.SCULK_EMITTER);
         corruptedReliquaryBlock(ModBlocks.CORRUPTED_RELIQUARY);
+        bindingPedestalBlock(ModBlocks.BINDING_PEDESTAL);
         blockWithItem(ModBlocks.EVENTIDE_BLOCK);
         blockWithItem(ModBlocks.EVENTIDE_ORE);
         blockWithItem(ModBlocks.EVENTIDE_DEEPSLATE_ORE);
@@ -365,6 +366,52 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .end();
 
         horizontalBlock(blockRegistryObject.get(), model);
+        simpleBlockItem(blockRegistryObject.get(), model);
+    }
+
+    // Creates a custom non-full binding pedestal model with side and shared top-bottom textures
+    private void bindingPedestalBlock(DeferredBlock<Block> blockRegistryObject) {
+        String path = blockRegistryObject.getId().getPath();
+
+        var model = models().withExistingParent(path, mcLoc("block/block"))
+                .texture("top", modLoc("block/" + path + "_top"))
+                .texture("side", modLoc("block/" + path + "_side"))
+                .texture("particle", modLoc("block/" + path + "_side"));
+
+        // Lower base
+        model.element()
+                .from(2.0F, 0.0F, 2.0F).to(14.0F, 4.0F, 14.0F)
+                .face(Direction.DOWN).texture("#top").end()
+                .face(Direction.UP).texture("#top").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        // Mid body
+        model.element()
+                .from(3.0F, 4.0F, 3.0F).to(13.0F, 12.0F, 13.0F)
+                .face(Direction.DOWN).texture("#top").end()
+                .face(Direction.UP).texture("#top").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        // Top cap
+        model.element()
+                .from(1.5F, 12.0F, 1.5F).to(14.5F, 16.0F, 14.5F)
+                .face(Direction.DOWN).texture("#top").end()
+                .face(Direction.UP).texture("#top").end()
+                .face(Direction.NORTH).texture("#side").end()
+                .face(Direction.SOUTH).texture("#side").end()
+                .face(Direction.WEST).texture("#side").end()
+                .face(Direction.EAST).texture("#side").end()
+                .end();
+
+        simpleBlock(blockRegistryObject.get(), model);
         simpleBlockItem(blockRegistryObject.get(), model);
     }
 

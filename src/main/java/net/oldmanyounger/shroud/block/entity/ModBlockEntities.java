@@ -53,6 +53,14 @@ public class ModBlockEntities {
                             ModBlocks.CORRUPTED_RELIQUARY.get()
                     ).build(null));
 
+    // Block entity for the binding pedestal that tracks and holds one bound mob
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ModBindingPedestalBlockEntity>> BINDING_PEDESTAL =
+            BLOCK_ENTITIES.register("binding_pedestal",
+                    () -> BlockEntityType.Builder.of(
+                            ModBindingPedestalBlockEntity::new,
+                            ModBlocks.BINDING_PEDESTAL.get()
+                    ).build(null));
+
     // ==================================
     //  REGISTRATION
     // ==================================

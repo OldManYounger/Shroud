@@ -20,7 +20,8 @@ import java.util.List;
  *
  * <p>This renderer draws only occupied reliquary slots as an evenly spaced circular ring that
  * rotates around the center of the block. Empty slots are ignored so spacing always adapts to
- * the actual number of displayed items.
+ * the actual number of displayed items. Items also bob with alternating phase so neighboring
+ * entries move in opposite vertical directions.
  *
  * <p>In the broader context of the project, this class provides world-space visual feedback for
  * ritual input buildup, letting players quickly read reliquary contents before ritual systems
@@ -50,12 +51,18 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     // Rotation speed in degrees per tick
     private static final float RING_ROTATION_DEG_PER_TICK = 1.6F;
 
+    // Vertical bobbing amplitude applied per item
+    private static final float BOB_AMPLITUDE = 0.035F;
+
+    // Bobbing speed in radians per tick
+    private static final float BOB_SPEED_RAD_PER_TICK = 0.11F;
+
     // Creates the renderer instance
     public ModCorruptedReliquaryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
-    // Renders occupied reliquary items in a rotating circular ring
+    // Renders occupied reliquary items in a rotating circular ring with alternating bob motion
     @Override
     public void render(ModCorruptedReliquaryBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         List<ItemStack> occupiedItems = collectOccupiedItems(blockEntity);
@@ -74,6 +81,7 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
         float baseAngleDeg = gameTime * RING_ROTATION_DEG_PER_TICK;
         float ringRadius = computeRingRadius(count);
         float stepDeg = 360.0F / count;
+        float bobTime = gameTime * BOB_SPEED_RAD_PER_TICK;
 
         for (int i = 0; i < count; i++) {
             ItemStack stack = occupiedItems.get(i);
@@ -84,8 +92,13 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
             float x = 0.5F + (Mth.cos(angleRad) * ringRadius);
             float z = 0.5F + (Mth.sin(angleRad) * ringRadius);
 
+            // Alternates bob phase so every other item moves opposite in vertical motion
+            float bobPhase = (i & 1) == 0 ? 0.0F : Mth.PI;
+            float bobOffset = Mth.sin(bobTime + bobPhase) * BOB_AMPLITUDE;
+            float y = RING_Y + bobOffset;
+
             poseStack.pushPose();
-            poseStack.translate(x, RING_Y, z);
+            poseStack.translate(x, y, z);
 
             // Rotates each item to face outward from the ring center
             poseStack.mulPose(Axis.YP.rotationDegrees(-angleDeg + 90.0F));

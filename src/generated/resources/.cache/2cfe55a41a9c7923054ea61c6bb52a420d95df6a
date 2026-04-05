@@ -1,4 +1,5 @@
-// 1.21.1	2026-04-05T12:36:34.4801963	Block States: shroud
+// 1.21.1	2026-04-05T14:54:57.5930726	Block States: shroud
+a0fd7978f2fe3b5f6e5d75bd4321d84c507f0d7c assets/shroud/blockstates/binding_pedestal.json
 a63848b42b81bfd84e74be03f76ad1f9cb6136fc assets/shroud/blockstates/chiseled_sculk_stone_bricks.json
 9ef858fcf90d9bedec2ea395f8d2b1bda17138a5 assets/shroud/blockstates/cobbled_sculk_deepslate.json
 a69d7b592753c110e25760c58aa57709878ddecd assets/shroud/blockstates/cobbled_sculk_deepslate_slab.json
@@ -78,6 +79,7 @@ a1a15b1f697aa7c394a8d66d93f17ecbe67d5050 assets/shroud/blockstates/virelith_slab
 ab2b8379b360653e059c1be09a80103f16eb7750 assets/shroud/blockstates/virelith_trapdoor.json
 002985f559587ef84b05adfea7c9b2a3990bf00e assets/shroud/blockstates/virelith_wall.json
 d00eb25cb1f6b82e4745805dec1d9a7c1ea0975e assets/shroud/blockstates/virelith_wood.json
+171e443e6f047e186a974783910b8eccdeaeacdc assets/shroud/models/block/binding_pedestal.json
 fc30caf7c42d909ef12e49ea6a106d32717a73cf assets/shroud/models/block/chiseled_sculk_stone_bricks.json
 61161e37d4df78ffa75386cbd82ac2175144c6bb assets/shroud/models/block/cobbled_sculk_deepslate.json
 cd4ef630524d6847f64fbaaa2f5f5661278b9287 assets/shroud/models/block/cobbled_sculk_deepslate_slab.json
@@ -238,6 +240,7 @@ a7d01e484ea4f19f1a837addc5b795031f14bfdf assets/shroud/models/block/virelith_tra
 35e449bb8e86986165f2b302d2e1f26fe64bb0e6 assets/shroud/models/block/virelith_wall_side_tall.json
 5c830fde699288ba5ce2a48bf6d37f2e719a43e3 assets/shroud/models/block/virelith_wood.json
 4791c374694045c36b00b41ffeca7f845dac6484 assets/shroud/models/block/virelith_wood_horizontal.json
+c367fb0bf9983481a57cf18efc790dd9a454feae assets/shroud/models/item/binding_pedestal.json
 122d5ff743ff4275c684a33434925df4603f8fd5 assets/shroud/models/item/chiseled_sculk_stone_bricks.json
 0c651ddedd714e69b4c194c663bc2d402b5e4f43 assets/shroud/models/item/cobbled_sculk_deepslate.json
 2b01357e177fd24227f3f86175f4f14dd3c8e5bc assets/shroud/models/item/cobbled_sculk_deepslate_slab.json

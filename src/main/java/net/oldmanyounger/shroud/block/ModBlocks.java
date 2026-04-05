@@ -467,6 +467,14 @@ public class ModBlocks {
                     .sound(SoundType.DEEPSLATE)
                     .noOcclusion()));
 
+    // Mob-binding pedestal block that captures and holds one mob on top
+    public static final DeferredBlock<Block> BINDING_PEDESTAL = registerBlock("binding_pedestal",
+            () -> new ModBindingPedestalBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DEEPSLATE)
+                    .strength(4.0F, 6.0F)
+                    .requiresCorrectToolForDrops()
+                    .sound(SoundType.DEEPSLATE)
+                    .noOcclusion()));
+
     // Registration helpers.
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);

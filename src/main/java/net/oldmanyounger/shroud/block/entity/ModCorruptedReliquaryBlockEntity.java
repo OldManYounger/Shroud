@@ -34,7 +34,7 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // ==================================
 
     // Total number of one-item slots supported by the reliquary
-    public static final int MAX_SLOTS = 64;
+    public static final int MAX_SLOTS = 32;
 
     // NBT key for stored slot items
     private static final String TAG_ITEMS = "Items";

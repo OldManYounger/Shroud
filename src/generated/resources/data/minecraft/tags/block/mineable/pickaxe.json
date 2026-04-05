@@ -31,6 +31,8 @@
     "shroud:eventide_deepslate_ore",
     "shroud:sculk_stone_eventide_ore",
     "shroud:sculk_deepslate_eventide_ore",
-    "shroud:gloomstone"
+    "shroud:gloomstone",
+    "shroud:corrupted_reliquary",
+    "shroud:binding_pedestal"
   ]
 }

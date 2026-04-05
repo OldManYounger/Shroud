@@ -92,7 +92,9 @@ public class ModBlockTagProvider extends BlockTagsProvider {
                 .add(ModBlocks.EVENTIDE_DEEPSLATE_ORE.get())
                 .add(ModBlocks.SCULK_STONE_EVENTIDE_ORE.get())
                 .add(ModBlocks.SCULK_DEEPSLATE_EVENTIDE_ORE.get())
-                .add(ModBlocks.GLOOMSTONE.get());
+                .add(ModBlocks.GLOOMSTONE.get())
+                .add(ModBlocks.CORRUPTED_RELIQUARY.get())
+                .add(ModBlocks.BINDING_PEDESTAL.get());
 
         tag(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(ModBlocks.SCULK_GRAVEL.get());

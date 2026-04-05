@@ -11,18 +11,19 @@ import net.oldmanyounger.shroud.block.ModBlocks;
 /**
  * Central registry class for all Shroud block entity types.
  *
- * <p>This class is responsible for declaring each block entity type and linking
- * it to the blocks that should create it at runtime. It acts as the bridge
- * between registered blocks and their server/client-side logic containers,
- * ensuring that blocks with persistent state or ticking behavior can function
- * correctly once placed in the world.
+ * <p>This class declares each block entity type and links it to the corresponding
+ * block registrations so NeoForge can instantiate and tick persistent block logic
+ * correctly at runtime.
  *
- * <p>In the broader context of the project, this file serves as the single
- * registration point for Shroud's block entities, keeping special block logic
- * organized and discoverable in the same way that {@code ModBlocks} does for
- * blocks themselves.
+ * <p>In the broader context of the project, this file is part of Shroud's core
+ * content bootstrap layer, ensuring complex world objects like lights, emitters,
+ * and ritual reliquaries are registered consistently and discoverably.
  */
 public class ModBlockEntities {
+
+    // ==================================
+    //  FIELDS
+    // ==================================
 
     // Deferred register that owns all Shroud block entity type registrations
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -43,6 +44,18 @@ public class ModBlockEntities {
                             ModSculkEmitterBlockEntity::new,
                             ModBlocks.SCULK_EMITTER.get()
                     ).build(null));
+
+    // Block entity for the corrupted reliquary ritual block
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ModCorruptedReliquaryBlockEntity>> CORRUPTED_RELIQUARY =
+            BLOCK_ENTITIES.register("corrupted_reliquary",
+                    () -> BlockEntityType.Builder.of(
+                            ModCorruptedReliquaryBlockEntity::new,
+                            ModBlocks.CORRUPTED_RELIQUARY.get()
+                    ).build(null));
+
+    // ==================================
+    //  REGISTRATION
+    // ==================================
 
     // Registers all declared block entity types onto the mod event bus
     public static void register(IEventBus eventBus) {

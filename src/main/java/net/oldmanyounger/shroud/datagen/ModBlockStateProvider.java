@@ -172,6 +172,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockItem(ModBlocks.UMBER_FENCE_GATE);
         blockItem(ModBlocks.UMBER_TRAPDOOR, "_bottom");
 
+        // Reliquary and pedestal blocks
+        simpleBlockWithItem(ModBlocks.CORRUPTED_RELIQUARY.get(), cubeAll(ModBlocks.CORRUPTED_RELIQUARY.get()));
+
         // Limbo blocks
         stackingWallpaperBlock(
                 ModBlocks.LIMBO_WALLPAPER_DIAMOND.get(),

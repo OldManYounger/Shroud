@@ -4,13 +4,19 @@
     Removals
     Bug Fixes
 
-- Version 0.4.2
+- Version 0.5.0
     Additions
-        - Ritual crafting system v1
+        - Added custom ritual crafting mechanic for future mod content
+            - Central altar (corrupted reliquary) accepts items via right-click, drop, or hopper/pipe
+            - Mobs can be lured and trapped upon the binding pedestals, placed within 8 blocks of the reliquary
+            - Currently the activation item is a stone axe; simply right-click the reliquary with it when ready
+            - Rudimentary JEI integration is available; refinements to come with later updates
+            - More info and screenshots are included on the mod page; in-game guide will likely come in the future
     Changes
         - Finished back-end refinements of code, formatting and comments to updated standards
     Removals
         - Removed references to 'Resonant Hulk' entity and spawn egg; mob is not yet implemented
+        - Removed crafting table recipe for 'Totem of Last Breath' due to new ritual crafting mechanic
     Bug Fixes
 
 - Version 0.4.1

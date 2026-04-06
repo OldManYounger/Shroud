@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:sculk_catalyst"
+    },
+    "S": {
+      "item": "minecraft:sculk"
+    },
+    "T": {
+      "item": "shroud:sculk_stone"
+    }
+  },
+  "pattern": [
+    "SSS",
+    " C ",
+    "TTT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:corrupted_reliquary"
+  }
+}

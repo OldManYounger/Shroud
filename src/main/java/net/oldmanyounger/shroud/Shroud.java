@@ -17,6 +17,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
+import net.oldmanyounger.shroud.compat.ModCompat;
 import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeRenderer;
@@ -109,7 +110,7 @@ public class Shroud {
 
     // Runs common setup logic for both logical sides
     private void commonSetup(FMLCommonSetupEvent event) {
-
+        ModCompat.initialize();
     }
 
     // Registers spawn placement rules for custom entities

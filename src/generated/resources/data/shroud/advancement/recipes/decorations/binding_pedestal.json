@@ -1,32 +1,32 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "shroud:totem_of_last_breath"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "has_totem_of_undying": {
+    "has_sculk_deepslate": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:totem_of_undying"
+            "items": "shroud:sculk_deepslate"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "shroud:binding_pedestal"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "has_totem_of_undying"
+      "has_sculk_deepslate"
     ]
   ],
   "rewards": {
     "recipes": [
-      "shroud:totem_of_last_breath"
+      "shroud:binding_pedestal"
     ]
   }
 }

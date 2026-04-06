@@ -106,6 +106,10 @@
   "block.shroud.corrupted_reliquary": "Corrupted Reliquary",
   "block.shroud.binding_pedestal": "Binding Pedestal",
 
+  "jei.shroud.ritual_crafting": "Ritual Crafting",
+  "jei.shroud.ritual_mobs": "Required bound mobs:",
+  "jei.shroud.ritual_damage": "Damage per required mob: %s",
+
   "block.shroud.limbo_wallpaper_diamond": "Limbo Wallpaper Diamond",
   "block.shroud.limbo_wallpaper_segmented": "Limbo Wallpaper Segmented",
   "block.shroud.limbo_carpet": "Limbo Carpet",

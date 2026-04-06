@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "shroud:sculk_deepslate"
+    },
+    "S": {
+      "item": "minecraft:sculk"
+    }
+  },
+  "pattern": [
+    "SSS",
+    " D ",
+    "DDD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:binding_pedestal"
+  }
+}

@@ -45,17 +45,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_gloomstone_dust", has(ModItems.GLOOMSTONE_DUST.get()))
                 .save(recipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.TOTEM_OF_LAST_BREATH.get())
-                .pattern("EGE")
-                .pattern("PTP")
-                .pattern("EGE")
-                .define('G', ModItems.GLOOMSTONE_DUST.get())
-                .define('E', Items.ECHO_SHARD)
-                .define('P', ModItems.SCULK_PEARL.get())
-                .define('T', Items.TOTEM_OF_UNDYING)
-                .unlockedBy("has_totem_of_undying", has(Items.TOTEM_OF_UNDYING))
-                .save(recipeOutput);
-
         // Eventide materials and block recipes
         List<ItemLike> EVENTIDE_SMELTABLES = List.of(
                 ModItems.RAW_EVENTIDE,
@@ -196,6 +185,26 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreBlasting(recipeOutput, EVENTIDE_SMELTABLES, RecipeCategory.MISC, ModItems.EVENTIDE_INGOT.get(), 0.25f, 100, "eventide");
         trimSmithing(recipeOutput, ModItems.EVENTIDE_SMITHING_TEMPLATE.get(),
                 ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "eventide"));
+
+        // Corrupted reliquary and binding pedestal recipes
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CORRUPTED_RELIQUARY.get())
+                .pattern("SSS")
+                .pattern(" C ")
+                .pattern("TTT")
+                .define('S', Items.SCULK)
+                .define('C', Items.SCULK_CATALYST)
+                .define('T', ModBlocks.SCULK_STONE.get())
+                .unlockedBy("has_sculk_catalyst", has(Items.SCULK_CATALYST))
+                .save(recipeOutput);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.BINDING_PEDESTAL.get())
+                .pattern("SSS")
+                .pattern(" D ")
+                .pattern("DDD")
+                .define('S', Items.SCULK)
+                .define('D', ModBlocks.SCULK_DEEPSLATE.get())
+                .unlockedBy("has_sculk_deepslate", has(ModBlocks.SCULK_DEEPSLATE.get()))
+                .save(recipeOutput);
 
         // Eventide tools
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_SWORD.get())

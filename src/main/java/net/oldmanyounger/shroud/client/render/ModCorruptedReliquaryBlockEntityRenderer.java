@@ -46,7 +46,7 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     private static final float RING_RADIUS_PER_ITEM = 0.010F;
 
     // Uniform item scale used for ring rendering
-    private static final float ITEM_SCALE = 0.24F;
+    private static final float ITEM_SCALE = 0.40F;
 
     // Rotation speed in degrees per tick
     private static final float RING_ROTATION_DEG_PER_TICK = 1.6F;

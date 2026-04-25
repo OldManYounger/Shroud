@@ -53,7 +53,7 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
 
     // Creates a JSON reload listener for ritual recipe files
     private RitualRecipeManager() {
-        super(GSON, "recipes/ritual");
+        super(GSON, "recipe/ritual");
     }
 
     // Applies freshly loaded ritual recipe JSON documents

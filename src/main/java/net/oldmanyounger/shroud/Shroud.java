@@ -25,6 +25,7 @@ import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
+import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeRegistries;
 import net.oldmanyounger.shroud.sound.ModSounds;
 import net.oldmanyounger.shroud.util.ModItemProperties;
 import net.oldmanyounger.shroud.worldgen.ModFeatures;
@@ -84,6 +85,8 @@ public class Shroud {
 
         ModMobEffects.MOB_EFFECTS.register(modEventBus);
         ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+
+        RitualRecipeRegistries.register(modEventBus);
     }
 
     // ==================================

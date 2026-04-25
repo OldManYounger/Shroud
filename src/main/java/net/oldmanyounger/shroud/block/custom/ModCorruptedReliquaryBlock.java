@@ -39,11 +39,11 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>This block routes world interactions into reliquary storage behavior, including
  * single-item insertion on right click, shift-right-click LIFO removal, dropped-item
- * auto-insertion on top contact, and inventory item spill on block replacement.
+ * auto-insertion on top contact, ritual activation attempts, and inventory spill on replacement.
  *
  * <p>In the broader context of the project, this class provides the physical world-facing
  * entry point for ritual crafting inputs and activation attempts before full ritual execution
- * flow is added.
+ * flow is expanded.
  */
 public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
@@ -52,8 +52,7 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
     // ==================================
 
     // Codec used by Minecraft to serialize and recreate this block type
-    public static final MapCodec<ModCorruptedReliquaryBlock> CODEC =
-            simpleCodec(ModCorruptedReliquaryBlock::new);
+    public static final MapCodec<ModCorruptedReliquaryBlock> CODEC = simpleCodec(ModCorruptedReliquaryBlock::new);
 
     // Horizontal facing property for model and shape orientation
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -72,11 +71,19 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
             Block.box(1.5D, 9.0D, 2.0D, 14.5D, 12.0D, 14.0D)
     );
 
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
+
     // Creates a corrupted reliquary block with the supplied block properties
     public ModCorruptedReliquaryBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
+
+    // ==================================
+    //  BLOCK BASICS
+    // ==================================
 
     // Returns the codec for this block type
     @Override
@@ -89,6 +96,17 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
     protected RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
+
+    // Creates the corrupted reliquary block entity
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ModCorruptedReliquaryBlockEntity(pos, state);
+    }
+
+    // ==================================
+    //  BLOCKSTATE ORIENTATION
+    // ==================================
 
     // Returns the placement state with facing opposite the player
     @Nullable
@@ -115,6 +133,10 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         builder.add(FACING);
     }
 
+    // ==================================
+    //  SHAPE
+    // ==================================
+
     // Returns the custom non-full-block shape based on horizontal axis
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -127,6 +149,10 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
     protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return getShape(state, level, pos, context);
     }
+
+    // ==================================
+    //  PLAYER INTERACTION
+    // ==================================
 
     // Handles right-click insertion and ritual activation item use
     @Override
@@ -197,6 +223,10 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
+    // ==================================
+    //  WORLD INTERACTION
+    // ==================================
+
     // Auto-inserts dropped item entities that contact the top of the reliquary
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
@@ -222,29 +252,22 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
     }
 
-    // Creates the corrupted reliquary block entity
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ModCorruptedReliquaryBlockEntity(pos, state);
-    }
-
     // Drops all stored items when the block is replaced by a different block
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof ModCorruptedReliquaryBlockEntity reliquary) {
-                for (ItemStack stack : reliquary.copyItems()) {
-                    if (!stack.isEmpty()) {
-                        Block.popResource(level, pos, stack);
-                    }
-                }
+                dropAllStoredItems(level, pos, reliquary);
             }
         }
 
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
+
+    // ==================================
+    //  INTERNAL HELPERS
+    // ==================================
 
     // Returns true when the held item is the current global ritual activator
     private boolean isRitualActivator(ItemStack stackInHand) {
@@ -272,5 +295,16 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
         }
 
         return ItemInteractionResult.SUCCESS;
+    }
+
+    // Drops all non-empty stacks currently stored in reliquary slots
+    private void dropAllStoredItems(Level level, BlockPos pos, ModCorruptedReliquaryBlockEntity reliquary) {
+        int totalSlots = reliquary.getContainerSize();
+        for (int slot = 0; slot < totalSlots; slot++) {
+            ItemStack stack = reliquary.getItem(slot);
+            if (!stack.isEmpty()) {
+                Block.popResource(level, pos, stack.copy());
+            }
+        }
     }
 }

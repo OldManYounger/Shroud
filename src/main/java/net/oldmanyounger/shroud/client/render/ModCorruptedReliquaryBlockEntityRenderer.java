@@ -12,13 +12,10 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.oldmanyounger.shroud.block.entity.ModCorruptedReliquaryBlockEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Client-side renderer for visualizing Corrupted Reliquary inventory contents above the block.
  *
- * <p>This renderer draws occupied reliquary slots in a circular ring and now supports ritual-time
+ * <p>This renderer draws occupied reliquary slots in a circular ring and supports ritual-time
  * convergence animation where items spin faster, rise upward, and tighten toward the altar focus.
  *
  * <p>In the broader context of the project, this class provides world-space visual feedback for
@@ -63,20 +60,24 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     // Max rotation speed during ritual convergence
     private static final float RITUAL_MAX_ROTATION_DEG_PER_TICK = 18.0F;
 
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
+
     // Creates the renderer instance
     public ModCorruptedReliquaryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
+    // ==================================
+    //  RENDER
+    // ==================================
+
     // Renders occupied reliquary items with idle ring motion and ritual convergence animation
     @Override
     public void render(ModCorruptedReliquaryBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        List<ItemStack> occupiedItems = collectOccupiedItems(blockEntity);
-        int count = occupiedItems.size();
-
-        if (count <= 0) {
-            return;
-        }
+        int occupiedCount = countOccupiedItems(blockEntity);
+        if (occupiedCount <= 0) return;
 
         var itemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -88,7 +89,7 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
         float ritualProgress = blockEntity.getRitualVisualProgress(partialTick);
         float accelerationProgress = ritualProgress * ritualProgress * ritualProgress;
 
-        float baseRadius = computeRingRadius(count);
+        float baseRadius = computeRingRadius(occupiedCount);
         float ringRadius = Mth.lerp(ritualProgress, baseRadius, RITUAL_TARGET_RADIUS);
 
         float rotationSpeed = Mth.lerp(accelerationProgress, RING_ROTATION_DEG_PER_TICK, RITUAL_MAX_ROTATION_DEG_PER_TICK);
@@ -97,43 +98,33 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
         float yBase = Mth.lerp(ritualProgress, RING_Y, RITUAL_TARGET_Y);
         float bobAmplitude = Mth.lerp(ritualProgress, BOB_AMPLITUDE, 0.0F);
 
-        float stepDeg = 360.0F / count;
+        float stepDeg = 360.0F / occupiedCount;
         float bobTime = gameTime * BOB_SPEED_RAD_PER_TICK;
 
-        for (int i = 0; i < count; i++) {
-            ItemStack stack = occupiedItems.get(i);
+        int renderIndex = 0;
+        int totalSlots = blockEntity.getContainerSize();
 
-            float angleDeg = baseAngleDeg + (stepDeg * i);
-            float angleRad = angleDeg * Mth.DEG_TO_RAD;
+        for (int slot = 0; slot < totalSlots; slot++) {
+            ItemStack stack = blockEntity.getItem(slot);
+            if (stack.isEmpty()) continue;
 
-            float x = 0.5F + (Mth.cos(angleRad) * ringRadius);
-            float z = 0.5F + (Mth.sin(angleRad) * ringRadius);
-
-            // Alternates bob phase so every other item moves opposite in vertical motion
-            float bobPhase = (i & 1) == 0 ? 0.0F : Mth.PI;
-            float bobOffset = Mth.sin(bobTime + bobPhase) * bobAmplitude;
-            float y = yBase + bobOffset;
-
-            poseStack.pushPose();
-            poseStack.translate(x, y, z);
-
-            // Rotates each item to face outward from the ring center
-            poseStack.mulPose(Axis.YP.rotationDegrees(-angleDeg + 90.0F));
-
-            poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-
-            itemRenderer.renderStatic(
-                    stack,
-                    ItemDisplayContext.GROUND,
-                    packedLight,
-                    OverlayTexture.NO_OVERLAY,
+            renderItemInRing(
+                    blockEntity,
                     poseStack,
                     buffer,
-                    blockEntity.getLevel(),
-                    i
+                    packedLight,
+                    itemRenderer,
+                    stack,
+                    renderIndex,
+                    stepDeg,
+                    baseAngleDeg,
+                    ringRadius,
+                    yBase,
+                    bobTime,
+                    bobAmplitude
             );
 
-            poseStack.popPose();
+            renderIndex++;
         }
     }
 
@@ -141,15 +132,67 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     //  HELPERS
     // ==================================
 
-    // Collects only non-empty item stacks from reliquary storage
-    private List<ItemStack> collectOccupiedItems(ModCorruptedReliquaryBlockEntity blockEntity) {
-        List<ItemStack> occupied = new ArrayList<>();
-        for (ItemStack stack : blockEntity.copyItems()) {
-            if (!stack.isEmpty()) {
-                occupied.add(stack);
+    // Counts non-empty reliquary slots
+    private int countOccupiedItems(ModCorruptedReliquaryBlockEntity blockEntity) {
+        int totalSlots = blockEntity.getContainerSize();
+        int occupied = 0;
+
+        for (int slot = 0; slot < totalSlots; slot++) {
+            if (!blockEntity.getItem(slot).isEmpty()) {
+                occupied++;
             }
         }
+
         return occupied;
+    }
+
+    // Renders one item at its ring position and orientation
+    private void renderItemInRing(
+            ModCorruptedReliquaryBlockEntity blockEntity,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            net.minecraft.client.renderer.entity.ItemRenderer itemRenderer,
+            ItemStack stack,
+            int index,
+            float stepDeg,
+            float baseAngleDeg,
+            float ringRadius,
+            float yBase,
+            float bobTime,
+            float bobAmplitude
+    ) {
+        float angleDeg = baseAngleDeg + (stepDeg * index);
+        float angleRad = angleDeg * Mth.DEG_TO_RAD;
+
+        float x = 0.5F + (Mth.cos(angleRad) * ringRadius);
+        float z = 0.5F + (Mth.sin(angleRad) * ringRadius);
+
+        // Alternates bob phase so every other item moves opposite in vertical motion
+        float bobPhase = (index & 1) == 0 ? 0.0F : Mth.PI;
+        float bobOffset = Mth.sin(bobTime + bobPhase) * bobAmplitude;
+        float y = yBase + bobOffset;
+
+        poseStack.pushPose();
+        poseStack.translate(x, y, z);
+
+        // Rotates each item to face outward from the ring center
+        poseStack.mulPose(Axis.YP.rotationDegrees(-angleDeg + 90.0F));
+
+        poseStack.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
+
+        itemRenderer.renderStatic(
+                stack,
+                ItemDisplayContext.GROUND,
+                packedLight,
+                OverlayTexture.NO_OVERLAY,
+                poseStack,
+                buffer,
+                blockEntity.getLevel(),
+                index
+        );
+
+        poseStack.popPose();
     }
 
     // Computes ring radius based on occupied item count

@@ -18,13 +18,13 @@ import java.util.UUID;
 /**
  * Block entity that stores and manages one mob bound to a Binding Pedestal.
  *
- * <p>This block entity automatically captures a mob when one enters pedestal space, persists
- * the bound mob identity and snapshot metadata, and keeps the bound mob positioned on top of
+ * <p>This block entity captures a mob when one enters pedestal space, persists
+ * bound identity and snapshot metadata, and keeps the bound mob positioned on top of
  * the pedestal each server tick. It intentionally focuses on pedestal behavior and does not
  * execute ritual crafting.
  *
- * <p>In the broader context of the project, this class provides the mob-input anchor needed for
- * future ritual validation flows while remaining usable as a standalone world mechanic first.
+ * <p>In the broader context of the project, this class provides the mob-input anchor
+ * needed for ritual validation flows while remaining usable as a standalone world mechanic.
  */
 public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.block.entity.BlockEntity {
 
@@ -74,6 +74,10 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
 
     // Ritual lock scaffold for future integration
     private boolean ritualLocked = false;
+
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
 
     // Creates the binding pedestal block entity
     public ModBindingPedestalBlockEntity(BlockPos pos, BlockState state) {
@@ -152,6 +156,49 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
 
         this.ritualLocked = ritualLocked;
         markChangedAndSync();
+    }
+
+    // Returns the currently bound living mob for ritual visuals and validation
+    @Nullable
+    public LivingEntity getBoundLivingMob(ServerLevel serverLevel) {
+        if (boundMobUuid == null) return null;
+
+        Entity entity = resolveBoundEntity(serverLevel);
+        if (!(entity instanceof LivingEntity living) || !living.isAlive() || living.isRemoved()) {
+            releaseBoundMob();
+            return null;
+        }
+
+        snapshotBoundEntity(living);
+        return living;
+    }
+
+    // Damages the currently bound living mob using generic damage and fails if mob dies
+    public boolean damageBoundMob(float amount) {
+        if (amount <= 0.0F) return true;
+        if (!(level instanceof ServerLevel serverLevel)) return false;
+        if (boundMobUuid == null) return false;
+
+        Entity entity = resolveBoundEntity(serverLevel);
+        if (!(entity instanceof LivingEntity living) || !living.isAlive() || living.isRemoved()) {
+            releaseBoundMob();
+            return false;
+        }
+
+        boolean hurt = living.hurt(serverLevel.damageSources().generic(), amount);
+        snapshotBoundEntity(living);
+        markChangedAndSync();
+
+        if (!hurt) {
+            return false;
+        }
+
+        if (!living.isAlive() || living.isRemoved()) {
+            releaseBoundMob();
+            return false;
+        }
+
+        return true;
     }
 
     // ==================================
@@ -307,48 +354,5 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
 
         BlockState state = getBlockState();
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
-    }
-
-    // Returns the currently bound living mob for ritual visuals and validation
-    @Nullable
-    public LivingEntity getBoundLivingMob(ServerLevel serverLevel) {
-        if (boundMobUuid == null) return null;
-
-        Entity entity = resolveBoundEntity(serverLevel);
-        if (!(entity instanceof LivingEntity living) || !living.isAlive() || living.isRemoved()) {
-            releaseBoundMob();
-            return null;
-        }
-
-        snapshotBoundEntity(living);
-        return living;
-    }
-
-    // Damages the currently bound living mob using generic damage and fails if mob dies
-    public boolean damageBoundMob(float amount) {
-        if (amount <= 0.0F) return true;
-        if (!(level instanceof ServerLevel serverLevel)) return false;
-        if (boundMobUuid == null) return false;
-
-        Entity entity = resolveBoundEntity(serverLevel);
-        if (!(entity instanceof LivingEntity living) || !living.isAlive() || living.isRemoved()) {
-            releaseBoundMob();
-            return false;
-        }
-
-        boolean hurt = living.hurt(serverLevel.damageSources().generic(), amount);
-        snapshotBoundEntity(living);
-        markChangedAndSync();
-
-        if (!hurt) {
-            return false;
-        }
-
-        if (!living.isAlive() || living.isRemoved()) {
-            releaseBoundMob();
-            return false;
-        }
-
-        return true;
     }
 }

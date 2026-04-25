@@ -4,10 +4,14 @@
     Removals
     Bug Fixes
 
-- Version 0.5.X
+- Version 0.6.0
     Additions
     Changes
+        - Added custom particles and animations to ritual crafting; now takes a specified duration to craft
+        - Updated textures for Binding Pedestal and Corrupted Altar
+        - Optimized item rendering on altar
     Removals
+        - Removed some unused logic for corruption effect heart overlay
     Bug Fixes
 
 - Version 0.5.1

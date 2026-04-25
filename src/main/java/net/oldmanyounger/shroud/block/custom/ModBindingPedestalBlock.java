@@ -36,8 +36,7 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
     // ==================================
 
     // Codec used by Minecraft to serialize and recreate this block type
-    public static final MapCodec<ModBindingPedestalBlock> CODEC =
-            simpleCodec(ModBindingPedestalBlock::new);
+    public static final MapCodec<ModBindingPedestalBlock> CODEC = simpleCodec(ModBindingPedestalBlock::new);
 
     // Full-height pedestal shape with side indent style
     private static final VoxelShape SHAPE = Shapes.or(
@@ -46,10 +45,18 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
             Block.box(1.5D, 12.0D, 1.5D, 14.5D, 16.0D, 14.5D)
     );
 
+    // ==================================
+    //  CONSTRUCTOR
+    // ==================================
+
     // Creates a binding pedestal block with the supplied block properties
     public ModBindingPedestalBlock(Properties properties) {
         super(properties);
     }
+
+    // ==================================
+    //  BLOCK BASICS
+    // ==================================
 
     // Returns the codec for this block type
     @Override
@@ -63,6 +70,17 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
+    // Creates the binding pedestal block entity
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ModBindingPedestalBlockEntity(pos, state);
+    }
+
+    // ==================================
+    //  SHAPE
+    // ==================================
+
     // Returns the custom full-height outline shape
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
@@ -75,6 +93,10 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
         return SHAPE;
     }
 
+    // ==================================
+    //  WORLD INTERACTION
+    // ==================================
+
     // Captures an eligible mob when it enters pedestal space
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
@@ -82,18 +104,28 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
 
         if (level.isClientSide) return;
 
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ModBindingPedestalBlockEntity pedestalBe) {
-            pedestalBe.tryBindEntity(entity);
+        ModBindingPedestalBlockEntity pedestal = getPedestalEntity(level, pos);
+        if (pedestal != null) {
+            pedestal.tryBindEntity(entity);
         }
     }
 
-    // Creates the binding pedestal block entity
-    @Nullable
+    // Releases bound state when the block is removed
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ModBindingPedestalBlockEntity(pos, state);
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            ModBindingPedestalBlockEntity pedestal = getPedestalEntity(level, pos);
+            if (pedestal != null) {
+                pedestal.releaseBoundMob();
+            }
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
     }
+
+    // ==================================
+    //  TICKER
+    // ==================================
 
     // Supplies the server-side ticker for bound mob hold behavior
     @Nullable
@@ -106,16 +138,17 @@ public class ModBindingPedestalBlock extends BaseEntityBlock {
                 : null;
     }
 
-    // Releases bound state when the block is removed
-    @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof ModBindingPedestalBlockEntity pedestalBe) {
-                pedestalBe.releaseBoundMob();
-            }
-        }
+    // ==================================
+    //  INTERNAL HELPERS
+    // ==================================
 
-        super.onRemove(state, level, pos, newState, movedByPiston);
+    // Resolves this position's binding pedestal block entity when present
+    @Nullable
+    private ModBindingPedestalBlockEntity getPedestalEntity(Level level, BlockPos pos) {
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ModBindingPedestalBlockEntity pedestal) {
+            return pedestal;
+        }
+        return null;
     }
 }

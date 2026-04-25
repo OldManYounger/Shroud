@@ -2,7 +2,6 @@ package net.oldmanyounger.shroud.effect;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -97,10 +96,5 @@ public class ModCorruptionMobEffect extends MobEffect {
         double currentMaxHealth = maxHealth.getValue();
 
         return modifier == null ? currentMaxHealth : currentMaxHealth - modifier.amount();
-    }
-
-    // Returns whole-number health points currently blocked by Corruption.
-    public static int getBlockedHealthPoints(LivingEntity livingEntity) {
-        return Math.max(0, Mth.ceil((float) getUncorruptedMaxHealth(livingEntity) - getAllowedHealth(livingEntity)));
     }
 }

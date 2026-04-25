@@ -19,17 +19,21 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Core persistent state holder for the Corrupted Reliquary block.
  *
- * <p>This block entity owns the reliquary's internal one-item-slot inventory model and exposes
- * focused methods for manual insertion, dropped-item insertion, LIFO removal, and automation-facing
- * insertion-only container behavior. It intentionally avoids ritual execution logic so the block can
- * be implemented and validated independently first.
+ * <p>This block entity owns the reliquary's one-item-slot inventory model and exposes
+ * focused methods for manual insertion, dropped-item insertion, LIFO removal, recipe
+ * requirement consumption, and automation-facing insertion-only container behavior.
+ * It intentionally avoids ritual execution logic so the block can be validated independently.
  *
  * <p>In the broader context of the project, this class is the foundation of ritual item intake,
- * serving as the canonical source of reliquary contents that future ritual validation and activation
- * systems will consume.
+ * serving as the canonical source of reliquary contents that ritual validation and activation
+ * systems consume.
  */
 public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.block.entity.BlockEntity implements WorldlyContainer {
 
@@ -49,6 +53,15 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // NBT key for inventory revision used to force renderer-visible sync transitions
     private static final String TAG_INVENTORY_REVISION = "InventoryRevision";
 
+    // NBT key for ritual visual active state
+    private static final String TAG_RITUAL_VISUAL_ACTIVE = "RitualVisualActive";
+
+    // NBT key for ritual visual start tick
+    private static final String TAG_RITUAL_VISUAL_START_TICK = "RitualVisualStartTick";
+
+    // NBT key for ritual visual duration ticks
+    private static final String TAG_RITUAL_VISUAL_DURATION_TICKS = "RitualVisualDurationTicks";
+
     // All slot indexes exposed for insertion checks by automation
     private static final int[] AUTOMATION_SLOTS = buildAutomationSlots();
 
@@ -64,12 +77,13 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // Monotonic revision that increments on every inventory mutation
     private int inventoryRevision = 0;
 
-    private static final String TAG_RITUAL_VISUAL_ACTIVE = "RitualVisualActive";
-    private static final String TAG_RITUAL_VISUAL_START_TICK = "RitualVisualStartTick";
-    private static final String TAG_RITUAL_VISUAL_DURATION_TICKS = "RitualVisualDurationTicks";
-
+    // Runtime ritual visual state
     private boolean ritualVisualActive = false;
+
+    // Runtime ritual visual start tick
     private long ritualVisualStartTick = 0L;
+
+    // Runtime ritual visual duration in ticks
     private int ritualVisualDurationTicks = 0;
 
     // ==================================
@@ -198,6 +212,77 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         if (this.ritualLocked == ritualLocked) return;
         this.ritualLocked = ritualLocked;
         markChangedAndSync(false);
+    }
+
+    // ==================================
+    //  RITUAL VISUAL STATE
+    // ==================================
+
+    // Starts ritual visual animation tracking
+    public void startRitualVisual(long startGameTick, int durationTicks) {
+        this.ritualVisualActive = true;
+        this.ritualVisualStartTick = startGameTick;
+        this.ritualVisualDurationTicks = Math.max(1, durationTicks);
+        markChangedAndSync(false);
+    }
+
+    // Clears ritual visual animation tracking
+    public void clearRitualVisual() {
+        if (!this.ritualVisualActive && this.ritualVisualDurationTicks == 0) return;
+
+        this.ritualVisualActive = false;
+        this.ritualVisualStartTick = 0L;
+        this.ritualVisualDurationTicks = 0;
+        markChangedAndSync(false);
+    }
+
+    // Returns true when ritual visual animation is active
+    public boolean isRitualVisualActive() {
+        return ritualVisualActive;
+    }
+
+    // Returns normalized ritual visual progress in range 0 to 1
+    public float getRitualVisualProgress(float partialTick) {
+        if (!ritualVisualActive) return 0.0F;
+        if (ritualVisualDurationTicks <= 0) return 0.0F;
+        if (level == null) return 0.0F;
+
+        float elapsed = (float) ((level.getGameTime() - ritualVisualStartTick) + partialTick);
+        return Mth.clamp(elapsed / (float) ritualVisualDurationTicks, 0.0F, 1.0F);
+    }
+
+    // ==================================
+    //  REQUIREMENT CONSUMPTION
+    // ==================================
+
+    // Consumes one item unit per expanded requirement selector and returns true on full success
+    public boolean consumeRequirements(List<RitualRecipe.ItemRequirement> requirements) {
+        List<RitualRecipe.ItemRequirement> expanded = new ArrayList<>();
+        for (RitualRecipe.ItemRequirement req : requirements) {
+            int count = Math.max(1, req.count());
+            for (int i = 0; i < count; i++) {
+                expanded.add(req);
+            }
+        }
+
+        int[] matchedSlots = new int[expanded.size()];
+        Arrays.fill(matchedSlots, -1);
+
+        boolean[] usedSlots = new boolean[MAX_SLOTS];
+        boolean ok = matchRequirementRecursive(expanded, 0, usedSlots, matchedSlots);
+        if (!ok) {
+            return false;
+        }
+
+        for (int slot : matchedSlots) {
+            if (slot >= 0 && slot < MAX_SLOTS) {
+                items.set(slot, ItemStack.EMPTY);
+            }
+        }
+
+        pruneInsertionOrderToExistingItems();
+        markChangedAndSync(true);
+        return true;
     }
 
     // ==================================
@@ -382,38 +467,34 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         return items.get(slot).isEmpty();
     }
 
-    // Consumes one item unit per expanded requirement selector and returns true on full success
-    public boolean consumeRequirements(java.util.List<RitualRecipe.ItemRequirement> requirements) {
-        java.util.List<RitualRecipe.ItemRequirement> expanded = new java.util.ArrayList<>();
-        for (RitualRecipe.ItemRequirement req : requirements) {
-            int count = Math.max(1, req.count());
-            for (int i = 0; i < count; i++) {
-                expanded.add(req);
-            }
-        }
+    // ==================================
+    //  WORLDLY CONTAINER
+    // ==================================
 
-        int[] matchedSlots = new int[expanded.size()];
-        java.util.Arrays.fill(matchedSlots, -1);
-
-        boolean[] usedSlots = new boolean[MAX_SLOTS];
-        boolean ok = matchRequirementRecursive(expanded, 0, usedSlots, matchedSlots);
-        if (!ok) {
-            return false;
-        }
-
-        for (int slot : matchedSlots) {
-            if (slot >= 0 && slot < MAX_SLOTS) {
-                items.set(slot, ItemStack.EMPTY);
-            }
-        }
-
-        pruneInsertionOrderToExistingItems();
-        markChangedAndSync(true);
-        return true;
+    // Exposes all slots for sided automation insertion attempts
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return AUTOMATION_SLOTS;
     }
 
+    // Allows sided insertion into empty slots only
+    @Override
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
+        return canPlaceItem(slot, stack);
+    }
+
+    // Blocks sided extraction from all faces
+    @Override
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
+        return false;
+    }
+
+    // ==================================
+    //  INTERNAL HELPERS
+    // ==================================
+
     // Matches expanded selectors to unique occupied reliquary slots
-    private boolean matchRequirementRecursive(java.util.List<RitualRecipe.ItemRequirement> expanded,
+    private boolean matchRequirementRecursive(List<RitualRecipe.ItemRequirement> expanded,
                                               int reqIndex,
                                               boolean[] usedSlots,
                                               int[] matchedSlots) {
@@ -458,65 +539,6 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         insertionOrder.clear();
         insertionOrder.addAll(kept);
     }
-
-    // Starts ritual visual animation tracking
-    public void startRitualVisual(long startGameTick, int durationTicks) {
-        this.ritualVisualActive = true;
-        this.ritualVisualStartTick = startGameTick;
-        this.ritualVisualDurationTicks = Math.max(1, durationTicks);
-        markChangedAndSync(false);
-    }
-
-    // Clears ritual visual animation tracking
-    public void clearRitualVisual() {
-        if (!this.ritualVisualActive && this.ritualVisualDurationTicks == 0) return;
-
-        this.ritualVisualActive = false;
-        this.ritualVisualStartTick = 0L;
-        this.ritualVisualDurationTicks = 0;
-        markChangedAndSync(false);
-    }
-
-    // Returns true when ritual visual animation is active
-    public boolean isRitualVisualActive() {
-        return ritualVisualActive;
-    }
-
-    // Returns normalized ritual visual progress in range 0 to 1
-    public float getRitualVisualProgress(float partialTick) {
-        if (!ritualVisualActive) return 0.0F;
-        if (ritualVisualDurationTicks <= 0) return 0.0F;
-        if (level == null) return 0.0F;
-
-        float elapsed = (float) ((level.getGameTime() - ritualVisualStartTick) + partialTick);
-        return Mth.clamp(elapsed / (float) ritualVisualDurationTicks, 0.0F, 1.0F);
-    }
-
-    // ==================================
-    //  WORLDLY CONTAINER
-    // ==================================
-
-    // Exposes all slots for sided automation insertion attempts
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-        return AUTOMATION_SLOTS;
-    }
-
-    // Allows sided insertion into empty slots only
-    @Override
-    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, Direction side) {
-        return canPlaceItem(slot, stack);
-    }
-
-    // Blocks sided extraction from all faces
-    @Override
-    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction side) {
-        return false;
-    }
-
-    // ==================================
-    //  INTERNAL HELPERS
-    // ==================================
 
     // Marks data dirty and pushes a full client update so renderer state refreshes after inventory changes
     private void markChangedAndSync(boolean inventoryMutated) {

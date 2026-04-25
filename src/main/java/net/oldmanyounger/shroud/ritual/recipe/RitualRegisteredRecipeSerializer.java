@@ -1,20 +1,25 @@
 package net.oldmanyounger.shroud.ritual.recipe;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
+import java.util.List;
+
 /**
- * Minimal serializer for the registered ritual bridge recipe type.
+ * Serializer for `shroud:ritual` recipes using explicit ritual field codecs.
  *
- * <p>This serializer provides a no-payload network codec so recipe sync packets
- * can encode and decode ritual bridge recipes without requiring per-recipe
- * binary fields.
+ * <p>This serializer decodes recipe JSON authored by datapacks and KubeJS `event.custom`,
+ * then keeps packet sync consistent by round-tripping recipe payload as JSON text.
  *
- * <p>In the broader context of the project, this class keeps `shroud:ritual`
- * registry compatibility stable for datapacks and KubeJS integrations while
- * ritual execution remains managed by Shroud's dedicated ritual systems.
+ * <p>In the broader context of the project, this class enables ritual recipes to participate
+ * in the same recipe registration and loading workflow used by standard modded recipe types.
  */
 public class RitualRegisteredRecipeSerializer implements RecipeSerializer<RitualRegisteredRecipe> {
 
@@ -22,34 +27,43 @@ public class RitualRegisteredRecipeSerializer implements RecipeSerializer<Ritual
     //  FIELDS
     // ==================================
 
-    // Codec used for datapack json loading
-    private static final MapCodec<RitualRegisteredRecipe> CODEC =
-            MapCodec.unit(RitualRegisteredRecipe::new);
+    // Map codec for datapack json decoding
+    private static final MapCodec<RitualRegisteredRecipe> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    RitualRegisteredRecipe.ItemRequirementData.CODEC.listOf().optionalFieldOf("items", List.of()).forGetter(RitualRegisteredRecipe::items),
+                    RitualRegisteredRecipe.MobRequirementData.CODEC.listOf().optionalFieldOf("mobs", List.of()).forGetter(RitualRegisteredRecipe::mobs),
+                    Codec.FLOAT.optionalFieldOf("mob_damage", 2.0F).forGetter(RitualRegisteredRecipe::mobDamagePerRequiredMob),
+                    Codec.INT.optionalFieldOf("duration_seconds", 6).forGetter(RitualRegisteredRecipe::durationSeconds),
+                    RitualRegisteredRecipe.OutputData.CODEC.fieldOf("output").forGetter(RitualRegisteredRecipe::output)
+            ).apply(instance, RitualRegisteredRecipe::new)
+    );
 
-    // Stream codec used for recipe sync packets
+    // Stream codec for packet sync
     private static final StreamCodec<RegistryFriendlyByteBuf, RitualRegisteredRecipe> STREAM_CODEC =
             new StreamCodec<>() {
-
-                // Encodes no payload for the bridge recipe
                 @Override
                 public void encode(RegistryFriendlyByteBuf buffer, RitualRegisteredRecipe value) {
-                    // No-op by design
+                    JsonElement encoded = RitualRegisteredRecipe.CODEC.encodeStart(JsonOps.INSTANCE, value)
+                            .getOrThrow(error -> new IllegalStateException("Failed to encode ritual recipe: " + error));
+                    buffer.writeUtf(encoded.toString());
                 }
 
-                // Decodes a fresh bridge recipe instance
                 @Override
                 public RitualRegisteredRecipe decode(RegistryFriendlyByteBuf buffer) {
-                    return new RitualRegisteredRecipe();
+                    String raw = buffer.readUtf();
+                    JsonElement element = JsonParser.parseString(raw);
+                    return RitualRegisteredRecipe.CODEC.parse(JsonOps.INSTANCE, element)
+                            .getOrThrow(error -> new IllegalStateException("Failed to decode ritual recipe: " + error));
                 }
             };
 
-    // Returns the json codec
+    // Returns json map codec
     @Override
     public MapCodec<RitualRegisteredRecipe> codec() {
         return CODEC;
     }
 
-    // Returns the packet stream codec
+    // Returns packet stream codec
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, RitualRegisteredRecipe> streamCodec() {
         return STREAM_CODEC;

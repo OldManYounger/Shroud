@@ -34,6 +34,8 @@ public final class RitualActivationHandler {
             return new RitualActivationResult(RitualActivationStatus.NO_MATCH, Optional.empty(), Optional.empty());
         }
 
+        RitualExecutionService.clearStaleLockIfNotPending(serverLevel, reliquaryPos, reliquaryBe);
+
         if (reliquaryBe.isRitualLocked()) {
             return new RitualActivationResult(RitualActivationStatus.RELIQUARY_LOCKED, Optional.empty(), Optional.empty());
         }

@@ -6,13 +6,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.block.entity.ModBindingPedestalBlockEntity;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
-import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeManager;
+import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeRegistries;
+import net.oldmanyounger.shroud.ritual.recipe.RitualRegisteredRecipe;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +27,7 @@ import java.util.Set;
  * mob requirements against nearby pedestals using one-mob-per-pedestal semantics.
  *
  * <p>In the broader context of the project, this class is the first execution-phase bridge
- * between loaded ritual recipe data and world-state validation.
+ * between serializer-loaded ritual recipes and world-state validation.
  */
 public final class RitualRecipeMatcher {
 
@@ -48,7 +49,7 @@ public final class RitualRecipeMatcher {
     /**
      * Tries to find the first ritual recipe that matches current reliquary and pedestal state.
      *
-     * <p>Matching order follows loaded recipe order from the manager.
+     * <p>Matching order follows recipe manager order for the ritual recipe type.
      *
      * @param level server world level
      * @param reliquaryPos reliquary block position
@@ -59,7 +60,14 @@ public final class RitualRecipeMatcher {
         List<ItemStack> normalizedItems = normalizeReliquaryItems(reliquaryItems);
         List<PedestalSnapshot> pedestals = collectNearbyPedestals(level, reliquaryPos);
 
-        for (RitualRecipe recipe : RitualRecipeManager.INSTANCE.getAll()) {
+        List<RitualRecipe> runtimeRecipes = level.getRecipeManager()
+                .getAllRecipesFor(RitualRecipeRegistries.RITUAL_TYPE.get())
+                .stream()
+                .map(holder -> toRuntimeRecipe(holder.id(), holder.value()))
+                .flatMap(Optional::stream)
+                .toList();
+
+        for (RitualRecipe recipe : runtimeRecipes) {
             if (!matchesItems(recipe, normalizedItems)) {
                 continue;
             }
@@ -73,6 +81,16 @@ public final class RitualRecipeMatcher {
         }
 
         return Optional.empty();
+    }
+
+    // Converts registered recipe payload into runtime ritual recipe safely
+    private static Optional<RitualRecipe> toRuntimeRecipe(ResourceLocation id, RitualRegisteredRecipe recipe) {
+        try {
+            return Optional.of(recipe.toRuntime(id));
+        } catch (Exception ex) {
+            Shroud.LOGGER.error("Failed to materialize ritual recipe {}", id, ex);
+            return Optional.empty();
+        }
     }
 
     // ==================================
@@ -99,12 +117,10 @@ public final class RitualRecipeMatcher {
     private static boolean matchesItems(RitualRecipe recipe, List<ItemStack> actualItems) {
         List<RitualRecipe.ItemRequirement> selectors = expandItemRequirements(recipe.itemRequirements());
 
-        // Extra-item invalidation rule
         if (actualItems.size() != selectors.size()) {
             return false;
         }
 
-        // Backtracking assignment to support exact item and tag overlap safely
         boolean[] used = new boolean[actualItems.size()];
         return matchSelectorRecursive(selectors, 0, actualItems, used);
     }

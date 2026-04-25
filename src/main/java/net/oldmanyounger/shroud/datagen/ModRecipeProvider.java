@@ -195,11 +195,11 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         // Ritual infrastructure block recipes
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ModBlocks.CORRUPTED_RELIQUARY.get())
                 .pattern("SSS")
-                .pattern(" C ")
+                .pattern("TCT")
                 .pattern("TTT")
                 .define('S', Items.SCULK)
                 .define('C', Items.SCULK_CATALYST)
-                .define('T', ModBlocks.SCULK_STONE.get())
+                .define('T', ModBlocks.SCULK_STONE_BRICKS.get())
                 .unlockedBy("has_sculk_catalyst", has(Items.SCULK_CATALYST))
                 .save(craftingRecipeOutput);
 
@@ -208,7 +208,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern(" D ")
                 .pattern("DDD")
                 .define('S', Items.SCULK)
-                .define('D', ModBlocks.SCULK_DEEPSLATE.get())
+                .define('D', ModBlocks.SCULK_STONE_BRICKS.get())
                 .unlockedBy("has_sculk_deepslate", has(ModBlocks.SCULK_DEEPSLATE.get()))
                 .save(craftingRecipeOutput);
 

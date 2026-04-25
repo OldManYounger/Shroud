@@ -5,11 +5,12 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipe;
-import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeManager;
+import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeRegistries;
 
 import java.util.List;
 
@@ -24,6 +25,10 @@ import java.util.List;
  */
 @JeiPlugin
 public final class ShroudJeiPlugin implements IModPlugin {
+
+    // ==================================
+    //  FIELDS
+    // ==================================
 
     // Plugin uid resource id
     private static final ResourceLocation PLUGIN_UID =
@@ -41,11 +46,19 @@ public final class ShroudJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new JeiRitualRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
-    // Registers ritual recipes
+    // Registers ritual recipes from recipe manager ritual type entries
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        List<JeiRitualDisplay> displays = RitualRecipeManager.INSTANCE.getAll()
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null) {
+            registration.addRecipes(JeiRitualRecipeCategory.RECIPE_TYPE, List.of());
+            return;
+        }
+
+        List<JeiRitualDisplay> displays = minecraft.level.getRecipeManager()
+                .getAllRecipesFor(RitualRecipeRegistries.RITUAL_TYPE.get())
                 .stream()
+                .map(holder -> holder.value().toRuntime(holder.id()))
                 .map(this::mapRecipe)
                 .toList();
 

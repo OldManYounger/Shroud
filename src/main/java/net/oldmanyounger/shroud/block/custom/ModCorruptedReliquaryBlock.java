@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -162,6 +163,11 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
+        // Clears stale ritual lock before handling normal interactions
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            RitualExecutionService.clearStaleLockIfNotPending(serverLevel, pos, reliquary);
+        }
+
         if (isRitualActivator(stackInHand)) {
             return handleRitualActivation(level, pos, player, reliquary);
         }
@@ -201,6 +207,11 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
+        // Clears stale ritual lock before handling normal interactions
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            RitualExecutionService.clearStaleLockIfNotPending(serverLevel, pos, reliquary);
+        }
+
         if (!player.isShiftKeyDown()) {
             return InteractionResult.PASS;
         }
@@ -238,6 +249,11 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
 
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (!(blockEntity instanceof ModCorruptedReliquaryBlockEntity reliquary)) return;
+
+        // Clears stale ritual lock before auto-insert from dropped items
+        if (level instanceof ServerLevel serverLevel) {
+            RitualExecutionService.clearStaleLockIfNotPending(serverLevel, pos, reliquary);
+        }
 
         ItemStack stack = itemEntity.getItem();
         if (stack.isEmpty()) return;

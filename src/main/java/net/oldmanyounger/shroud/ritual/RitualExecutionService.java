@@ -12,7 +12,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -58,6 +57,12 @@ public final class RitualExecutionService {
 
     // Pending ritual queue processed during server ticks
     private static final List<PendingRitual> PENDING_RITUALS = new ArrayList<>();
+
+    // Horizontal stale-lock pedestal scan radius from reliquary
+    private static final int STALE_UNLOCK_RADIUS_XZ = 8;
+
+    // Vertical stale-lock pedestal scan range above and below reliquary
+    private static final int STALE_UNLOCK_RADIUS_Y = 1;
 
     // ==================================
     //  CONSTRUCTOR
@@ -377,36 +382,37 @@ public final class RitualExecutionService {
     //  OUTPUT ROUTING
     // ==================================
 
-    // Routes ritual output to adjacent chest or north-side drop fallback
+    // Routes ritual output to adjacent containers including below or north-side drop fallback
     private static void routeOutput(ServerLevel level, BlockPos reliquaryPos, ItemStack output) {
         if (output.isEmpty()) return;
 
         ItemStack remainder = output.copy();
 
-        boolean insertedIntoChest = tryInsertIntoAdjacentChest(level, reliquaryPos, remainder);
-        if (insertedIntoChest) {
+        boolean insertedIntoContainer = tryInsertIntoAdjacentContainer(level, reliquaryPos, remainder);
+        if (insertedIntoContainer) {
             return;
         }
 
         dropNorthOfReliquary(level, reliquaryPos, remainder);
     }
 
-    // Tries to insert output stack into any chest on the four cardinal sides
-    private static boolean tryInsertIntoAdjacentChest(ServerLevel level, BlockPos reliquaryPos, ItemStack stack) {
+    // Tries to insert output stack into any container on four cardinal sides then below
+    private static boolean tryInsertIntoAdjacentContainer(ServerLevel level, BlockPos reliquaryPos, ItemStack stack) {
         Direction[] directions = new Direction[]{
                 Direction.NORTH,
                 Direction.EAST,
                 Direction.SOUTH,
-                Direction.WEST
+                Direction.WEST,
+                Direction.DOWN
         };
 
         for (Direction direction : directions) {
-            BlockPos chestPos = reliquaryPos.relative(direction);
-            BlockEntity be = level.getBlockEntity(chestPos);
-            if (!(be instanceof ChestBlockEntity chest)) continue;
+            BlockPos containerPos = reliquaryPos.relative(direction);
+            Container container = getContainerAt(level, containerPos);
+            if (container == null) continue;
 
-            insertIntoContainer(chest, stack);
-            chest.setChanged();
+            insertIntoContainer(container, stack);
+            container.setChanged();
 
             if (stack.isEmpty()) {
                 return true;
@@ -414,6 +420,16 @@ public final class RitualExecutionService {
         }
 
         return false;
+    }
+
+    // Returns a container at the given position when present
+    private static Container getContainerAt(ServerLevel level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be instanceof Container container) {
+            return container;
+        }
+
+        return null;
     }
 
     // Inserts as much as possible from stack into a container
@@ -460,6 +476,48 @@ public final class RitualExecutionService {
         ItemEntity itemEntity = new ItemEntity(level, x, y, z, output);
         itemEntity.setDefaultPickUpDelay();
         level.addFreshEntity(itemEntity);
+    }
+
+    // ==================================
+    // PENDING RITUAL LOGIC
+    // ==================================
+
+    // Clears stale reliquary and pedestal ritual locks when no pending ritual exists
+    public static void clearStaleLockIfNotPending(ServerLevel level,
+                                                  BlockPos reliquaryPos,
+                                                  ModCorruptedReliquaryBlockEntity reliquaryBe) {
+        if (!reliquaryBe.isRitualLocked()) return;
+
+        boolean hasPending = hasPendingRitualAt(level, reliquaryPos);
+        if (hasPending) return;
+
+        reliquaryBe.setRitualLocked(false);
+        reliquaryBe.clearRitualVisual();
+        unlockNearbyPedestals(level, reliquaryPos);
+    }
+
+    // Returns true when a ritual queue entry exists for this reliquary position
+    private static boolean hasPendingRitualAt(ServerLevel level, BlockPos reliquaryPos) {
+        for (PendingRitual pending : PENDING_RITUALS) {
+            if (pending.level() != level) continue;
+            if (!pending.reliquaryPos().equals(reliquaryPos)) continue;
+            return true;
+        }
+        return false;
+    }
+
+    // Unlocks nearby binding pedestals that may have stale ritual lock state
+    private static void unlockNearbyPedestals(ServerLevel level, BlockPos reliquaryPos) {
+        BlockPos min = reliquaryPos.offset(-STALE_UNLOCK_RADIUS_XZ, -STALE_UNLOCK_RADIUS_Y, -STALE_UNLOCK_RADIUS_XZ);
+        BlockPos max = reliquaryPos.offset(STALE_UNLOCK_RADIUS_XZ, STALE_UNLOCK_RADIUS_Y, STALE_UNLOCK_RADIUS_XZ);
+
+        for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (!(be instanceof ModBindingPedestalBlockEntity pedestalBe)) continue;
+            if (!pedestalBe.isRitualLocked()) continue;
+
+            pedestalBe.setRitualLocked(false);
+        }
     }
 
     // ==================================

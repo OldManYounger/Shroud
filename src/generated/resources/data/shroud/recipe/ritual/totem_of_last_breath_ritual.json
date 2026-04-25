@@ -1,9 +1,9 @@
 {
   "type": "shroud:ritual",
-  "duration_seconds": 6,
+  "duration_seconds": 8,
   "items": [
     {
-      "count": 1,
+      "count": 2,
       "item": "minecraft:echo_shard"
     },
     {
@@ -11,11 +11,15 @@
       "item": "shroud:sculk_pearl"
     },
     {
-      "count": 1,
+      "count": 4,
       "item": "shroud:gloomstone_dust"
+    },
+    {
+      "count": 1,
+      "item": "minecraft:totem_of_undying"
     }
   ],
-  "mob_damage": 2.0,
+  "mob_damage": 4.0,
   "mobs": [
     {
       "count": 4,

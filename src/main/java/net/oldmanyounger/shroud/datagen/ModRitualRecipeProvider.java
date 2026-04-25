@@ -58,17 +58,18 @@ public class ModRitualRecipeProvider implements DataProvider {
         root.addProperty("type", "shroud:ritual");
 
         JsonArray items = new JsonArray();
-        items.add(itemRequirement("minecraft:echo_shard", 1));
+        items.add(itemRequirement("minecraft:echo_shard", 2));
         items.add(itemRequirement("shroud:sculk_pearl", 1));
-        items.add(itemRequirement("shroud:gloomstone_dust", 1));
+        items.add(itemRequirement("shroud:gloomstone_dust", 4));
+        items.add(itemRequirement("minecraft:totem_of_undying", 1));
         root.add("items", items);
 
         JsonArray mobs = new JsonArray();
         mobs.add(mobRequirement("shroud:living_sculk", 4));
         root.add("mobs", mobs);
 
-        root.addProperty("mob_damage", 2.0F);
-        root.addProperty("duration_seconds", 6);
+        root.addProperty("mob_damage", 4.0F);
+        root.addProperty("duration_seconds", 8);
 
         JsonObject output = new JsonObject();
         output.addProperty("item", "shroud:totem_of_last_breath");

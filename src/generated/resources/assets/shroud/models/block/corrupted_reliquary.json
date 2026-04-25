@@ -16,7 +16,7 @@
           "texture": "#side"
         },
         "up": {
-          "texture": "#side"
+          "texture": "#inset"
         },
         "west": {
           "texture": "#side"
@@ -36,7 +36,7 @@
     {
       "faces": {
         "down": {
-          "texture": "#side"
+          "texture": "#inset"
         },
         "east": {
           "texture": "#side"
@@ -48,7 +48,7 @@
           "texture": "#side"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#inset"
         },
         "west": {
           "texture": "#side"
@@ -68,7 +68,7 @@
     {
       "faces": {
         "down": {
-          "texture": "#side"
+          "texture": "#inset"
         },
         "east": {
           "texture": "#side"
@@ -100,6 +100,7 @@
   ],
   "textures": {
     "bottom": "shroud:block/corrupted_reliquary_bottom",
+    "inset": "shroud:block/corrupted_reliquary_inset",
     "particle": "shroud:block/corrupted_reliquary_side",
     "side": "shroud:block/corrupted_reliquary_side",
     "top": "shroud:block/corrupted_reliquary_top"

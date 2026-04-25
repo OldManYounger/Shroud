@@ -148,6 +148,10 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     public ItemStack popMostRecentItem() {
         if (ritualLocked) return ItemStack.EMPTY;
 
+        if (insertionOrder.isEmpty()) {
+            rebuildInsertionOrderFromOccupiedSlots();
+        }
+
         while (!insertionOrder.isEmpty()) {
             int slot = insertionOrder.removeInt(insertionOrder.size() - 1);
             ItemStack stack = items.get(slot);
@@ -156,6 +160,16 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
                 markChangedAndSync(true);
                 return stack;
             }
+        }
+
+        // Fallback scan in case insertion order was malformed
+        for (int slot = MAX_SLOTS - 1; slot >= 0; slot--) {
+            ItemStack stack = items.get(slot);
+            if (stack.isEmpty()) continue;
+
+            items.set(slot, ItemStack.EMPTY);
+            markChangedAndSync(true);
+            return stack;
         }
 
         return ItemStack.EMPTY;
@@ -347,6 +361,11 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         // Clears local slot state first so missing empty inventory tags do not leave stale client render items
         for (int i = 0; i < MAX_SLOTS; i++) {
             this.items.set(i, ItemStack.EMPTY);
+        }
+
+        // Rebuild insertion order when persisted order is missing or empty but inventory is not empty
+        if (this.insertionOrder.isEmpty() && !this.isEmpty()) {
+            rebuildInsertionOrderFromOccupiedSlots();
         }
 
         ContainerHelper.loadAllItems(tag, this.items, registries);
@@ -589,5 +608,15 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
     // Returns true when the slot index is valid
     private boolean isValidSlot(int slot) {
         return slot >= 0 && slot < MAX_SLOTS;
+    }
+
+    // Rebuilds insertion order from currently occupied slots
+    private void rebuildInsertionOrderFromOccupiedSlots() {
+        insertionOrder.clear();
+        for (int slot = 0; slot < MAX_SLOTS; slot++) {
+            if (!items.get(slot).isEmpty()) {
+                insertionOrder.add(slot);
+            }
+        }
     }
 }

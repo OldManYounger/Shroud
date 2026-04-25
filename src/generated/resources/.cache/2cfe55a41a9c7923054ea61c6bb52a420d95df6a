@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-24T22:48:11.3215212	Block States: shroud
+// 1.21.1	2026-04-25T14:35:04.2779819	Block States: shroud
 a0fd7978f2fe3b5f6e5d75bd4321d84c507f0d7c assets/shroud/blockstates/binding_pedestal.json
 a63848b42b81bfd84e74be03f76ad1f9cb6136fc assets/shroud/blockstates/chiseled_sculk_stone_bricks.json
 9ef858fcf90d9bedec2ea395f8d2b1bda17138a5 assets/shroud/blockstates/cobbled_sculk_deepslate.json
@@ -90,7 +90,7 @@ e82b32ee3245376cad884927da74ff6d789aef88 assets/shroud/models/block/cobbled_scul
 2c07b46195ac2e0de2eed4b1346cbab0324a938f assets/shroud/models/block/cobbled_sculk_deepslate_wall_post.json
 b9a4294e2f05f4bf221c1102b0ace6b46837193a assets/shroud/models/block/cobbled_sculk_deepslate_wall_side.json
 24d87ddf1240ab68ce4c87af82d47b51f3da5142 assets/shroud/models/block/cobbled_sculk_deepslate_wall_side_tall.json
-ab70892056281687ab89bed36e10c800bd1cf313 assets/shroud/models/block/corrupted_reliquary.json
+bae7bcb7b85c398ef493d58b206c610a901abb40 assets/shroud/models/block/corrupted_reliquary.json
 2e1381c3de2a8701c100af39ff3eee1a6e60bfdf assets/shroud/models/block/cracked_sculk_deepslate_bricks.json
 da1f1b686f076427beeb8f04304116430003a5fd assets/shroud/models/block/cracked_sculk_deepslate_tiles.json
 bc6f02da519e4874284427fbc57ac315547dbdf1 assets/shroud/models/block/cracked_sculk_stone_bricks.json

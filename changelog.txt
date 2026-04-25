@@ -8,9 +8,16 @@
     Additions
         - Added direct KubeJS support for ritual crafting recipes; example provided on mod page
     Changes
-        - Added custom particles and animations to ritual crafting; now takes a specified duration to craft
-        - Updated textures for Binding Pedestal and Corrupted Altar
-        - Optimized item rendering on altar
+        - Ritual crafting
+            - Added custom particles and animations to ritual crafting; now takes a specified duration to craft
+            - Added logic to handle situations when world is closed or chunks are unloaded during a ritual craft in progress
+            - Allow ritual craft result to be placed in an inventory below the altar, as well as in one on any four horizontal sides
+            - Updated textures for Binding Pedestal and Corrupted Altar
+            - Updated recipe for Totem of Last Breath
+            - Optimized item rendering on altar
+
+        - Other
+            - Slightly tweaked animations on Living Sculk, more refinements to come in future updates
     Removals
         - Removed some unused logic for corruption effect heart overlay
     Bug Fixes

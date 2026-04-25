@@ -322,13 +322,14 @@ public class ModBlockStateProvider extends BlockStateProvider {
         });
     }
 
-    // Creates a custom non-full reliquary model with top side and bottom textures and horizontal facing variants
+    // Creates a custom non-full reliquary model with dedicated top inset and bottom textures and horizontal facing variants
     private void corruptedReliquaryBlock(DeferredBlock<Block> blockRegistryObject) {
         String path = blockRegistryObject.getId().getPath();
 
         var model = models().withExistingParent(path, mcLoc("block/block"))
                 .texture("top", modLoc("block/" + path + "_top"))
                 .texture("side", modLoc("block/" + path + "_side"))
+                .texture("inset", modLoc("block/" + path + "_inset"))
                 .texture("bottom", modLoc("block/" + path + "_bottom"))
                 .texture("particle", modLoc("block/" + path + "_side"));
 
@@ -336,18 +337,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
         model.element()
                 .from(3.0F, 0.0F, 2.0F).to(13.0F, 4.0F, 14.0F)
                 .face(Direction.DOWN).texture("#bottom").end()
-                .face(Direction.UP).texture("#side").end()
+                .face(Direction.UP).texture("#inset").end()
                 .face(Direction.NORTH).texture("#side").end()
                 .face(Direction.SOUTH).texture("#side").end()
                 .face(Direction.WEST).texture("#side").end()
                 .face(Direction.EAST).texture("#side").end()
                 .end();
 
-        // Mid body
+        // Mid-body
         model.element()
                 .from(4.0F, 4.0F, 3.5F).to(12.0F, 9.0F, 12.5F)
-                .face(Direction.DOWN).texture("#side").end()
-                .face(Direction.UP).texture("#top").end()
+                .face(Direction.DOWN).texture("#inset").end()
+                .face(Direction.UP).texture("#inset").end()
                 .face(Direction.NORTH).texture("#side").end()
                 .face(Direction.SOUTH).texture("#side").end()
                 .face(Direction.WEST).texture("#side").end()
@@ -357,7 +358,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         // Upper plate
         model.element()
                 .from(2.0F, 9.0F, 1.5F).to(14.0F, 12.0F, 14.5F)
-                .face(Direction.DOWN).texture("#side").end()
+                .face(Direction.DOWN).texture("#inset").end()
                 .face(Direction.UP).texture("#top").end()
                 .face(Direction.NORTH).texture("#side").end()
                 .face(Direction.SOUTH).texture("#side").end()

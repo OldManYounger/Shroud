@@ -4,7 +4,7 @@
     {
       "faces": {
         "down": {
-          "texture": "#top"
+          "texture": "#bottom"
         },
         "east": {
           "texture": "#side"
@@ -16,7 +16,7 @@
           "texture": "#side"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#inset"
         },
         "west": {
           "texture": "#side"
@@ -36,7 +36,7 @@
     {
       "faces": {
         "down": {
-          "texture": "#top"
+          "texture": "#inset"
         },
         "east": {
           "texture": "#side"
@@ -48,7 +48,7 @@
           "texture": "#side"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#inset"
         },
         "west": {
           "texture": "#side"
@@ -68,7 +68,7 @@
     {
       "faces": {
         "down": {
-          "texture": "#top"
+          "texture": "#inset"
         },
         "east": {
           "texture": "#side"
@@ -99,6 +99,8 @@
     }
   ],
   "textures": {
+    "bottom": "shroud:block/binding_pedestal_bottom",
+    "inset": "shroud:block/binding_pedestal_inset",
     "particle": "shroud:block/binding_pedestal_side",
     "side": "shroud:block/binding_pedestal_side",
     "top": "shroud:block/binding_pedestal_top"

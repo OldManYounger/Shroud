@@ -18,14 +18,11 @@ import java.util.List;
 /**
  * Client-side renderer for visualizing Corrupted Reliquary inventory contents above the block.
  *
- * <p>This renderer draws only occupied reliquary slots as an evenly spaced circular ring that
- * rotates around the center of the block. Empty slots are ignored so spacing always adapts to
- * the actual number of displayed items. Items also bob with alternating phase so neighboring
- * entries move in opposite vertical directions.
+ * <p>This renderer draws occupied reliquary slots in a circular ring and now supports ritual-time
+ * convergence animation where items spin faster, rise upward, and tighten toward the altar focus.
  *
  * <p>In the broader context of the project, this class provides world-space visual feedback for
- * ritual input buildup, letting players quickly read reliquary contents before ritual systems
- * are fully wired.
+ * ritual input buildup and ritual progression state.
  */
 public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRenderer<ModCorruptedReliquaryBlockEntity> {
 
@@ -57,12 +54,21 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
     // Bobbing speed in radians per tick
     private static final float BOB_SPEED_RAD_PER_TICK = 0.11F;
 
+    // Target Y height where ritual item ring converges
+    private static final float RITUAL_TARGET_Y = 1.55F;
+
+    // Target ring radius at ritual completion
+    private static final float RITUAL_TARGET_RADIUS = 0.05F;
+
+    // Max rotation speed during ritual convergence
+    private static final float RITUAL_MAX_ROTATION_DEG_PER_TICK = 18.0F;
+
     // Creates the renderer instance
     public ModCorruptedReliquaryBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 
     }
 
-    // Renders occupied reliquary items in a rotating circular ring with alternating bob motion
+    // Renders occupied reliquary items with idle ring motion and ritual convergence animation
     @Override
     public void render(ModCorruptedReliquaryBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         List<ItemStack> occupiedItems = collectOccupiedItems(blockEntity);
@@ -78,8 +84,19 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
                 ? blockEntity.getLevel().getGameTime() + partialTick
                 : partialTick;
 
-        float baseAngleDeg = gameTime * RING_ROTATION_DEG_PER_TICK;
-        float ringRadius = computeRingRadius(count);
+        // Uses eased progress so spin acceleration ramps up gradually across ritual duration
+        float ritualProgress = blockEntity.getRitualVisualProgress(partialTick);
+        float accelerationProgress = ritualProgress * ritualProgress * ritualProgress;
+
+        float baseRadius = computeRingRadius(count);
+        float ringRadius = Mth.lerp(ritualProgress, baseRadius, RITUAL_TARGET_RADIUS);
+
+        float rotationSpeed = Mth.lerp(accelerationProgress, RING_ROTATION_DEG_PER_TICK, RITUAL_MAX_ROTATION_DEG_PER_TICK);
+        float baseAngleDeg = gameTime * rotationSpeed;
+
+        float yBase = Mth.lerp(ritualProgress, RING_Y, RITUAL_TARGET_Y);
+        float bobAmplitude = Mth.lerp(ritualProgress, BOB_AMPLITUDE, 0.0F);
+
         float stepDeg = 360.0F / count;
         float bobTime = gameTime * BOB_SPEED_RAD_PER_TICK;
 
@@ -94,8 +111,8 @@ public class ModCorruptedReliquaryBlockEntityRenderer implements BlockEntityRend
 
             // Alternates bob phase so every other item moves opposite in vertical motion
             float bobPhase = (i & 1) == 0 ? 0.0F : Mth.PI;
-            float bobOffset = Mth.sin(bobTime + bobPhase) * BOB_AMPLITUDE;
-            float y = RING_Y + bobOffset;
+            float bobOffset = Mth.sin(bobTime + bobPhase) * bobAmplitude;
+            float y = yBase + bobOffset;
 
             poseStack.pushPose();
             poseStack.translate(x, y, z);

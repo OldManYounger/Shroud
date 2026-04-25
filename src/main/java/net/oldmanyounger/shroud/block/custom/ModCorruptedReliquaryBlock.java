@@ -266,7 +266,7 @@ public class ModCorruptedReliquaryBlock extends BaseEntityBlock {
             case EXECUTION_FAILED -> player.displayClientMessage(Component.literal(
                     result.execution().map(RitualExecutionService.RitualExecutionResult::message).orElse("Ritual failed")
             ), true);
-            case EXECUTED -> player.displayClientMessage(Component.literal("Ritual completed"), true);
+            case EXECUTED -> player.displayClientMessage(Component.literal("Ritual started"), true);
             default -> {
             }
         }

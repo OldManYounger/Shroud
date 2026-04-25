@@ -309,6 +309,21 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
     }
 
+    // Returns the currently bound living mob for ritual visuals and validation
+    @Nullable
+    public LivingEntity getBoundLivingMob(ServerLevel serverLevel) {
+        if (boundMobUuid == null) return null;
+
+        Entity entity = resolveBoundEntity(serverLevel);
+        if (!(entity instanceof LivingEntity living) || !living.isAlive() || living.isRemoved()) {
+            releaseBoundMob();
+            return null;
+        }
+
+        snapshotBoundEntity(living);
+        return living;
+    }
+
     // Damages the currently bound living mob using generic damage and fails if mob dies
     public boolean damageBoundMob(float amount) {
         if (amount <= 0.0F) return true;

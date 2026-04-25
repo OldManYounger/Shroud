@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-05T14:54:57.5930726	Block States: shroud
+// 1.21.1	2026-04-24T22:48:11.3215212	Block States: shroud
 a0fd7978f2fe3b5f6e5d75bd4321d84c507f0d7c assets/shroud/blockstates/binding_pedestal.json
 a63848b42b81bfd84e74be03f76ad1f9cb6136fc assets/shroud/blockstates/chiseled_sculk_stone_bricks.json
 9ef858fcf90d9bedec2ea395f8d2b1bda17138a5 assets/shroud/blockstates/cobbled_sculk_deepslate.json
@@ -79,7 +79,7 @@ a1a15b1f697aa7c394a8d66d93f17ecbe67d5050 assets/shroud/blockstates/virelith_slab
 ab2b8379b360653e059c1be09a80103f16eb7750 assets/shroud/blockstates/virelith_trapdoor.json
 002985f559587ef84b05adfea7c9b2a3990bf00e assets/shroud/blockstates/virelith_wall.json
 d00eb25cb1f6b82e4745805dec1d9a7c1ea0975e assets/shroud/blockstates/virelith_wood.json
-171e443e6f047e186a974783910b8eccdeaeacdc assets/shroud/models/block/binding_pedestal.json
+250ac2d287119768246e9e89b6b595effe5d0dcf assets/shroud/models/block/binding_pedestal.json
 fc30caf7c42d909ef12e49ea6a106d32717a73cf assets/shroud/models/block/chiseled_sculk_stone_bricks.json
 61161e37d4df78ffa75386cbd82ac2175144c6bb assets/shroud/models/block/cobbled_sculk_deepslate.json
 cd4ef630524d6847f64fbaaa2f5f5661278b9287 assets/shroud/models/block/cobbled_sculk_deepslate_slab.json

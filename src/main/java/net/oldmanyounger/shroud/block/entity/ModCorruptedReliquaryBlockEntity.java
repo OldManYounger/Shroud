@@ -8,6 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
@@ -62,6 +63,14 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
     // Monotonic revision that increments on every inventory mutation
     private int inventoryRevision = 0;
+
+    private static final String TAG_RITUAL_VISUAL_ACTIVE = "RitualVisualActive";
+    private static final String TAG_RITUAL_VISUAL_START_TICK = "RitualVisualStartTick";
+    private static final String TAG_RITUAL_VISUAL_DURATION_TICKS = "RitualVisualDurationTicks";
+
+    private boolean ritualVisualActive = false;
+    private long ritualVisualStartTick = 0L;
+    private int ritualVisualDurationTicks = 0;
 
     // ==================================
     //  CONSTRUCTOR
@@ -208,6 +217,9 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         CompoundTag tag = pkt.getTag();
         if (tag != null) {
             this.loadAdditional(tag, registries);
+            this.ritualVisualActive = tag.getBoolean(TAG_RITUAL_VISUAL_ACTIVE);
+            this.ritualVisualStartTick = tag.contains(TAG_RITUAL_VISUAL_START_TICK) ? tag.getLong(TAG_RITUAL_VISUAL_START_TICK) : 0L;
+            this.ritualVisualDurationTicks = tag.contains(TAG_RITUAL_VISUAL_DURATION_TICKS) ? tag.getInt(TAG_RITUAL_VISUAL_DURATION_TICKS) : 0;
         }
     }
 
@@ -237,6 +249,9 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
         tag.putIntArray(TAG_INSERTION_ORDER, this.insertionOrder.toIntArray());
         tag.putBoolean(TAG_RITUAL_LOCKED, this.ritualLocked);
         tag.putInt(TAG_INVENTORY_REVISION, this.inventoryRevision);
+        tag.putBoolean(TAG_RITUAL_VISUAL_ACTIVE, this.ritualVisualActive);
+        tag.putLong(TAG_RITUAL_VISUAL_START_TICK, this.ritualVisualStartTick);
+        tag.putInt(TAG_RITUAL_VISUAL_DURATION_TICKS, this.ritualVisualDurationTicks);
     }
 
     // Loads reliquary inventory and state from NBT
@@ -442,6 +457,39 @@ public class ModCorruptedReliquaryBlockEntity extends net.minecraft.world.level.
 
         insertionOrder.clear();
         insertionOrder.addAll(kept);
+    }
+
+    // Starts ritual visual animation tracking
+    public void startRitualVisual(long startGameTick, int durationTicks) {
+        this.ritualVisualActive = true;
+        this.ritualVisualStartTick = startGameTick;
+        this.ritualVisualDurationTicks = Math.max(1, durationTicks);
+        markChangedAndSync(false);
+    }
+
+    // Clears ritual visual animation tracking
+    public void clearRitualVisual() {
+        if (!this.ritualVisualActive && this.ritualVisualDurationTicks == 0) return;
+
+        this.ritualVisualActive = false;
+        this.ritualVisualStartTick = 0L;
+        this.ritualVisualDurationTicks = 0;
+        markChangedAndSync(false);
+    }
+
+    // Returns true when ritual visual animation is active
+    public boolean isRitualVisualActive() {
+        return ritualVisualActive;
+    }
+
+    // Returns normalized ritual visual progress in range 0 to 1
+    public float getRitualVisualProgress(float partialTick) {
+        if (!ritualVisualActive) return 0.0F;
+        if (ritualVisualDurationTicks <= 0) return 0.0F;
+        if (level == null) return 0.0F;
+
+        float elapsed = (float) ((level.getGameTime() - ritualVisualStartTick) + partialTick);
+        return Mth.clamp(elapsed / (float) ritualVisualDurationTicks, 0.0F, 1.0F);
     }
 
     // ==================================

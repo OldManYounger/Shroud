@@ -74,8 +74,8 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         final int minHalfSpan = 10;
         final int maxHalfSpan = 22;
 
-        final int minHeight = 8;
-        final int maxHeight = 18;
+        final int minHeight = 10;
+        final int maxHeight = 42;
 
         int halfSpan = Mth.nextInt(random, minHalfSpan, maxHalfSpan);
         halfSpan = Math.min(halfSpan, SAFE_MAX_HALF_SPAN);
@@ -84,9 +84,17 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
                 ? 0.0F
                 : (halfSpan - (float) minHalfSpan) / (float) (maxHalfSpan - minHalfSpan);
 
-        int archHeight = Mth.floor(Mth.lerp(sizeT, minHeight, maxHeight));
-        archHeight += random.nextInt(3) - 1;
+        // Builds a higher baseline for larger arches
+        int baseArchHeight = Mth.floor(Mth.lerp(sizeT, 14.0F, 28.0F));
+
+        // Adds strong vertical variance while keeping horizontal size fixed
+        float apexVariance = Mth.lerp(random.nextFloat(), 0.75F, 1.65F);
+
+        int archHeight = Mth.floor(baseArchHeight * apexVariance);
         archHeight = Mth.clamp(archHeight, minHeight, maxHeight);
+
+        // Varies curvature so arches can be flatter or more dramatic
+        float curveExponent = Mth.lerp(random.nextFloat(), 0.72F, 1.45F);
 
         int thickness = 1 + Mth.floor(sizeT * 2.0F);
         thickness = Mth.clamp(thickness, 1, 4);
@@ -125,7 +133,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
         int steps = Mth.clamp(span * 3, 50, 180);
 
         // Aborts early when any sampled arch point would be unwritable
-        if (!canWriteEntireArch(level, footA, footB, archHeight, thickness, steps)) {
+        if (!canWriteEntireArch(level, footA, footB, archHeight, curveExponent, thickness, steps)) {
             return false;
         }
 
@@ -140,7 +148,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
             float z = Mth.lerp(t, footA.getZ(), footB.getZ());
             float baseY = Mth.lerp(t, footA.getY(), footB.getY());
 
-            float lift = Mth.sin((float) Math.PI * t) * archHeight;
+            float lift = computeArchLift(t, archHeight, curveExponent);
 
             int px = Mth.floor(x);
             int pz = Mth.floor(z);
@@ -194,6 +202,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos footA,
             BlockPos footB,
             int archHeight,
+            float curveExponent,
             int thickness,
             int steps
     ) {
@@ -205,7 +214,7 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
             float x = Mth.lerp(t, footA.getX(), footB.getX());
             float z = Mth.lerp(t, footA.getZ(), footB.getZ());
             float baseY = Mth.lerp(t, footA.getY(), footB.getY());
-            float lift = Mth.sin((float) Math.PI * t) * archHeight;
+            float lift = computeArchLift(t, archHeight, curveExponent);
 
             BlockPos c = new BlockPos(Mth.floor(x), Mth.floor(baseY + lift), Mth.floor(z));
 
@@ -279,5 +288,12 @@ public class SculkArchFeature extends Feature<NoneFeatureConfiguration> {
                 }
             }
         }
+    }
+
+    // Computes parabolic-style lift with adjustable curvature
+    private static float computeArchLift(float t, int archHeight, float curveExponent) {
+        float normalized = Mth.sin((float) Math.PI * t);
+        normalized = (float) Math.pow(normalized, curveExponent);
+        return normalized * archHeight;
     }
 }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "shroud:gloamcane"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "shroud:gloam_sugar"
+  }
+}

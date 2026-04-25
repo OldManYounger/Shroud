@@ -1,9 +1,9 @@
 {
-  "feature": "shroud:patch_tall_grass",
+  "feature": "shroud:patch_gloamcane",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 5
+      "chance": 6
     },
     {
       "type": "minecraft:in_square"

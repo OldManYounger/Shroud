@@ -29,19 +29,49 @@
       "heightmap": "OCEAN_FLOOR"
     },
     {
-      "type": "minecraft:biome"
-    },
-    {
       "type": "minecraft:block_predicate_filter",
       "predicate": {
-        "type": "minecraft:would_survive",
-        "state": {
-          "Name": "shroud:virelith_sapling",
-          "Properties": {
-            "stage": "0"
+        "type": "minecraft:all_of",
+        "predicates": [
+          {
+            "type": "minecraft:would_survive",
+            "state": {
+              "Name": "shroud:virelith_sapling",
+              "Properties": {
+                "stage": "0"
+              }
+            }
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_fluids",
+              "fluids": [
+                "minecraft:water",
+                "minecraft:flowing_water"
+              ]
+            }
+          },
+          {
+            "type": "minecraft:not",
+            "predicate": {
+              "type": "minecraft:matching_fluids",
+              "fluids": [
+                "minecraft:water",
+                "minecraft:flowing_water"
+              ],
+              "offset": [
+                0,
+                -1,
+                0
+              ]
+            }
           }
-        }
+        ]
       }
+    },
+    {
+      "type": "minecraft:biome"
     }
   ]
 }

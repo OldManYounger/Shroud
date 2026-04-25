@@ -4,6 +4,7 @@
   "item.shroud.totem_of_last_breath.desc": "Revives you with 5 hearts. The rest are sealed by corruption. But within that corruption... power?",
 
   "item.shroud.gloom_pulp": "Gloom Pulp",
+  "item.shroud.gloam_sugar": "Gloam Sugar",
   "item.shroud.gloomstone_dust": "Gloomstone Dust",
 
   "item.shroud.raw_eventide": "Raw Eventide",
@@ -66,6 +67,7 @@
 
   "block.shroud.sculk_bulb": "Sculk Bulb",
   "block.shroud.ghost_bloom": "Ghost Bloom",
+  "block.shroud.gloamcane": "Gloamcane",
   "block.shroud.sculk_emitter": "Sculk Emitter",
   "block.shroud.sculk_vine": "Sculk Vine",
 

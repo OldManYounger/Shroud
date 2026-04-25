@@ -7,6 +7,8 @@
 - Version 0.6.0
     Additions
         - Added direct KubeJS support for ritual crafting recipes; example provided on mod page
+        - Added new Sculk River biome to prevent some odd tree generation
+        - Added gloamcane and gloam sugar for more vegetation variety, and use in food recipes
     Changes
         - Ritual crafting
             - Added custom particles and animations to ritual crafting; now takes a specified duration to craft
@@ -18,9 +20,13 @@
 
         - Other
             - Slightly tweaked animations on Living Sculk, more refinements to come in future updates
+            - Adjusted foliage color in Umbral Forest
+            - Adjusted colors on spawn eggs
     Removals
         - Removed some unused logic for corruption effect heart overlay
     Bug Fixes
+        - Fixed issue where certain trees would generate on water
+        - Fixed issue where tall grass would generate on sculk patch, leaving top piece floating
 
 - Version 0.5.1
     Additions

@@ -79,6 +79,7 @@ public class ModCreativeModeTabs {
                         // Sculk flora and utility blocks.
                         output.accept(ModBlocks.SCULK_BULB.get());
                         output.accept(ModBlocks.GHOST_BLOOM.get());
+                        output.accept(ModBlocks.GLOAMCANE.get());
                         output.accept(ModBlocks.GLOOMSTONE.get());
                         output.accept(ModBlocks.SCULK_EMITTER.get());
 
@@ -154,6 +155,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.GLOOMSTONE_DUST.get());
                         output.accept(ModItems.TOTEM_OF_LAST_BREATH.get());
                         output.accept(ModItems.GLOOM_PULP.get());
+                        output.accept(ModItems.GLOAM_SUGAR.get());
 
                         // Eventide raw and refined materials.
                         output.accept(ModItems.RAW_EVENTIDE.get());

@@ -91,6 +91,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         saplingBlock(ModBlocks.SCULK_BULB);
         saplingBlock(ModBlocks.GHOST_BLOOM);
+        saplingBlock(ModBlocks.GLOAMCANE);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
         // Technical and resource blocks

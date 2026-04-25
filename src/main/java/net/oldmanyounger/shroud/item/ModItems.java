@@ -57,6 +57,10 @@ public class ModItems {
                     )
             ));
 
+    // Alternative sugar from gloamcane
+    public static final DeferredItem<Item> GLOAM_SUGAR = ITEMS.register("gloam_sugar",
+            () -> new Item(new Item.Properties()));
+
     // Crafting dust item from gloomstone
     public static final DeferredItem<Item> GLOOMSTONE_DUST = ITEMS.register("gloomstone_dust",
             () -> new Item(new Item.Properties()));
@@ -148,17 +152,17 @@ public class ModItems {
 
     // Living Sculk spawn egg
     public static final DeferredItem<Item> LIVING_SCULK_SPAWN_EGG = ITEMS.register("living_sculk_spawn_egg",
-            () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 0x31afaf, 0xffac00,
+            () -> new DeferredSpawnEggItem(ModEntities.LIVING_SCULK, 593685, 1517611,
                     new Item.Properties()));
 
     // Umbral Howler spawn egg
     public static final DeferredItem<Item> UMBRAL_HOWLER_SPAWN_EGG = ITEMS.register("umbral_howler_spawn_egg",
-            () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 0x0A0A0A, 0x6A0DAD,
+            () -> new DeferredSpawnEggItem(ModEntities.UMBRAL_HOWLER, 213328, 12305307,
                     new Item.Properties()));
 
     // Blighted Shade spawn egg
     public static final DeferredItem<Item> BLIGHTED_SHADE_SPAWN_EGG = ITEMS.register("blighted_shade_spawn_egg",
-            () -> new DeferredSpawnEggItem(ModEntities.BLIGHTED_SHADE, 0x1B1B2E, 0x7B2CBF,
+            () -> new DeferredSpawnEggItem(ModEntities.BLIGHTED_SHADE, 1517611, 2748379,
                     new Item.Properties()));
 
     // ==================================

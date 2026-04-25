@@ -62,6 +62,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Basic generated items
         basicItem(ModItems.SCULK_PEARL.get());
         basicItem(ModItems.GLOOM_PULP.get());
+        basicItem(ModItems.GLOAM_SUGAR.get());
         basicItem(ModItems.GLOOMSTONE_DUST.get());
         basicItem(ModItems.TOTEM_OF_LAST_BREATH.get());
         basicItem(ModItems.RAW_EVENTIDE.get());
@@ -90,6 +91,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Plant and block-derived items
         saplingItem(ModBlocks.SCULK_BULB);
         saplingItem(ModBlocks.GHOST_BLOOM);
+        basicItem(ModBlocks.GLOAMCANE.asItem());
         saplingItem(ModBlocks.VIRELITH_SAPLING);
         buttonItem(ModBlocks.VIRELITH_BUTTON, ModBlocks.VIRELITH_PLANKS);
         fenceItem(ModBlocks.VIRELITH_FENCE, ModBlocks.VIRELITH_PLANKS);

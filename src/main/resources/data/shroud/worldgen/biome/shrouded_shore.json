@@ -33,12 +33,12 @@
       "shroud:lake_lava_surface"
     ],
     [
-      "shroud:patch_grass",
-      "shroud:patch_tall_grass",
-      "shroud:patch_sculk_bulb"
+      "shroud:sculk_patch"
     ],
     [
-      "shroud:sculk_patch"
+      "shroud:patch_grass",
+      "shroud:patch_sculk_bulb",
+      "shroud:patch_gloamcane"
     ],
     [
       "shroud:ore_eventide_placed"

@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-25T14:38:51.8913109	Recipes
+// 1.21.1	2026-04-25T15:19:51.8899819	Recipes
 0f3b6c9c19bfceab2a9611743b91cb33faf71724 data/shroud/advancement/recipes/building_blocks/chiseled_sculk_stone_bricks.json
 348754298dad875846e3fc8c87d92af6cbae938a data/shroud/advancement/recipes/building_blocks/cobbled_sculk_deepslate_slab.json
 9a02d74b096b556eeb8d303de7c1c98fe2c3947a data/shroud/advancement/recipes/building_blocks/cobbled_sculk_deepslate_stairs.json
@@ -55,6 +55,7 @@ ea0408d1a59545f4017237b6fb1f6b7870d90156 data/shroud/advancement/recipes/misc/ev
 8fe8e738ed0ea4e46c9ee92b9640ba13e38f2c29 data/shroud/advancement/recipes/misc/eventide_ingot_from_smelting_eventide_deepslate_ore.json
 20ab4b9df2c1c80069f2f711685e5683272e0b82 data/shroud/advancement/recipes/misc/eventide_ingot_from_smelting_eventide_ore.json
 bc49748d291afbae81a4a85d134a878f872b6cf5 data/shroud/advancement/recipes/misc/eventide_ingot_from_smelting_raw_eventide.json
+796ed07ec103f2bfa6f9b6e7a7aeb6c4368f1cc9 data/shroud/advancement/recipes/misc/gloam_sugar.json
 4f50e4c9f4850c88a80fb221dc390c38c363246d data/shroud/advancement/recipes/redstone/umber_button.json
 975312e0332c842ef3140447eb3a6590e215a2cf data/shroud/advancement/recipes/redstone/umber_door.json
 d771e96a78eb6d29e1f3087adc993762bcf6a52b data/shroud/advancement/recipes/redstone/umber_fence_gate.json
@@ -97,6 +98,7 @@ a7eaa7dd9201fa9830befff8fe2ca5c583811cab data/shroud/recipe/crafting/eventide_le
 600bf2f506707b7c8b7bd9a4b432ff5afe2a8d0f data/shroud/recipe/crafting/eventide_pickaxe.json
 0c83db125b0ff011c8da4b1bfca81112229fcfd3 data/shroud/recipe/crafting/eventide_shovel.json
 f40fb1b88dc4d38dd47d78076050e12e7d04d48a data/shroud/recipe/crafting/eventide_sword.json
+a633cfbac39a77515ee25950aac1163a5ffc50bd data/shroud/recipe/crafting/gloam_sugar.json
 19b4c9259d80bbf715110afa0fc5cd77fb2c2ccd data/shroud/recipe/crafting/gloomstone.json
 3d218d6bfd9bcc87a28d7e7ccd10042050911068 data/shroud/recipe/crafting/sculk_cobblestone_slab.json
 dae0bcf89128263a6f2da88f1f7884dd80d83ee0 data/shroud/recipe/crafting/sculk_cobblestone_stairs.json

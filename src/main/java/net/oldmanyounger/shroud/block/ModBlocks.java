@@ -159,6 +159,9 @@ public class ModBlocks {
                     .offsetType(BlockBehaviour.OffsetType.XZ)
                     .lightLevel(state -> 14)));
 
+    public static final DeferredBlock<Block> GLOAMCANE = registerBlock("gloamcane",
+            () -> new ModGloamcaneBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SUGAR_CANE)));
+
     public static final DeferredBlock<ModSculkVinesBlock> SCULK_VINES = registerBlockNoItem("sculk_vines",
             () -> new ModSculkVinesBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES),

@@ -1,5 +1,6 @@
 package net.oldmanyounger.shroud.worldgen;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -8,9 +9,12 @@ import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.*;
+import net.minecraft.world.level.material.Fluids;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.ModBlocks;
 
@@ -60,7 +64,7 @@ public class ModPlacedFeatures {
                 context,
                 VIRELITH_TREE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.VIRELITH_TREE),
-                VegetationPlacements.treePlacement(
+                shroudTreePlacement(
                         PlacementUtils.countExtra(3, 0.1f, 2),
                         ModBlocks.VIRELITH_SAPLING.get()
                 )
@@ -71,7 +75,7 @@ public class ModPlacedFeatures {
                 context,
                 SCRAGGLE_TREE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SCRAGGLE_TREE),
-                VegetationPlacements.treePlacement(
+                shroudTreePlacement(
                         PlacementUtils.countExtra(1, 0.1f, 0),
                         ModBlocks.VIRELITH_SAPLING.get()
                 )
@@ -81,7 +85,7 @@ public class ModPlacedFeatures {
                 context,
                 UMBER_TREE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.UMBER_TREE),
-                VegetationPlacements.treePlacement(
+                shroudTreePlacement(
                         PlacementUtils.countExtra(4, 0.1f, 2),
                         ModBlocks.UMBER_SAPLING.get()
                 )
@@ -91,11 +95,9 @@ public class ModPlacedFeatures {
                 context,
                 BALDACHIN_TREE_PLACED,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.BALDACHIN_TREE),
-                List.of(
+                shroudTreePlacement(
                         CountPlacement.of(1),
-                        InSquarePlacement.spread(),
-                        PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
-                        BiomeFilter.biome()
+                        ModBlocks.VIRELITH_SAPLING.get()
                 )
         );
 
@@ -178,5 +180,23 @@ public class ModPlacedFeatures {
             List<PlacementModifier> modifiers
     ) {
         context.register(key, new PlacedFeature(configuration, List.copyOf(modifiers)));
+    }
+
+    // Builds tree placement with dry-start and sapling-survival gating
+    private static List<PlacementModifier> shroudTreePlacement(PlacementModifier countModifier, Block saplingBlock) {
+        return List.of(
+                countModifier,
+                InSquarePlacement.spread(),
+                SurfaceWaterDepthFilter.forMaxDepth(0),
+                PlacementUtils.HEIGHTMAP_OCEAN_FLOOR,
+                BlockPredicateFilter.forPredicate(
+                        BlockPredicate.allOf(
+                                BlockPredicate.wouldSurvive(saplingBlock.defaultBlockState(), BlockPos.ZERO),
+                                BlockPredicate.not(BlockPredicate.matchesFluids(BlockPos.ZERO, Fluids.WATER, Fluids.FLOWING_WATER)),
+                                BlockPredicate.not(BlockPredicate.matchesFluids(BlockPos.ZERO.below(), Fluids.WATER, Fluids.FLOWING_WATER))
+                        )
+                ),
+                BiomeFilter.biome()
+        );
     }
 }

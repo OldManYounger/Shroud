@@ -96,6 +96,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         add(ModBlocks.GHOST_BLOOM.get(), block -> createShearsOnlyDrop(ModBlocks.GHOST_BLOOM.get()));
         add(ModBlocks.SCULK_VINES.get(), block -> noDrop());
         add(ModBlocks.SCULK_VINES_PLANT.get(), block -> noDrop());
+        dropSelf(ModBlocks.GLOAMCANE.get());
 
         // Technical blocks
         dropSelf(ModBlocks.SCULK_EMITTER.get());

@@ -11,7 +11,7 @@
           "parameters": {
             "temperature": [-0.45, 0.2],
             "humidity": [-0.1, 0.1],
-            "continentalness": [-0.11, 1.0],
+            "continentalness": [-0.06, 1.0],
             "erosion": [-0.2225, 0.55],
             "weirdness": [-0.4, 0.4],
             "depth": 0.0,
@@ -23,8 +23,20 @@
           "parameters": {
             "temperature": [0.2, 0.55],
             "humidity": [-1.0, -0.1],
-            "continentalness": [-0.11, 1.0],
+            "continentalness": [-0.06, 1.0],
             "erosion": [-0.2225, 1.0],
+            "weirdness": [-0.4, 0.4],
+            "depth": 0.0,
+            "offset": 0.0
+          }
+        },
+        {
+          "biome": "shroud:sculk_river",
+          "parameters": {
+            "temperature": [0.05, 0.75],
+            "humidity": [-1.0, 1.0],
+            "continentalness": [-0.14, -0.06],
+            "erosion": [0.35, 1.0],
             "weirdness": [-0.4, 0.4],
             "depth": 0.0,
             "offset": 0.0

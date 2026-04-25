@@ -212,6 +212,12 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .unlockedBy("has_sculk_deepslate", has(ModBlocks.SCULK_DEEPSLATE.get()))
                 .save(craftingRecipeOutput);
 
+        // Gloam sugar
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.GLOAM_SUGAR.get())
+                .requires(ModBlocks.GLOAMCANE.get())
+                .unlockedBy("has_gloamcane", has(ModBlocks.GLOAMCANE.get()))
+                .save(craftingRecipeOutput);
+
         // Eventide tools and armor recipes
         ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, ModItems.EVENTIDE_SWORD.get())
                 .pattern("E")

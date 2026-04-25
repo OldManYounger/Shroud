@@ -83,5 +83,10 @@ public class ModItemTagProvider extends ItemTagsProvider {
 
         tag(ItemTags.PLANKS)
                 .add(ModBlocks.UMBER_PLANKS.asItem());
+
+        // Allow sculk cobblestone and sculk cobbled deepslate to be used in crafting stone equipment
+        tag(ItemTags.STONE_TOOL_MATERIALS)
+                .add(ModBlocks.SCULK_COBBLESTONE.get().asItem())
+                .add(ModBlocks.COBBLED_SCULK_DEEPSLATE.get().asItem());
     }
 }

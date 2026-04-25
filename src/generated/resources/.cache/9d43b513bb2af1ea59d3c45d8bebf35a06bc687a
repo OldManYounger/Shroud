@@ -1,10 +1,11 @@
-// 1.21.1	2026-04-02T15:58:27.3460452	Tags for minecraft:item mod id shroud
+// 1.21.1	2026-04-09T21:59:22.541801	Tags for minecraft:item mod id shroud
 419452c2dd341b4ad8a1c23d886aa4729d872c5b data/minecraft/tags/item/axes.json
 4dde90978200ce57e7be8ff3216a705f2280b89b data/minecraft/tags/item/hoes.json
 d5219b193bdd56d89de16d3fca00337ec968ae06 data/minecraft/tags/item/logs_that_burn.json
 ce0c74815c72c5e7ff30b2b622e6f5c8bd55a2c4 data/minecraft/tags/item/pickaxes.json
 6c4d045fc426df7704a8e7574df01c1523afeff7 data/minecraft/tags/item/planks.json
 0a2f8e4d9f08f5f70f88e6dbabbffd7b40ea5afe data/minecraft/tags/item/shovels.json
+2898fd740626b3432e72e99ab7e6dad90e36d18a data/minecraft/tags/item/stone_tool_materials.json
 3bc6edab19a4023ed279af1dcaf0a0010485f1b4 data/minecraft/tags/item/swords.json
 af6962f8c0a23c5ec87b39c0afc5e81c937e92e5 data/minecraft/tags/item/trimmable_armor.json
 a09505b8d287cd726793297468dfc6bfda7b81f5 data/minecraft/tags/item/trim_materials.json

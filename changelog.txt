@@ -4,6 +4,19 @@
     Removals
     Bug Fixes
 
+- Version 0.5.X
+    Additions
+    Changes
+    Removals
+    Bug Fixes
+
+- Version 0.5.1
+    Additions
+    Changes
+        - Added sculk cobblestone and cobbled sculk deepslate tags such that they can be used to craft stone equipment
+    Removals
+    Bug Fixes
+
 - Version 0.5.0
     Additions
         - Added custom ritual crafting mechanic for future mod content

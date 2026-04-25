@@ -6,6 +6,7 @@
 
 - Version 0.6.0
     Additions
+        - Added direct KubeJS support for ritual crafting recipes; example provided on mod page
     Changes
         - Added custom particles and animations to ritual crafting; now takes a specified duration to craft
         - Updated textures for Binding Pedestal and Corrupted Altar

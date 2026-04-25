@@ -42,6 +42,9 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
     // Gson parser used for ritual recipe JSON documents
     private static final Gson GSON = new GsonBuilder().create();
 
+    // Default ritual duration in seconds for backwards compatibility
+    private static final int DEFAULT_DURATION_SECONDS = 6;
+
     // Shared singleton instance used by reload registration and lookup callers
     public static final RitualRecipeManager INSTANCE = new RitualRecipeManager();
 
@@ -50,7 +53,7 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
 
     // Creates a JSON reload listener for ritual recipe files
     private RitualRecipeManager() {
-        super(GSON, "ritual_recipe");
+        super(GSON, "recipes/ritual");
     }
 
     // Applies freshly loaded ritual recipe JSON documents
@@ -64,12 +67,18 @@ public class RitualRecipeManager extends SimpleJsonResourceReloadListener {
             try {
                 JsonObject root = GsonHelper.convertToJsonObject(entry.getValue(), "ritual_recipe");
 
+                String type = GsonHelper.getAsString(root, "type", "shroud:ritual");
+                if (!"shroud:ritual".equals(type)) {
+                    throw new IllegalArgumentException("Recipe " + id + " must declare type 'shroud:ritual'");
+                }
+
                 List<RitualRecipe.ItemRequirement> itemRequirements = parseItemRequirements(id, root);
                 List<RitualRecipe.MobRequirement> mobRequirements = parseMobRequirements(id, root);
                 float mobDamage = Math.max(0.0F, GsonHelper.getAsFloat(root, "mob_damage", 2.0F));
+                int durationSeconds = Math.max(1, GsonHelper.getAsInt(root, "duration_seconds", DEFAULT_DURATION_SECONDS));
                 ItemStack output = parseOutput(id, root);
 
-                RitualRecipe recipe = new RitualRecipe(id, itemRequirements, mobRequirements, mobDamage, output);
+                RitualRecipe recipe = new RitualRecipe(id, itemRequirements, mobRequirements, mobDamage, durationSeconds, output);
                 loaded.put(id, recipe);
             } catch (Exception ex) {
                 Shroud.LOGGER.error("Failed to parse ritual recipe {}", id, ex);

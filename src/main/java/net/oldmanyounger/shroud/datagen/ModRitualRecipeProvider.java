@@ -32,7 +32,7 @@ public class ModRitualRecipeProvider implements DataProvider {
 
     // Creates the ritual recipe provider
     public ModRitualRecipeProvider(PackOutput output) {
-        this.ritualRecipePathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "ritual_recipe");
+        this.ritualRecipePathProvider = output.createPathProvider(PackOutput.Target.DATA_PACK, "recipe/ritual");
     }
 
     // Writes all ritual recipe JSON files
@@ -55,6 +55,7 @@ public class ModRitualRecipeProvider implements DataProvider {
     // Builds the test v1 ritual recipe for Totem of Last Breath
     private JsonObject buildTotemOfLastBreathRecipe() {
         JsonObject root = new JsonObject();
+        root.addProperty("type", "shroud:ritual");
 
         JsonArray items = new JsonArray();
         items.add(itemRequirement("minecraft:echo_shard", 1));
@@ -67,6 +68,7 @@ public class ModRitualRecipeProvider implements DataProvider {
         root.add("mobs", mobs);
 
         root.addProperty("mob_damage", 2.0F);
+        root.addProperty("duration_seconds", 6);
 
         JsonObject output = new JsonObject();
         output.addProperty("item", "shroud:totem_of_last_breath");

@@ -1,4 +1,6 @@
 {
+  "type": "shroud:ritual",
+  "duration_seconds": 6,
   "items": [
     {
       "count": 1,

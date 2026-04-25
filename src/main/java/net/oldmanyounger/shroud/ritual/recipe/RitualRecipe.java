@@ -7,19 +7,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Immutable ritual recipe model loaded from datapack JSON.
+ * Immutable ritual recipe model loaded from datapack JSON
  *
  * <p>This model stores unordered item requirements, entity-count pedestal requirements,
- * a per-mob health damage value, and a simple item output payload for the ritual system.
+ * a per-mob health damage value, a per-recipe craft duration in seconds, and a simple item output payload for the ritual system
  *
  * <p>In the broader context of the project, this class provides the canonical data contract
- * between JSON-authored ritual definitions and runtime ritual validation code.
+ * between JSON-authored ritual definitions and runtime ritual validation code
  */
 public record RitualRecipe(
         ResourceLocation id,
         java.util.List<ItemRequirement> itemRequirements,
         java.util.List<MobRequirement> mobRequirements,
         float mobDamagePerRequiredMob,
+        int durationSeconds,
         ItemStack output
 ) {
 

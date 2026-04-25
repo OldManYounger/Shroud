@@ -29,8 +29,7 @@ import java.util.List;
  * Executes ritual transactions after a successful recipe match.
  *
  * <p>This service performs delayed ritual execution by locking participants, progressing
- * particle phases over a fixed duration, applying staged mob damage, and committing output
- * only after successful completion.
+ * particle phases, applying staged mob damage, and committing output only after successful completion.
  *
  * <p>In the broader context of the project, this class is the transactional execution layer
  * for ritual crafting.
@@ -41,9 +40,6 @@ public final class RitualExecutionService {
     // ==================================
     //  FIELDS
     // ==================================
-
-    // Total ritual duration in ticks
-    private static final int RITUAL_DURATION_TICKS = 120;
 
     // Ticks spent in coil-up phase
     private static final int PHASE_COIL_TICKS = 40;
@@ -94,7 +90,7 @@ public final class RitualExecutionService {
 
         List<ModBindingPedestalBlockEntity> participantPedestals = new ArrayList<>();
         for (RitualRecipeMatcher.PedestalSelection selection : matchContext.selectedPedestals()) {
-            var be = level.getBlockEntity(selection.pos());
+            BlockEntity be = level.getBlockEntity(selection.pos());
             if (!(be instanceof ModBindingPedestalBlockEntity pedestalBe)) {
                 return RitualExecutionResult.fail("Missing participating pedestal");
             }
@@ -115,7 +111,8 @@ public final class RitualExecutionService {
             return RitualExecutionResult.fail(preCommitValidation.message());
         }
 
-        reliquaryBe.startRitualVisual(level.getGameTime(), RITUAL_DURATION_TICKS);
+        int ritualDurationTicks = getRitualDurationTicks(recipe);
+        reliquaryBe.startRitualVisual(level.getGameTime(), ritualDurationTicks);
 
         float[] damageAppliedByPedestal = new float[participantPedestals.size()];
 
@@ -160,35 +157,37 @@ public final class RitualExecutionService {
     private static boolean processPendingRitual(PendingRitual pending) {
         ServerLevel level = pending.level();
         RitualRecipe recipe = pending.recipe();
+        int ritualDurationTicks = getRitualDurationTicks(recipe);
         float totalDamagePerMob = Math.max(0.0F, recipe.mobDamagePerRequiredMob());
 
-        List<LivingEntity> boundMobs = new ArrayList<>();
-        for (ModBindingPedestalBlockEntity pedestal : pending.participantPedestals()) {
+        List<ModBindingPedestalBlockEntity> participantPedestals = pending.participantPedestals();
+        int pedestalCount = participantPedestals.size();
+
+        List<LivingEntity> boundMobs = new ArrayList<>(pedestalCount);
+        for (ModBindingPedestalBlockEntity pedestal : participantPedestals) {
             LivingEntity living = pedestal.getBoundLivingMob(level);
             if (living == null) {
-                unlockRitualLocks(pending.reliquaryBe(), pending.participantPedestals());
+                unlockRitualLocks(pending.reliquaryBe(), participantPedestals);
                 return true;
             }
             boundMobs.add(living);
         }
 
         int nextTick = pending.ticksElapsed() + 1;
-        double progress = Mth.clamp(nextTick / (double) RITUAL_DURATION_TICKS, 0.0D, 1.0D);
-
-        emitProgressParticles(level, pending.reliquaryPos(), boundMobs, progress, nextTick);
+        emitProgressParticles(level, pending.reliquaryPos(), boundMobs, nextTick, ritualDurationTicks);
 
         if (totalDamagePerMob > 0.0F) {
             double damageProgress = Mth.clamp(nextTick / (double) PHASE_COIL_TICKS, 0.0D, 1.0D);
             float targetDamageByNow = (float) (totalDamagePerMob * damageProgress);
 
-            for (int i = 0; i < pending.participantPedestals().size(); i++) {
-                ModBindingPedestalBlockEntity pedestal = pending.participantPedestals().get(i);
+            for (int i = 0; i < pedestalCount; i++) {
+                ModBindingPedestalBlockEntity pedestal = participantPedestals.get(i);
                 float alreadyApplied = pending.damageAppliedByPedestal()[i];
 
                 while ((alreadyApplied + 1.0F) <= targetDamageByNow) {
                     boolean damagedAndAlive = pedestal.damageBoundMob(1.0F);
                     if (!damagedAndAlive) {
-                        unlockRitualLocks(pending.reliquaryBe(), pending.participantPedestals());
+                        unlockRitualLocks(pending.reliquaryBe(), participantPedestals);
                         return true;
                     }
                     alreadyApplied += 1.0F;
@@ -198,21 +197,21 @@ public final class RitualExecutionService {
             }
         }
 
-        if (nextTick < RITUAL_DURATION_TICKS) {
+        if (nextTick < ritualDurationTicks) {
             pending.setTicksElapsed(nextTick);
             return false;
         }
 
         if (totalDamagePerMob > 0.0F) {
-            for (int i = 0; i < pending.participantPedestals().size(); i++) {
-                ModBindingPedestalBlockEntity pedestal = pending.participantPedestals().get(i);
+            for (int i = 0; i < pedestalCount; i++) {
+                ModBindingPedestalBlockEntity pedestal = participantPedestals.get(i);
                 float alreadyApplied = pending.damageAppliedByPedestal()[i];
                 float remaining = totalDamagePerMob - alreadyApplied;
 
                 if (remaining > 0.0F) {
                     boolean damagedAndAlive = pedestal.damageBoundMob(remaining);
                     if (!damagedAndAlive) {
-                        unlockRitualLocks(pending.reliquaryBe(), pending.participantPedestals());
+                        unlockRitualLocks(pending.reliquaryBe(), participantPedestals);
                         return true;
                     }
                     pending.damageAppliedByPedestal()[i] = totalDamagePerMob;
@@ -222,16 +221,25 @@ public final class RitualExecutionService {
 
         boolean consumedAtCommit = pending.reliquaryBe().consumeRequirements(recipe.itemRequirements());
         if (!consumedAtCommit) {
-            unlockRitualLocks(pending.reliquaryBe(), pending.participantPedestals());
+            unlockRitualLocks(pending.reliquaryBe(), participantPedestals);
             return true;
         }
 
         ItemStack output = recipe.output().copy();
         routeOutput(level, pending.reliquaryPos(), output);
         emitCompletionParticles(level, pending.reliquaryPos());
-        unlockRitualLocks(pending.reliquaryBe(), pending.participantPedestals());
+        unlockRitualLocks(pending.reliquaryBe(), participantPedestals);
 
         return true;
+    }
+
+    // ==================================
+    //  DURATION HELPERS
+    // ==================================
+
+    // Converts recipe duration seconds into clamped ritual ticks
+    private static int getRitualDurationTicks(RitualRecipe recipe) {
+        return Math.max(1, recipe.durationSeconds() * 20);
     }
 
     // ==================================
@@ -242,20 +250,20 @@ public final class RitualExecutionService {
     private static void emitProgressParticles(ServerLevel level,
                                               BlockPos reliquaryPos,
                                               List<LivingEntity> boundMobs,
-                                              double progress,
-                                              int ticksElapsed) {
+                                              int ticksElapsed,
+                                              int ritualDurationTicks) {
         double focusX = reliquaryPos.getX() + 0.5D;
         double focusY = reliquaryPos.getY() + FOCUS_HEIGHT_OFFSET;
         double focusZ = reliquaryPos.getZ() + 0.5D;
 
-        int clampedTick = Mth.clamp(ticksElapsed, 1, RITUAL_DURATION_TICKS);
+        int clampedTick = Mth.clamp(ticksElapsed, 1, ritualDurationTicks);
 
         int coilEnd = PHASE_COIL_TICKS;
         int beamEnd = PHASE_COIL_TICKS + PHASE_BEAM_TICKS;
         int ballEnd = PHASE_COIL_TICKS + PHASE_BEAM_TICKS + PHASE_BALL_TICKS;
 
-        if (ballEnd > RITUAL_DURATION_TICKS) {
-            ballEnd = RITUAL_DURATION_TICKS;
+        if (ballEnd > ritualDurationTicks) {
+            ballEnd = ritualDurationTicks;
             beamEnd = Math.min(beamEnd, ballEnd);
             coilEnd = Math.min(coilEnd, beamEnd);
         }

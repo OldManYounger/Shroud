@@ -182,6 +182,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.LIVING_SCULK_SPAWN_EGG);
                         output.accept(ModItems.UMBRAL_HOWLER_SPAWN_EGG);
                         output.accept(ModItems.BLIGHTED_SHADE_SPAWN_EGG);
+                        output.accept(ModItems.TWINBLIGHT_WATCHER_SPAWN_EGG);
                     })
                     .build()
     );

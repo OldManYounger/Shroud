@@ -165,6 +165,11 @@ public class ModItems {
             () -> new DeferredSpawnEggItem(ModEntities.BLIGHTED_SHADE, 1517611, 2748379,
                     new Item.Properties()));
 
+    // Twinblight Watcher spawn egg
+    public static final DeferredItem<Item> TWINBLIGHT_WATCHER_SPAWN_EGG = ITEMS.register("twinblight_watcher_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntities.TWINBLIGHT_WATCHER, 593685, 2748379,
+                    new Item.Properties()));
+
     // ==================================
     //  REGISTRATION
     // ==================================

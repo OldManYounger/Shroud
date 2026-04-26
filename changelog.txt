@@ -4,6 +4,10 @@
     Removals
     Bug Fixes
 
+- Version 0.7.0
+    Additions
+        - Added new mob: Twinblight Watcher
+
 - Version 0.6.0
     Additions
         - Added direct KubeJS support for ritual crafting recipes; example provided on mod page

@@ -113,6 +113,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         withExistingParent(ModItems.LIVING_SCULK_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.UMBRAL_HOWLER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
         withExistingParent(ModItems.BLIGHTED_SHADE_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
+        withExistingParent(ModItems.TWINBLIGHT_WATCHER_SPAWN_EGG.getId().getPath(), mcLoc("item/template_spawn_egg"));
     }
 
     // Creates an item/generated model for a plant-like block item using the block texture

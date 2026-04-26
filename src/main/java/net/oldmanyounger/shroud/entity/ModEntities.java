@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.custom.BlightedShadeEntity;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
+import net.oldmanyounger.shroud.entity.custom.TwinblightWatcherEntity;
 import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 
 /**
@@ -53,6 +54,15 @@ public class ModEntities {
                     () -> EntityType.Builder.of(BlightedShadeEntity::new, MobCategory.MONSTER)
                             .sized(0.6f, 2.8f) // Tall narrow silhouette
                             .build(Shroud.MOD_ID + ":blighted_shade")
+            );
+
+    // Twinblight Watcher entity type registration
+    public static final DeferredHolder<EntityType<?>, EntityType<TwinblightWatcherEntity>> TWINBLIGHT_WATCHER =
+            ENTITY_TYPES.register(
+                    "twinblight_watcher",
+                    () -> EntityType.Builder.of(TwinblightWatcherEntity::new, MobCategory.MONSTER)
+                            .sized(1.8f, 3.8f) // Same footprint as Living Sculk
+                            .build(Shroud.MOD_ID + ":twinblight_watcher")
             );
 
     // Registers entity deferred entries on the mod event bus

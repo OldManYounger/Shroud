@@ -7,6 +7,7 @@ import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.custom.BlightedShadeEntity;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
+import net.oldmanyounger.shroud.entity.custom.TwinblightWatcherEntity;
 import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 
 /**
@@ -28,5 +29,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.LIVING_SCULK.get(), LivingSculkEntity.createAttributes().build());
         event.put(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerEntity.createAttributes().build());
         event.put(ModEntities.BLIGHTED_SHADE.get(), BlightedShadeEntity.createAttributes().build());
+        event.put(ModEntities.TWINBLIGHT_WATCHER.get(), TwinblightWatcherEntity.createAttributes().build());
     }
 }

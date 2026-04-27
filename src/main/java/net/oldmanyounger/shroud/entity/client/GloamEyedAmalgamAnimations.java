@@ -3,13 +3,13 @@ package net.oldmanyounger.shroud.entity.client;
 import software.bernie.geckolib.animation.RawAnimation;
 
 /**
- * Centralizes GeckoLib animation definitions for Twinblight Watcher
+ * Centralizes GeckoLib animation definitions for Gloam Eyed Amalgam.
  *
  * <p>This class exposes animation keys for locomotion and triggerable action states, including the renamed secondary idle animation key {@code idle_eye_watch}.
  *
  * <p>In the broader context of the project, this class is part of Shroud's client animation coordination layer that keeps entity controller logic and authored animation asset names synchronized.
  */
-public final class TwinblightWatcherAnimations {
+public final class GloamEyedAmalgamAnimations {
 
     // ==================================
     //  ANIMATION KEYS
@@ -36,6 +36,6 @@ public final class TwinblightWatcherAnimations {
             RawAnimation.begin().thenPlay("vibration_react");
 
     // Prevents instantiation of this animation constants holder
-    private TwinblightWatcherAnimations() {
+    private GloamEyedAmalgamAnimations() {
     }
 }

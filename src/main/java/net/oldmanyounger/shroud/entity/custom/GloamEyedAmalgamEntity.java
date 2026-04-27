@@ -14,7 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -35,7 +35,7 @@ import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
-import net.oldmanyounger.shroud.entity.client.TwinblightWatcherAnimations;
+import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
 import net.oldmanyounger.shroud.sound.ModSounds;
@@ -51,13 +51,13 @@ import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
- * Defines the Twinblight Watcher hostile entity and its baseline gameplay behavior
+ * Defines the Gloam Eyed Amalgam hostile entity and its baseline gameplay behavior.
  *
  * <p>This entity provides foundational monster combat AI, GeckoLib-driven animation control, and vibration-based sensing without advanced conversion or item-corruption mechanics.
  *
  * <p>In the broader context of the project, this class is part of Shroud's entity foundation layer that introduces new mobs with stable core combat and sensory systems before later specialization.
  */
-public class TwinblightWatcherEntity extends Monster implements GeoEntity, VibrationListener, VibrationSystem {
+public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, VibrationListener, VibrationSystem {
 
     // ==================================
     //  CONSTANTS
@@ -76,10 +76,21 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
     private static final byte EVENT_ATTACK_ANIM = 60;
     private static final byte EVENT_VIBRATION_REACT_ANIM = 5;
 
+    // Warden-like melee reach baseline
+    private static final double WARDEN_MELEE_RANGE = 4.0D;
+
+    // Default animation speed multipliers
+    private static final double ANIM_SPEED_NORMAL = 1.0D;
+    private static final double ANIM_SPEED_INVESTIGATE = 3.0D;
+
+    // Locomotion animation speed multipliers
+    private static final float LOCOMOTION_ANIM_SPEED_NORMAL = 1.0F;
+    private static final float LOCOMOTION_ANIM_SPEED_INVESTIGATE = 1.65F;
+
     // GeckoLib animation controller names
-    private static final String CTRL_LOCOMOTION = "twinblight_watcher_locomotion_controller";
-    private static final String CTRL_VIBRATION = "twinblight_watcher_vibration_controller";
-    private static final String CTRL_ATTACK = "twinblight_watcher_attack_controller";
+    private static final String CTRL_LOCOMOTION = "gloam_eyed_amalgam_locomotion_controller";
+    private static final String CTRL_VIBRATION = "gloam_eyed_amalgam_vibration_controller";
+    private static final String CTRL_ATTACK = "gloam_eyed_amalgam_attack_controller";
 
     // GeckoLib trigger names
     private static final String TRIG_ATTACK = "attack";
@@ -123,14 +134,21 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
         return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
     }
 
+    // Returns true when the entity is actively investigating a vibration
+    private boolean isInvestigatingVibration() {
+        return this.getVibrationLocation() != null
+                && this.getTarget() == null
+                && this.getNavigation().isInProgress();
+    }
+
     // ==================================
     //  CONSTRUCTOR
     // ==================================
 
     // Creates the entity and wires vibration listener state
-    public TwinblightWatcherEntity(EntityType<? extends TwinblightWatcherEntity> type, Level level) {
+    public GloamEyedAmalgamEntity(EntityType<? extends GloamEyedAmalgamEntity> type, Level level) {
         super(type, level);
-        this.vibrationUser = new TwinblightWatcherVibrationUser();
+        this.vibrationUser = new GloamEyedAmalgamVibrationUser();
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
     }
 
@@ -141,9 +159,9 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
     // Declares baseline combat and movement attributes
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 30.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.24D)
-                .add(Attributes.ATTACK_DAMAGE, 5.0D)
+                .add(Attributes.MAX_HEALTH, 650.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.15D)
+                .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.FOLLOW_RANGE, 15.0D)
                 .add(Attributes.ARMOR, 2.0D);
     }
@@ -157,14 +175,19 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
     protected void registerGoals() {
         // Movement and combat goals
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.3D, false));
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1.2D, 20));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false) {
+            // Uses Warden-like melee reach logic
+            protected double getAttackReachSqr(LivingEntity target) {
+                return WARDEN_MELEE_RANGE + target.getBbWidth();
+            }
+        });
+        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1.0D, 20));
 
-        // Navigation toward recently detected vibration locations
-        this.goalSelector.addGoal(4, new VibrationGoal(this, 1.2D));
+        // Faster navigation toward recently detected vibration locations
+        this.goalSelector.addGoal(4, new VibrationGoal(this, 1.3D));
 
-        // Idle and awareness behavior
-        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 1.2D));
+        // Slower casual wandering similar to Warden pacing
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.6D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
@@ -391,28 +414,63 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
                     boolean moving = this.getNavigation().isInProgress()
                             || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
 
+                    // Sets GeckoLib controller playback speed each render frame
+                    state.setControllerSpeed(
+                            this.isInvestigatingVibration()
+                                    ? LOCOMOTION_ANIM_SPEED_INVESTIGATE
+                                    : LOCOMOTION_ANIM_SPEED_NORMAL
+                    );
+
                     if (moving) {
-                        return state.setAndContinue(TwinblightWatcherAnimations.WALKING);
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING);
                     }
 
-                    if (state.isCurrentAnimation(TwinblightWatcherAnimations.IDLE_EYE_WATCH)) {
-                        return state.setAndContinue(TwinblightWatcherAnimations.IDLE_EYE_WATCH);
+                    if (state.isCurrentAnimation(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH)) {
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
                     }
 
                     if (this.getRandom().nextInt(1800) == 0) {
-                        return state.setAndContinue(TwinblightWatcherAnimations.IDLE_EYE_WATCH);
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
                     }
 
-                    return state.setAndContinue(TwinblightWatcherAnimations.IDLE);
+                    return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE);
                 }),
 
                 // Overlay controller for one-shot vibration reaction
                 new AnimationController<>(this, CTRL_VIBRATION, 2, state -> PlayState.STOP)
-                        .triggerableAnim(TRIG_VIBRATION_REACT, TwinblightWatcherAnimations.VIBRATION_REACT),
+                        .triggerableAnim(TRIG_VIBRATION_REACT, GloamEyedAmalgamAnimations.VIBRATION_REACT),
 
                 // Overlay controller for one-shot attack animation
                 new AnimationController<>(this, CTRL_ATTACK, 2, state -> PlayState.STOP)
-                        .triggerableAnim(TRIG_ATTACK, TwinblightWatcherAnimations.ATTACK)
+                        .triggerableAnim(TRIG_ATTACK, GloamEyedAmalgamAnimations.ATTACK),
+
+                // Locomotion controller for idle/walk selection
+                new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
+                    boolean moving = this.getNavigation().isInProgress()
+                            || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
+
+                    // Speeds animation when pathing to a vibration without an active combat target
+                    boolean investigatingVibration = this.getVibrationLocation() != null && this.getTarget() == null;
+                    double locomotionAnimSpeed = investigatingVibration ? ANIM_SPEED_INVESTIGATE : ANIM_SPEED_NORMAL;
+                    state.getController().setAnimationSpeed(locomotionAnimSpeed);
+
+                    if (moving) {
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING);
+                    }
+
+                    // Resets animation speed while idle
+                    state.getController().setAnimationSpeed(ANIM_SPEED_NORMAL);
+
+                    if (state.isCurrentAnimation(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH)) {
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
+                    }
+
+                    if (this.getRandom().nextInt(1800) == 0) {
+                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
+                    }
+
+                    return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE);
+                })
         );
     }
 
@@ -427,11 +485,11 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
     // ==================================
 
     // Implements vibration system behavior for this entity
-    private class TwinblightWatcherVibrationUser implements VibrationSystem.User {
+    private class GloamEyedAmalgamVibrationUser implements VibrationSystem.User {
 
         // Position source tracks entity listener position at eye height
         private final PositionSource positionSource =
-                new EntityPositionSource(TwinblightWatcherEntity.this, TwinblightWatcherEntity.this.getEyeHeight());
+                new EntityPositionSource(GloamEyedAmalgamEntity.this, GloamEyedAmalgamEntity.this.getEyeHeight());
 
         // Returns vibration listener source position
         @Override
@@ -460,7 +518,7 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
         // Filters whether an incoming vibration should be accepted
         @Override
         public boolean canReceiveVibration(ServerLevel level, BlockPos pos, Holder<GameEvent> gameEvent, GameEvent.Context context) {
-            if (TwinblightWatcherEntity.this.isNoAi() || TwinblightWatcherEntity.this.isDeadOrDying()) {
+            if (GloamEyedAmalgamEntity.this.isNoAi() || GloamEyedAmalgamEntity.this.isDeadOrDying()) {
                 return false;
             }
 
@@ -470,11 +528,11 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
 
             Entity source = context.sourceEntity();
 
-            if (source == TwinblightWatcherEntity.this) {
+            if (source == GloamEyedAmalgamEntity.this) {
                 return false;
             }
 
-            if (TwinblightWatcherEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
+            if (GloamEyedAmalgamEntity.this.isVibrationFriendlySelf() && isVibrationFriendlyEntity(source)) {
                 return false;
             }
 
@@ -483,7 +541,7 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
             }
 
             long gameTime = level.getGameTime();
-            return gameTime >= TwinblightWatcherEntity.this.nextVibrationGameTime;
+            return gameTime >= GloamEyedAmalgamEntity.this.nextVibrationGameTime;
         }
 
         // Handles accepted vibration events and updates behavior and animation
@@ -499,22 +557,22 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
                 return;
             }
 
-            if (TwinblightWatcherEntity.this.isVibrationFriendlySelf()
+            if (GloamEyedAmalgamEntity.this.isVibrationFriendlySelf()
                     && (isVibrationFriendlyEntity(sourceEntity) || isVibrationFriendlyEntity(projectileOwner))) {
                 return;
             }
 
-            if (TwinblightWatcherEntity.this.isDeadOrDying()) {
+            if (GloamEyedAmalgamEntity.this.isDeadOrDying()) {
                 return;
             }
 
             long gameTime = level.getGameTime();
-            if (gameTime < TwinblightWatcherEntity.this.nextVibrationGameTime) {
+            if (gameTime < GloamEyedAmalgamEntity.this.nextVibrationGameTime) {
                 return;
             }
 
-            TwinblightWatcherEntity.this.nextVibrationGameTime = gameTime + VIBRATION_COOLDOWN_TICKS;
-            TwinblightWatcherEntity.this.setVibrationLocation(pos);
+            GloamEyedAmalgamEntity.this.nextVibrationGameTime = gameTime + VIBRATION_COOLDOWN_TICKS;
+            GloamEyedAmalgamEntity.this.setVibrationLocation(pos);
 
             Player playerToTarget = null;
 
@@ -526,19 +584,19 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
 
             if (playerToTarget != null) {
                 double maxDistSqr = VIBRATION_PLAYER_ACQUIRE_RANGE * VIBRATION_PLAYER_ACQUIRE_RANGE;
-                if (TwinblightWatcherEntity.this.distanceToSqr(playerToTarget) <= maxDistSqr) {
-                    TwinblightWatcherEntity.this.setTarget(playerToTarget);
+                if (GloamEyedAmalgamEntity.this.distanceToSqr(playerToTarget) <= maxDistSqr) {
+                    GloamEyedAmalgamEntity.this.setTarget(playerToTarget);
                 }
             }
 
-            TwinblightWatcherEntity.this.level().broadcastEntityEvent(TwinblightWatcherEntity.this, EVENT_VIBRATION_REACT_ANIM);
+            GloamEyedAmalgamEntity.this.level().broadcastEntityEvent(GloamEyedAmalgamEntity.this, EVENT_VIBRATION_REACT_ANIM);
 
-            if (!TwinblightWatcherEntity.this.isSilent()) {
+            if (!GloamEyedAmalgamEntity.this.isSilent()) {
                 level.playSound(
                         null,
-                        TwinblightWatcherEntity.this.blockPosition(),
+                        GloamEyedAmalgamEntity.this.blockPosition(),
                         ModSounds.ENTITY_LIVING_SCULK_VIBRATION_REACT.get(),
-                        TwinblightWatcherEntity.this.getSoundSource(),
+                        GloamEyedAmalgamEntity.this.getSoundSource(),
                         1.0F,
                         1.0F
                 );

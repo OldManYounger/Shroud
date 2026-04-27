@@ -125,12 +125,12 @@
   "item.shroud.living_sculk_spawn_egg": "Living Sculk Spawn Egg",
   "item.shroud.umbral_howler_spawn_egg": "Umbral Howler Spawn Egg",
   "item.shroud.blighted_shade_spawn_egg": "Blighted Shade Spawn Egg",
-  "item.shroud.twinblight_watcher_spawn_egg": "Twinblight Watcher Spawn Egg",
+  "item.shroud.gloam_eyed_amalgam_spawn_egg": "Gloam Eyed Amalgam Spawn Egg",
 
   "entity.shroud.living_sculk": "Living Sculk",
   "entity.shroud.umbral_howler": "Umbral Howler",
   "entity.shroud.blighted_shade": "Blighted Shade",
-  "entity.shroud.twinblight_watcher": "Twinblight Watcher",
+  "entity.shroud.gloam_eyed_amalgam": "Gloam Eyed Amalgam",
 
   "biome.shroud.umbral_forest": "Umbral Forest",
   "biome.shroud.pallid_grove": "Pallid Grove",

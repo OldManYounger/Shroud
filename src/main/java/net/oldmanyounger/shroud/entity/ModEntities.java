@@ -8,20 +8,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.custom.BlightedShadeEntity;
+import net.oldmanyounger.shroud.entity.custom.GloamEyedAmalgamEntity;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
-import net.oldmanyounger.shroud.entity.custom.TwinblightWatcherEntity;
 import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
 
 /**
- * Registers all custom EntityType entries used by Shroud
+ * Registers all custom EntityType entries used by Shroud.
  *
- * <p>This class defines deferred registrations for each custom hostile mob,
- * including category assignment and hitbox dimensions used for spawning,
- * collision, and rendering interactions
+ * <p>This class defines deferred registrations for each custom hostile mob, including category assignment and hitbox dimensions used for spawning, collision, and rendering interactions.
  *
- * <p>In the broader context of the project, this class is part of Shroud's
- * entity bootstrap pipeline that binds custom mob definitions into the
- * NeoForge registry lifecycle
+ * <p>In the broader context of the project, this class is part of Shroud's entity bootstrap pipeline that binds custom mob definitions into the NeoForge registry lifecycle.
  */
 public class ModEntities {
 
@@ -34,7 +30,7 @@ public class ModEntities {
             ENTITY_TYPES.register(
                     "living_sculk",
                     () -> EntityType.Builder.of(LivingSculkEntity::new, MobCategory.MONSTER)
-                            .sized(0.9f, 1.9f) // Sized to match Living Sculk model proportions
+                            .sized(0.9f, 1.9f)
                             .build(Shroud.MOD_ID + ":living_sculk")
             );
 
@@ -43,7 +39,7 @@ public class ModEntities {
             ENTITY_TYPES.register(
                     "umbral_howler",
                     () -> EntityType.Builder.of(UmbralHowlerEntity::new, MobCategory.MONSTER)
-                            .sized(0.6f, 0.85f) // Wolf-like footprint and height
+                            .sized(0.6f, 0.85f)
                             .build(Shroud.MOD_ID + ":umbral_howler")
             );
 
@@ -52,17 +48,17 @@ public class ModEntities {
             ENTITY_TYPES.register(
                     "blighted_shade",
                     () -> EntityType.Builder.of(BlightedShadeEntity::new, MobCategory.MONSTER)
-                            .sized(0.6f, 2.8f) // Tall narrow silhouette
+                            .sized(0.6f, 2.8f)
                             .build(Shroud.MOD_ID + ":blighted_shade")
             );
 
-    // Twinblight Watcher entity type registration
-    public static final DeferredHolder<EntityType<?>, EntityType<TwinblightWatcherEntity>> TWINBLIGHT_WATCHER =
+    // Gloam Eyed Amalgam entity type registration
+    public static final DeferredHolder<EntityType<?>, EntityType<GloamEyedAmalgamEntity>> GLOAM_EYED_AMALGAM =
             ENTITY_TYPES.register(
-                    "twinblight_watcher",
-                    () -> EntityType.Builder.of(TwinblightWatcherEntity::new, MobCategory.MONSTER)
-                            .sized(1.4f, 2.8f) // Same footprint as Living Sculk
-                            .build(Shroud.MOD_ID + ":twinblight_watcher")
+                    "gloam_eyed_amalgam",
+                    () -> EntityType.Builder.of(GloamEyedAmalgamEntity::new, MobCategory.MONSTER)
+                            .sized(0.9f, 2.9f)
+                            .build(Shroud.MOD_ID + ":gloam_eyed_amalgam")
             );
 
     // Registers entity deferred entries on the mod event bus

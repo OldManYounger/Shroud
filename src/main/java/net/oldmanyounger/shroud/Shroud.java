@@ -21,8 +21,8 @@ import net.oldmanyounger.shroud.compat.ModCompat;
 import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.BlightedShadeRenderer;
+import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamRenderer;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
-import net.oldmanyounger.shroud.entity.client.TwinblightWatcherRenderer;
 import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
@@ -104,7 +104,7 @@ public class Shroud {
             EntityRenderers.register(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
             EntityRenderers.register(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerRenderer::new);
             EntityRenderers.register(ModEntities.BLIGHTED_SHADE.get(), BlightedShadeRenderer::new);
-            EntityRenderers.register(ModEntities.TWINBLIGHT_WATCHER.get(), TwinblightWatcherRenderer::new);
+            EntityRenderers.register(ModEntities.GLOAM_EYED_AMALGAM.get(), GloamEyedAmalgamRenderer::new);
             ModItemProperties.addCustomItemProperties();
         }
     }
@@ -126,7 +126,7 @@ public class Shroud {
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         event.register(ModEntities.BLIGHTED_SHADE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
-        event.register(ModEntities.TWINBLIGHT_WATCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+        event.register(ModEntities.GLOAM_EYED_AMALGAM.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 Mob::checkMobSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
     }
 }

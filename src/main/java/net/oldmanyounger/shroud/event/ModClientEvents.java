@@ -9,8 +9,8 @@ import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
 import net.oldmanyounger.shroud.client.render.ModCorruptedReliquaryBlockEntityRenderer;
 import net.oldmanyounger.shroud.entity.ModEntities;
+import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamRenderer;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
-import net.oldmanyounger.shroud.entity.client.TwinblightWatcherRenderer;
 import net.oldmanyounger.shroud.item.ModItems;
 
 /**
@@ -30,7 +30,7 @@ public class ModClientEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
-        event.registerEntityRenderer(ModEntities.TWINBLIGHT_WATCHER.get(), TwinblightWatcherRenderer::new);
+        event.registerEntityRenderer(ModEntities.GLOAM_EYED_AMALGAM.get(), GloamEyedAmalgamRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CORRUPTED_RELIQUARY.get(), ModCorruptedReliquaryBlockEntityRenderer::new);
     }
 

@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-26T15:42:49.1510836	Item Models: shroud
+// 1.21.1	2026-04-26T23:51:04.448155	Item Models: shroud
 63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/blighted_shade_spawn_egg.json
 76cb297e6925ba5128a26e499f05889ba4a2a9c0 assets/shroud/models/item/cobbled_sculk_deepslate_wall.json
 58b5cf33c20934444e2b771fbfca200d42e8a889 assets/shroud/models/item/eventide_armor_trim_smithing_template.json
@@ -54,6 +54,7 @@ c12fb95120e7c055fb55ccdc9e14ec8d0a2dbd63 assets/shroud/models/item/eventide_legg
 51828d68ac81765e1c6fe398d67f84aeb5cdbf9e assets/shroud/models/item/eventide_sword.json
 9b38ca87410a5da403954afa6361e6feba56e0db assets/shroud/models/item/ghost_bloom.json
 5cae50cc141a7bad7740d61bf2931e135e9c7955 assets/shroud/models/item/gloamcane.json
+63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/gloam_eyed_amalgam_spawn_egg.json
 80d4ae57a618f087b879d9c4170970dc8b9ac89f assets/shroud/models/item/gloam_sugar.json
 0f06e408780a2b5c705fc63c6234d40e95966057 assets/shroud/models/item/gloomstone_dust.json
 5766e32a655014e5b607cd3e5870d787ea46e0df assets/shroud/models/item/gloom_pulp.json
@@ -66,7 +67,6 @@ eb052b1646305500d8c0fe1e06e6089b8139463e assets/shroud/models/item/sculk_deepsla
 2f2a454aeb930166344c99d1840142f4f192c0a9 assets/shroud/models/item/sculk_pearl.json
 19834410b9d05427f309e22d1913046f0fdb2c12 assets/shroud/models/item/sculk_stone_brick_wall.json
 574ece6333051d4ad5f34dcb604988d0f15e68ab assets/shroud/models/item/totem_of_last_breath.json
-63ec6c618a3a23eab4cab9c52d7d3250de9b516e assets/shroud/models/item/twinblight_watcher_spawn_egg.json
 4f5c5f7433962a797a67bba4bb41748b4a990460 assets/shroud/models/item/umber_button.json
 21a4c1bf3e8eaa34892fc6202396619770e1657b assets/shroud/models/item/umber_door.json
 d406781091d9d93d0948efe4e217f6cd1b3d21b5 assets/shroud/models/item/umber_fence.json

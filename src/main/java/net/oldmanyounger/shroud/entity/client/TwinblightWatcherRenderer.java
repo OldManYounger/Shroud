@@ -18,8 +18,8 @@ public class TwinblightWatcherRenderer extends GeoEntityRenderer<TwinblightWatch
         super(renderManager, new TwinblightWatcherModel());
 
         // Scales the rendered model to 2x on both axes
-        this.scaleWidth = 2.0f;
-        this.scaleHeight = 2.0f;
+        this.scaleWidth = 1.5f;
+        this.scaleHeight = 1.5f;
 
         // Increases shadow size to match larger body
         this.shadowRadius = 1.2f;

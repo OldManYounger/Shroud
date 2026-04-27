@@ -61,7 +61,7 @@ public class ModEntities {
             ENTITY_TYPES.register(
                     "twinblight_watcher",
                     () -> EntityType.Builder.of(TwinblightWatcherEntity::new, MobCategory.MONSTER)
-                            .sized(1.8f, 3.8f) // Same footprint as Living Sculk
+                            .sized(1.4f, 2.8f) // Same footprint as Living Sculk
                             .build(Shroud.MOD_ID + ":twinblight_watcher")
             );
 

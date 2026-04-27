@@ -142,7 +142,7 @@ public class TwinblightWatcherEntity extends Monster implements GeoEntity, Vibra
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 30.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.21D)
+                .add(Attributes.MOVEMENT_SPEED, 0.24D)
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.FOLLOW_RANGE, 15.0D)
                 .add(Attributes.ARMOR, 2.0D);

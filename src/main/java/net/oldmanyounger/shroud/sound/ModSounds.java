@@ -184,6 +184,20 @@ public final class ModSounds {
             );
 
     // ==================================
+    //  GLOAM-EYED AMALGAM
+    // ==================================
+
+    // Gloam Eyed Amalgam heartbeat sound with fixed hearing range
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_GLOAM_EYED_AMALGAM_HEARTBEAT =
+            SOUND_EVENTS.register(
+                    "entity.gloam_eyed_amalgam.heartbeat",
+                    () -> SoundEvent.createFixedRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.heartbeat"),
+                            70.0F
+                    )
+            );
+
+    // ==================================
     //  OTHER SOUNDS
     // ==================================
 

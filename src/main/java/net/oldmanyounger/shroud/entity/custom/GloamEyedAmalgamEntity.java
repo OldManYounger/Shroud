@@ -51,11 +51,11 @@ import javax.annotation.Nullable;
 import java.util.function.BiConsumer;
 
 /**
- * Defines the Gloam Eyed Amalgam hostile entity and its baseline gameplay behavior.
+ * Defines the Gloam Eyed Amalgam hostile entity and its core gameplay behavior.
  *
- * <p>This entity provides foundational monster combat AI, GeckoLib-driven animation control, and vibration-based sensing without advanced conversion or item-corruption mechanics.
+ * <p>This entity provides baseline monster combat AI, vibration-based sensing, and GeckoLib animation control without conversion mechanics or item-corruption mechanics.
  *
- * <p>In the broader context of the project, this class is part of Shroud's entity foundation layer that introduces new mobs with stable core combat and sensory systems before later specialization.
+ * <p>In the broader context of the project, this class is part of Shroud's core hostile-mob systems, providing a clean foundation variant that can be extended with specialized mechanics later.
  */
 public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, VibrationListener, VibrationSystem {
 
@@ -72,20 +72,12 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Max distance for acquiring player targets from vibration events
     private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
 
+    // Heartbeat interval in ticks
+    private static final int HEARTBEAT_INTERVAL_TICKS = 40;
+
     // Entity event IDs for client animation triggers
     private static final byte EVENT_ATTACK_ANIM = 60;
     private static final byte EVENT_VIBRATION_REACT_ANIM = 5;
-
-    // Warden-like melee reach baseline
-    private static final double WARDEN_MELEE_RANGE = 4.0D;
-
-    // Default animation speed multipliers
-    private static final double ANIM_SPEED_NORMAL = 1.0D;
-    private static final double ANIM_SPEED_INVESTIGATE = 3.0D;
-
-    // Locomotion animation speed multipliers
-    private static final float LOCOMOTION_ANIM_SPEED_NORMAL = 1.0F;
-    private static final float LOCOMOTION_ANIM_SPEED_INVESTIGATE = 1.65F;
 
     // GeckoLib animation controller names
     private static final String CTRL_LOCOMOTION = "gloam_eyed_amalgam_locomotion_controller";
@@ -111,6 +103,9 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Earliest game time at which a new vibration can be accepted
     private long nextVibrationGameTime = 0L;
 
+    // Earliest game time at which a new heartbeat can be played
+    private long nextHeartbeatGameTime = 0L;
+
     // Most recent vibration location used by vibration-aware goals
     @Nullable
     private BlockPos vibrationLocation;
@@ -134,13 +129,6 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         return entity != null && entity.getType().is(ModEntityTypeTags.VIBRATION_FRIENDLY);
     }
 
-    // Returns true when the entity is actively investigating a vibration
-    private boolean isInvestigatingVibration() {
-        return this.getVibrationLocation() != null
-                && this.getTarget() == null
-                && this.getNavigation().isInProgress();
-    }
-
     // ==================================
     //  CONSTRUCTOR
     // ==================================
@@ -156,12 +144,12 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  ATTRIBUTES
     // ==================================
 
-    // Declares baseline combat and movement attributes
+    // Declares baseline combat and movement attributes using Warden-like core values
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, 650.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.15D)
-                .add(Attributes.ATTACK_DAMAGE, 8.0D)
+                .add(Attributes.MAX_HEALTH, 500.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.20D)
+                .add(Attributes.ATTACK_DAMAGE, 30.0D)
                 .add(Attributes.FOLLOW_RANGE, 15.0D)
                 .add(Attributes.ARMOR, 2.0D);
     }
@@ -175,19 +163,14 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     protected void registerGoals() {
         // Movement and combat goals
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false) {
-            // Uses Warden-like melee reach logic
-            protected double getAttackReachSqr(LivingEntity target) {
-                return WARDEN_MELEE_RANGE + target.getBbWidth();
-            }
-        });
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 1.0D, 20));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.8D, 20));
 
-        // Faster navigation toward recently detected vibration locations
-        this.goalSelector.addGoal(4, new VibrationGoal(this, 1.3D));
+        // Navigation toward recently detected vibration locations
+        this.goalSelector.addGoal(4, new VibrationGoal(this, 0.8D));
 
-        // Slower casual wandering similar to Warden pacing
-        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.6D));
+        // Idle and awareness behavior
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
@@ -228,9 +211,33 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     public void tick() {
         if (this.level() instanceof ServerLevel serverLevel) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
+            this.tickHeartbeatSound(serverLevel);
         }
 
         super.tick();
+    }
+
+    // Plays long-range heartbeat sound at a fixed interval
+    private void tickHeartbeatSound(ServerLevel level) {
+        if (this.isDeadOrDying() || this.isSilent()) {
+            return;
+        }
+
+        long gameTime = level.getGameTime();
+        if (gameTime < this.nextHeartbeatGameTime) {
+            return;
+        }
+
+        this.nextHeartbeatGameTime = gameTime + HEARTBEAT_INTERVAL_TICKS;
+
+        level.playSound(
+                null,
+                this.blockPosition(),
+                ModSounds.ENTITY_GLOAM_EYED_AMALGAM_HEARTBEAT.get(),
+                this.getSoundSource(),
+                1.0F,
+                1.0F
+        );
     }
 
     // Runs death-side effects including sculk spread and particles
@@ -250,13 +257,13 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         serverLevel.sendParticles(
                 ParticleTypes.SCULK_SOUL,
                 this.getX(),
-                this.getY() + 0.5,
+                this.getY() + 0.5D,
                 this.getZ(),
                 20,
-                0.4,
-                0.4,
-                0.4,
-                0.02
+                0.4D,
+                0.4D,
+                0.4D,
+                0.02D
         );
     }
 
@@ -409,17 +416,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
-                // Locomotion controller for idle/walk selection
+                // Locomotion controller for idle and walk selection
                 new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
                     boolean moving = this.getNavigation().isInProgress()
                             || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
-
-                    // Sets GeckoLib controller playback speed each render frame
-                    state.setControllerSpeed(
-                            this.isInvestigatingVibration()
-                                    ? LOCOMOTION_ANIM_SPEED_INVESTIGATE
-                                    : LOCOMOTION_ANIM_SPEED_NORMAL
-                    );
 
                     if (moving) {
                         return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING);
@@ -442,35 +442,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
                 // Overlay controller for one-shot attack animation
                 new AnimationController<>(this, CTRL_ATTACK, 2, state -> PlayState.STOP)
-                        .triggerableAnim(TRIG_ATTACK, GloamEyedAmalgamAnimations.ATTACK),
-
-                // Locomotion controller for idle/walk selection
-                new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
-                    boolean moving = this.getNavigation().isInProgress()
-                            || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
-
-                    // Speeds animation when pathing to a vibration without an active combat target
-                    boolean investigatingVibration = this.getVibrationLocation() != null && this.getTarget() == null;
-                    double locomotionAnimSpeed = investigatingVibration ? ANIM_SPEED_INVESTIGATE : ANIM_SPEED_NORMAL;
-                    state.getController().setAnimationSpeed(locomotionAnimSpeed);
-
-                    if (moving) {
-                        return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING);
-                    }
-
-                    // Resets animation speed while idle
-                    state.getController().setAnimationSpeed(ANIM_SPEED_NORMAL);
-
-                    if (state.isCurrentAnimation(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH)) {
-                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
-                    }
-
-                    if (this.getRandom().nextInt(1800) == 0) {
-                        return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH);
-                    }
-
-                    return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE);
-                })
+                        .triggerableAnim(TRIG_ATTACK, GloamEyedAmalgamAnimations.ATTACK)
         );
     }
 

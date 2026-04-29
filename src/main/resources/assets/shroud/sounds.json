@@ -107,6 +107,11 @@
       { "name": "shroud:entity/blighted_shade/tendril_click3" }
     ]
   },
+  "entity.gloam_eyed_amalgam.heartbeat": {
+    "sounds": [
+      { "name": "shroud:entity/gloam_eyed_amalgam/heartbeat1" }
+    ]
+  },
   "block.sculk_emitter.spew": {
     "sounds": [
       { "name": "shroud:block/sculk_emitter/spew1" }

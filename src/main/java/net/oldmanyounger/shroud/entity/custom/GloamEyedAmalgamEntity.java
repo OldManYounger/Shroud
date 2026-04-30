@@ -3,6 +3,9 @@ package net.oldmanyounger.shroud.entity.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -17,9 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.MoveTowardsTargetGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
+import net.minecraft.world.phys.Vec3;
 import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
 import net.oldmanyounger.shroud.entity.goal.VibrationListener;
@@ -65,6 +67,16 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  CONSTANTS
     // ==================================
 
+    // Normal non-combat movement speed modifier
+    private static final double NORMAL_MOVE_SPEED_MODIFIER = 0.8D;
+
+    // Faster movement speed modifier used while pursuing an acquired target
+    private static final double PURSUIT_MOVE_SPEED_MODIFIER = 2.0D;
+
+    // Synced client animation state for target pursuit
+    private static final EntityDataAccessor<Boolean> DATA_PURSUING_ACQUIRED_TARGET =
+            SynchedEntityData.defineId(GloamEyedAmalgamEntity.class, EntityDataSerializers.BOOLEAN);
+
     // Cooldown between accepted vibration events
     private static final int VIBRATION_COOLDOWN_TICKS = 80;
 
@@ -83,8 +95,14 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Adjustable client heartbeat loudness
     private static final float HEARTBEAT_VOLUME = 5.0F;
 
+    // Target-acquire roar loudness
+    private static final float ROAR_VOLUME = 2.5F;
+
+    // Target-acquire roar pitch
+    private static final float ROAR_PITCH = 1.0F;
+
     // Duration to block pursue movement while roar animation finishes
-    private static final int TARGET_ACQUIRE_ROAR_TICKS = 40;
+    private static final int TARGET_ACQUIRE_ROAR_TICKS = 60;
 
     // Entity event IDs for client animation triggers
     private static final byte EVENT_ATTACK_ANIM = 60;
@@ -164,6 +182,13 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         this.dynamicGameEventListener = new DynamicGameEventListener<>(new VibrationSystem.Listener(this));
     }
 
+    // Defines synced entity data used by client-side animation controllers
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_PURSUING_ACQUIRED_TARGET, false);
+    }
+
     // ==================================
     //  ATTRIBUTES
     // ==================================
@@ -172,7 +197,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 500.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.19D)
+                .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.ATTACK_DAMAGE, 30.0D)
                 .add(Attributes.ENTITY_INTERACTION_RANGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 15.0D)
@@ -187,13 +212,28 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Registers AI and target goals
     @Override
     protected void registerGoals() {
-        // Movement and combat goals
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        // Blocks all movement while target-acquire roar plays
+        this.goalSelector.addGoal(1, new TargetAcquireRoarGoal(this));
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, PURSUIT_MOVE_SPEED_MODIFIER, false) {
+            // Prevents melee pathing while the target-acquire roar is active.
+            @Override
+            public boolean canUse() {
+                return GloamEyedAmalgamEntity.this.isPursueUnlocked() && super.canUse();
+            }
 
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false) {
+            // Prevents melee pathing from continuing while the target-acquire roar is active.
+            @Override
+            public boolean canContinueToUse() {
+                return GloamEyedAmalgamEntity.this.isPursueUnlocked() && super.canContinueToUse();
+            }
+
             // Extends melee range and preserves swing-based attack animation trigger
             @Override
             protected void checkAndPerformAttack(LivingEntity target) {
+                if (!GloamEyedAmalgamEntity.this.isPursueUnlocked()) {
+                    return;
+                }
+
                 double distToTargetSqr = this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
 
                 double baseReachSqr = (this.mob.getBbWidth() * 2.0F) * (this.mob.getBbWidth() * 2.0F) + target.getBbWidth();
@@ -208,11 +248,8 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             }
         });
 
-        // Blocks pursue movement while target-acquire roar plays
-        this.goalSelector.addGoal(2, new TargetAcquireRoarGoal(this));
-
         // Pursue movement begins only after roar gate unlocks
-        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, 0.8D, 20) {
+        this.goalSelector.addGoal(3, new MoveTowardsTargetGoal(this, PURSUIT_MOVE_SPEED_MODIFIER, 20) {
             // Checks if pursue movement can start
             @Override
             public boolean canUse() {
@@ -229,10 +266,8 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         });
 
         // Navigation toward recently detected vibration locations
-        this.goalSelector.addGoal(4, new VibrationGoal(this, 0.8D));
-
-        // Idle and awareness behavior
-        this.goalSelector.addGoal(5, new RandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(4, new VibrationGoal(this, NORMAL_MOVE_SPEED_MODIFIER));
+        this.goalSelector.addGoal(5, new RandomStrollGoal(this, NORMAL_MOVE_SPEED_MODIFIER));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         // Retaliation and proximity-based player targeting
@@ -272,24 +307,67 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         return this.level().getGameTime() >= this.pursueUnlockGameTime;
     }
 
-    // Starts roar lock and roar animation for a newly acquired target
+    // Returns true while target-acquire roar should immobilize the entity
+    private boolean isTargetAcquireRoarActive() {
+        return this.getTarget() != null && !this.isPursueUnlocked();
+    }
+
+    // Returns synced client-visible pursuit state for animation selection
+    private boolean isPursuingAcquiredTarget() {
+        return this.entityData.get(DATA_PURSUING_ACQUIRED_TARGET);
+    }
+
+    // Returns true on the server once the entity has finished roaring and is pursuing a live target
+    private boolean shouldPursueAcquiredTarget() {
+        LivingEntity target = this.getTarget();
+        return target != null && target.isAlive() && this.isPursueUnlocked();
+    }
+
+    // Syncs target pursuit state to clients for animation selection
+    private void setPursuingAcquiredTarget(boolean pursuing) {
+        this.entityData.set(DATA_PURSUING_ACQUIRED_TARGET, pursuing);
+    }
+
+    // Stops navigation and horizontal movement during target-acquire roar
+    private void stopTargetAcquireRoarMovement() {
+        this.getNavigation().stop();
+        this.setSpeed(0.0F);
+
+        Vec3 movement = this.getDeltaMovement();
+        this.setDeltaMovement(0.0D, movement.y, 0.0D);
+    }
+
+    // Starts roar lock, roar animation, and roar sound for a newly acquired target
     private void beginRoarForTarget(LivingEntity target) {
         this.pursueUnlockGameTime = this.level().getGameTime() + TARGET_ACQUIRE_ROAR_TICKS;
         this.lastRoarTarget = target;
 
         if (!this.level().isClientSide()) {
             this.level().broadcastEntityEvent(this, EVENT_ROAR_ANIM);
+
+            // Plays the roar sound at the same moment the roar animation starts.
+            this.level().playSound(
+                    null,
+                    this.getX(),
+                    this.getY(),
+                    this.getZ(),
+                    ModSounds.ENTITY_GLOAM_EYED_AMALGAM_ROAR.get(),
+                    this.getSoundSource(),
+                    ROAR_VOLUME,
+                    ROAR_PITCH
+            );
         }
     }
 
-    // Tracks newly acquired targets and opens roar gate before pursue movement
+
+    // Tracks newly acquired targets and holds movement until the roar animation ends
     private static class TargetAcquireRoarGoal extends Goal {
         private final GloamEyedAmalgamEntity mob;
 
         // Creates the target-acquire roar gate goal
         private TargetAcquireRoarGoal(GloamEyedAmalgamEntity mob) {
             this.mob = mob;
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
         }
 
         // Starts when there is a new live target that has not triggered roar yet
@@ -299,26 +377,60 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             return target != null && target.isAlive() && target != this.mob.lastRoarTarget;
         }
 
-        // Runs once to apply roar lock and animation trigger
+        // Applies roar lock and animation trigger
         @Override
         public void start() {
             LivingEntity target = this.mob.getTarget();
             if (target != null && target.isAlive()) {
                 this.mob.beginRoarForTarget(target);
-                this.mob.getNavigation().stop();
             }
         }
 
-        // Stops immediately after start because this is a one-shot gate trigger
+        // Keeps MOVE, LOOK, and JUMP locked until the roar timer ends
         @Override
         public boolean canContinueToUse() {
-            return false;
+            LivingEntity target = this.mob.getTarget();
+            return target != null
+                    && target.isAlive()
+                    && target == this.mob.lastRoarTarget
+                    && this.mob.isTargetAcquireRoarActive();
+        }
+
+        // Keeps the mob stationary and facing the acquired target during the roar
+        @Override
+        public void tick() {
+            LivingEntity target = this.mob.getTarget();
+            if (target != null) {
+                this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            }
+
+            this.mob.stopTargetAcquireRoarMovement();
+        }
+
+        // Ensures no leftover pathing or horizontal velocity remains after the goal exits
+        @Override
+        public void stop() {
+            this.mob.stopTargetAcquireRoarMovement();
         }
     }
+
 
     // ==================================
     //  TICKING / LIFECYCLE
     // ==================================
+
+    // Suppresses horizontal travel while the target-acquire roar is active
+    @Override
+    public void travel(Vec3 travelVector) {
+        if (this.isTargetAcquireRoarActive()) {
+            this.stopTargetAcquireRoarMovement();
+            super.travel(Vec3.ZERO);
+            this.stopTargetAcquireRoarMovement();
+            return;
+        }
+
+        super.travel(travelVector);
+    }
 
     // Ticks vibration state on server and heartbeat on client
     @Override
@@ -329,9 +441,23 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
         super.tick();
 
+        LivingEntity target = this.getTarget();
+        if (target == null || !target.isAlive()) {
+            this.lastRoarTarget = null;
+        }
+
+        if (this.isTargetAcquireRoarActive()) {
+            this.stopTargetAcquireRoarMovement();
+        }
+
+        if (!this.level().isClientSide()) {
+            this.setPursuingAcquiredTarget(this.shouldPursueAcquiredTarget());
+        }
+
         if (this.level().isClientSide()) {
             this.tickHeartbeatSoundClient();
         }
+
     }
 
     // Plays heartbeat sound locally on a fixed interval with adjustable loudness
@@ -503,7 +629,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Plays custom step sound
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(ModSounds.ENTITY_LIVING_SCULK_STEP.get(), 0.15F, 1.0F);
+        this.playSound(ModSounds.ENTITY_GLOAM_EYED_AMALGAM_STEP.get(), 0.15F, 1.0F);
     }
 
     // ==================================
@@ -568,8 +694,14 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
                     if (moving) {
                         this.allowCustomHeadLook = true;
+
+                        if (this.isPursuingAcquiredTarget()) {
+                            return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING_PURSUIT);
+                        }
+
                         return state.setAndContinue(GloamEyedAmalgamAnimations.WALKING);
                     }
+
 
                     if (state.isCurrentAnimation(GloamEyedAmalgamAnimations.IDLE_EYE_WATCH)) {
                         this.allowCustomHeadLook = false;

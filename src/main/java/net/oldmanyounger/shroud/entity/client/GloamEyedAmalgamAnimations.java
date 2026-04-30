@@ -28,6 +28,10 @@ public final class GloamEyedAmalgamAnimations {
     public static final RawAnimation WALKING =
             RawAnimation.begin().thenLoop("walking");
 
+    // Looped faster walking animation used while pursuing an acquired target
+    public static final RawAnimation WALKING_PURSUIT =
+            RawAnimation.begin().thenLoop("walking_pursuit");
+
     // One-shot melee attack animation
     public static final RawAnimation ATTACK =
             RawAnimation.begin().thenPlay("attack");

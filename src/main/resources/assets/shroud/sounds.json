@@ -112,6 +112,18 @@
       { "name": "shroud:entity/gloam_eyed_amalgam/heartbeat1" }
     ]
   },
+  "entity.gloam_eyed_amalgam.roar": {
+    "sounds": [
+      { "name": "shroud:entity/gloam_eyed_amalgam/roar1" }
+    ]
+  },
+  "entity.gloam_eyed_amalgam.step": {
+    "sounds": [
+      { "name": "shroud:entity/gloam_eyed_amalgam/step1" },
+      { "name": "shroud:entity/gloam_eyed_amalgam/step2" },
+      { "name": "shroud:entity/gloam_eyed_amalgam/step3" }
+    ]
+  },
   "block.sculk_emitter.spew": {
     "sounds": [
       { "name": "shroud:block/sculk_emitter/spew1" }

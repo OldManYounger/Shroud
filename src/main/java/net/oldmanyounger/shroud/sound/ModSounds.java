@@ -196,6 +196,23 @@ public final class ModSounds {
                     )
             );
 
+    // Gloam Eyed Amalgam target-acquire roar sound
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_GLOAM_EYED_AMALGAM_ROAR =
+            SOUND_EVENTS.register(
+                    "entity.gloam_eyed_amalgam.roar",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.roar")
+                    )
+            );
+    // Gloam Eyed Amalgam step sound
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_GLOAM_EYED_AMALGAM_STEP =
+            SOUND_EVENTS.register(
+                    "entity.gloam_eyed_amalgam.step",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.step")
+                    )
+            );
+
     // ==================================
     //  OTHER SOUNDS
     // ==================================

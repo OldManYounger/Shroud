@@ -1,3 +1,4 @@
+// File: src/main/java/net/oldmanyounger/shroud/entity/client/GloamEyedAmalgamAnimations.java
 package net.oldmanyounger.shroud.entity.client;
 
 import software.bernie.geckolib.animation.RawAnimation;
@@ -5,7 +6,7 @@ import software.bernie.geckolib.animation.RawAnimation;
 /**
  * Centralizes GeckoLib animation definitions for Gloam Eyed Amalgam.
  *
- * <p>This class exposes animation keys for locomotion and triggerable action states, including the renamed secondary idle animation key {@code idle_eye_watch}.
+ * <p>This class exposes animation keys for locomotion and triggerable action states, including roar-on-target-acquire sequencing support.
  *
  * <p>In the broader context of the project, this class is part of Shroud's client animation coordination layer that keeps entity controller logic and authored animation asset names synchronized.
  */
@@ -34,6 +35,10 @@ public final class GloamEyedAmalgamAnimations {
     // One-shot reaction animation for vibration events
     public static final RawAnimation VIBRATION_REACT =
             RawAnimation.begin().thenPlay("vibration_react");
+
+    // One-shot roar animation when a target is acquired
+    public static final RawAnimation ROAR =
+            RawAnimation.begin().thenPlay("roar");
 
     // Prevents instantiation of this animation constants holder
     private GloamEyedAmalgamAnimations() {

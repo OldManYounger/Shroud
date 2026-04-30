@@ -76,6 +76,10 @@ public class GloamEyedAmalgamModel extends GeoModel<GloamEyedAmalgamEntity> {
     ) {
         super.setCustomAnimations(animatable, instanceId, animationState);
 
+        if (!animatable.allowCustomHeadLook()) {
+            return;
+        }
+
         GeoBone headLeft = this.getAnimationProcessor().getBone("HeadLeft");
         GeoBone headRight = this.getAnimationProcessor().getBone("HeadRight");
         if (headLeft == null || headRight == null) {

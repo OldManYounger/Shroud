@@ -72,8 +72,14 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Max distance for acquiring player targets from vibration events
     private static final double VIBRATION_PLAYER_ACQUIRE_RANGE = 12.0D;
 
-    // Heartbeat interval in ticks
+    // Extra melee reach in blocks beyond vanilla-sized baseline
+    private static final double MELEE_REACH_BONUS_BLOCKS = 2.0D;
+
+    // Constant heartbeat interval in ticks
     private static final int HEARTBEAT_INTERVAL_TICKS = 40;
+
+    // Adjustable client heartbeat loudness
+    private static final float HEARTBEAT_VOLUME = 5.0F;
 
     // Entity event IDs for client animation triggers
     private static final byte EVENT_ATTACK_ANIM = 60;
@@ -150,8 +156,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
                 .add(Attributes.MAX_HEALTH, 500.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.20D)
                 .add(Attributes.ATTACK_DAMAGE, 30.0D)
+                .add(Attributes.ENTITY_INTERACTION_RANGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 15.0D)
-                .add(Attributes.ARMOR, 2.0D);
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
     // ==================================
@@ -163,7 +171,23 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     protected void registerGoals() {
         // Movement and combat goals
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false) {
+            // Extends melee range and preserves swing-based attack animation trigger
+            @Override
+            protected void checkAndPerformAttack(LivingEntity target) {
+                double distToTargetSqr = this.mob.distanceToSqr(target.getX(), target.getY(), target.getZ());
+
+                double baseReachSqr = (this.mob.getBbWidth() * 2.0F) * (this.mob.getBbWidth() * 2.0F) + target.getBbWidth();
+                double bonusReachSqr = MELEE_REACH_BONUS_BLOCKS * MELEE_REACH_BONUS_BLOCKS;
+                double totalReachSqr = baseReachSqr + bonusReachSqr;
+
+                if (distToTargetSqr <= totalReachSqr && this.isTimeToAttack()) {
+                    this.resetAttackCooldown();
+                    GloamEyedAmalgamEntity.this.swing(InteractionHand.MAIN_HAND);
+                    GloamEyedAmalgamEntity.this.doHurtTarget(target);
+                }
+            }
+        });
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.8D, 20));
 
         // Navigation toward recently detected vibration locations
@@ -206,37 +230,42 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  TICKING / LIFECYCLE
     // ==================================
 
-    // Ticks vibration state each update
+    // Ticks vibration state on server and heartbeat on client
     @Override
     public void tick() {
         if (this.level() instanceof ServerLevel serverLevel) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
-            this.tickHeartbeatSound(serverLevel);
         }
 
         super.tick();
+
+        if (this.level().isClientSide()) {
+            this.tickHeartbeatSoundClient();
+        }
     }
 
-    // Plays long-range heartbeat sound at a fixed interval
-    private void tickHeartbeatSound(ServerLevel level) {
+    // Plays heartbeat sound locally on a fixed interval with adjustable loudness
+    private void tickHeartbeatSoundClient() {
         if (this.isDeadOrDying() || this.isSilent()) {
             return;
         }
 
-        long gameTime = level.getGameTime();
+        long gameTime = this.level().getGameTime();
         if (gameTime < this.nextHeartbeatGameTime) {
             return;
         }
 
         this.nextHeartbeatGameTime = gameTime + HEARTBEAT_INTERVAL_TICKS;
 
-        level.playSound(
-                null,
-                this.blockPosition(),
+        this.level().playLocalSound(
+                this.getX(),
+                this.getY(),
+                this.getZ(),
                 ModSounds.ENTITY_GLOAM_EYED_AMALGAM_HEARTBEAT.get(),
                 this.getSoundSource(),
-                1.0F,
-                1.0F
+                HEARTBEAT_VOLUME,
+                this.getVoicePitch(),
+                false
         );
     }
 
@@ -332,6 +361,21 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         super.handleEntityEvent(id);
     }
 
+    // ==================================
+    //  LOOK ROTATION TUNING
+    // ==================================
+
+    // Matches vanilla-like max head yaw relative to body
+    @Override
+    public int getMaxHeadYRot() {
+        return 75;
+    }
+
+    // Controls how quickly the head can rotate per tick
+    @Override
+    public int getHeadRotSpeed() {
+        return 10;
+    }
     // ==================================
     //  SOUND OVERRIDES
     // ==================================

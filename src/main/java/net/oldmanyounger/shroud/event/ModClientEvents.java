@@ -10,6 +10,8 @@ import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
 import net.oldmanyounger.shroud.client.render.ModCorruptedReliquaryBlockEntityRenderer;
 import net.oldmanyounger.shroud.entity.ModEntities;
 import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamRenderer;
+import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamSculkShotModel;
+import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamSculkShotRenderer;
 import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
 import net.oldmanyounger.shroud.item.ModItems;
 
@@ -31,6 +33,7 @@ public class ModClientEvents {
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.LIVING_SCULK.get(), LivingSculkRenderer::new);
         event.registerEntityRenderer(ModEntities.GLOAM_EYED_AMALGAM.get(), GloamEyedAmalgamRenderer::new);
+        event.registerEntityRenderer(ModEntities.GLOAM_EYED_AMALGAM_SCULK_SHOT.get(), GloamEyedAmalgamSculkShotRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CORRUPTED_RELIQUARY.get(), ModCorruptedReliquaryBlockEntityRenderer::new);
     }
 
@@ -52,4 +55,14 @@ public class ModClientEvents {
             event.setNewFovModifier(fovModifier);
         }
     }
+
+    // Registers custom entity model layers
+    @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(
+                GloamEyedAmalgamSculkShotModel.LAYER_LOCATION,
+                GloamEyedAmalgamSculkShotModel::createBodyLayer
+        );
+    }
+
 }

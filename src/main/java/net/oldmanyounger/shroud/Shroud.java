@@ -20,10 +20,7 @@ import net.oldmanyounger.shroud.block.entity.ModBlockEntities;
 import net.oldmanyounger.shroud.compat.ModCompat;
 import net.oldmanyounger.shroud.effect.ModMobEffects;
 import net.oldmanyounger.shroud.entity.ModEntities;
-import net.oldmanyounger.shroud.entity.client.BlightedShadeRenderer;
-import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamRenderer;
-import net.oldmanyounger.shroud.entity.client.LivingSculkRenderer;
-import net.oldmanyounger.shroud.entity.client.UmbralHowlerRenderer;
+import net.oldmanyounger.shroud.entity.client.*;
 import net.oldmanyounger.shroud.item.ModCreativeModeTabs;
 import net.oldmanyounger.shroud.item.ModItems;
 import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeRegistries;
@@ -105,6 +102,7 @@ public class Shroud {
             EntityRenderers.register(ModEntities.UMBRAL_HOWLER.get(), UmbralHowlerRenderer::new);
             EntityRenderers.register(ModEntities.BLIGHTED_SHADE.get(), BlightedShadeRenderer::new);
             EntityRenderers.register(ModEntities.GLOAM_EYED_AMALGAM.get(), GloamEyedAmalgamRenderer::new);
+            EntityRenderers.register(ModEntities.GLOAM_EYED_AMALGAM_SCULK_SHOT.get(), GloamEyedAmalgamSculkShotRenderer::new);
             ModItemProperties.addCustomItemProperties();
         }
     }

@@ -7,10 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.entity.custom.BlightedShadeEntity;
-import net.oldmanyounger.shroud.entity.custom.GloamEyedAmalgamEntity;
-import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
-import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
+import net.oldmanyounger.shroud.entity.custom.*;
 
 /**
  * Registers all custom EntityType entries used by Shroud.
@@ -59,6 +56,19 @@ public class ModEntities {
                     () -> EntityType.Builder.of(GloamEyedAmalgamEntity::new, MobCategory.MONSTER)
                             .sized(0.9f, 2.9f)
                             .build(Shroud.MOD_ID + ":gloam_eyed_amalgam")
+            );
+
+    // Gloam Eyed Amalgam shulker-style sculk shot projectile registration
+    public static final DeferredHolder<EntityType<?>, EntityType<GloamEyedAmalgamSculkShotEntity>> GLOAM_EYED_AMALGAM_SCULK_SHOT =
+            ENTITY_TYPES.register(
+                    "gloam_eyed_amalgam_sculk_shot",
+                    () -> EntityType.Builder.<GloamEyedAmalgamSculkShotEntity>of(
+                                    (entityType, level) ->
+                                            new GloamEyedAmalgamSculkShotEntity(entityType, level), MobCategory.MISC)
+                            .sized(0.3125F, 0.3125F)
+                            .clientTrackingRange(8)
+                            .updateInterval(2)
+                            .build(Shroud.MOD_ID + ":gloam_eyed_amalgam_sculk_shot")
             );
 
     // Registers entity deferred entries on the mod event bus

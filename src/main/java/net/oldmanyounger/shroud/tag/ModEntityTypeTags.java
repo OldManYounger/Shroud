@@ -24,6 +24,21 @@ public final class ModEntityTypeTags {
                     ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "vibration_friendly")
             );
 
+    // Entity types that binding pedestals should never capture
+    public static final TagKey<EntityType<?>> BINDING_PEDESTAL_IMMUNE =
+            TagKey.create(
+                    Registries.ENTITY_TYPE,
+                    ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "binding_pedestal_immune")
+            );
+
+    // Entity types that should be treated as sculk-aligned faction members
+    public static final TagKey<EntityType<?>> SCULK =
+            TagKey.create(
+                    Registries.ENTITY_TYPE,
+                    ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "sculk")
+            );
+
+
     // Prevents instantiation of this static tag holder class
     private ModEntityTypeTags() {}
 }

@@ -3,11 +3,14 @@ package net.oldmanyounger.shroud.entity.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -110,6 +113,56 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     private static final double SCULK_SHOT_EYE_FORWARD_OFFSET = 0.45D;
 
     // ==================================
+    //  PULL AURA
+    // ==================================
+
+    // Time the target must remain unreachable before pull aura windup begins
+    private static final int UNREACHABLE_PULL_AURA_TICKS = 360;
+
+    // Delay between pull aura animation start and active pull force
+    private static final int PULL_AURA_WINDUP_TICKS = 30;
+
+    // Maximum distance where the pull aura affects the current target
+    private static final double PULL_AURA_RADIUS_BLOCKS = 20.0D;
+
+    // Distance where the pull aura reaches its strongest intended pull
+    private static final double PULL_AURA_CLOSE_DISTANCE_BLOCKS = 5.0D;
+
+    // Distance under which pull calculations stop to avoid center jitter
+    private static final double PULL_AURA_MIN_DISTANCE_BLOCKS = 0.75D;
+
+    // Pull force applied near the outer edge of the aura
+    private static final double PULL_AURA_FAR_STRENGTH = 0.010D;
+
+    // Pull force applied near the close-distance threshold
+    private static final double PULL_AURA_CLOSE_STRENGTH = 0.085D;
+
+    // Vertical pull multiplier keeps the pull aimed low without launching targets
+    private static final double PULL_AURA_VERTICAL_MULTIPLIER = 0.35D;
+
+    // Maximum inward horizontal speed caused by the aura
+    private static final double PULL_AURA_MAX_INWARD_SPEED = 0.55D;
+
+    // Height factor used for pulling targets toward the entity's lower half
+    private static final double PULL_AURA_CENTER_HEIGHT_FACTOR = 0.35D;
+
+    // Interval between inward particle ring spawns
+    private static final int PULL_AURA_PARTICLE_INTERVAL_TICKS = 4;
+
+    // Sparse particle count per ring pulse
+    private static final int PULL_AURA_PARTICLES_PER_RING = 14;
+
+    // Ring radius used by the inward-moving particle indicator
+    private static final double PULL_AURA_PARTICLE_RING_RADIUS = 4.25D;
+
+    // Small vertical scatter applied to pull aura ring particles
+    private static final double PULL_AURA_PARTICLE_Y_VARIANCE = 0.45D;
+
+    // Inward particle travel speed
+    private static final double PULL_AURA_PARTICLE_INWARD_SPEED = 0.17D;
+
+
+    // ==================================
     //  TARGETING / VIBRATION
     // ==================================
 
@@ -163,6 +216,12 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Custom step sound pitch
     private static final float STEP_PITCH = 1.0F;
 
+    // Arise sound loudness
+    private static final float ARISE_VOLUME = 3.0F;
+
+    // Arise sound pitch
+    private static final float ARISE_PITCH = 1.0F;
+
     // ==================================
     //  ANIMATION / SYNC IDS
     // ==================================
@@ -171,17 +230,27 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     private static final byte EVENT_ATTACK_ANIM = 60;
     private static final byte EVENT_VIBRATION_REACT_ANIM = 5;
     private static final byte EVENT_ROAR_ANIM = 61;
+    private static final byte EVENT_PULL_AURA_ANIM = 62;
+
+    // Duration to lock all actions while the arise animation plays
+    private static final int ARISE_ANIMATION_TICKS = 170;
+
+    // Interval between block-level arise particle bursts
+    private static final int ARISE_PARTICLE_INTERVAL_TICKS = 2;
 
     // GeckoLib animation controller names
     private static final String CTRL_LOCOMOTION = "gloam_eyed_amalgam_locomotion_controller";
     private static final String CTRL_VIBRATION = "gloam_eyed_amalgam_vibration_controller";
     private static final String CTRL_ATTACK = "gloam_eyed_amalgam_attack_controller";
     private static final String CTRL_ROAR = "gloam_eyed_amalgam_roar_controller";
+    private static final String CTRL_PULL_AURA = "gloam_eyed_amalgam_pull_aura_controller";
+    private static final String CTRL_ARISE = "gloam_eyed_amalgam_arise_controller";
 
     // GeckoLib trigger names
     private static final String TRIG_ATTACK = "attack";
     private static final String TRIG_VIBRATION_REACT = "vibration_react";
     private static final String TRIG_ROAR = "roar";
+    private static final String TRIG_PULL_AURA = "pull_aura";
 
     // Synced client animation state for target pursuit
     private static final EntityDataAccessor<Boolean> DATA_PURSUING_ACQUIRED_TARGET =
@@ -189,6 +258,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
     // Synced client animation state for target-acquire roar
     private static final EntityDataAccessor<Boolean> DATA_TARGET_ACQUIRE_ROARING =
+            SynchedEntityData.defineId(GloamEyedAmalgamEntity.class, EntityDataSerializers.BOOLEAN);
+
+    // Synced client animation state for shrieker-summoned emergence
+    private static final EntityDataAccessor<Boolean> DATA_ARISING =
             SynchedEntityData.defineId(GloamEyedAmalgamEntity.class, EntityDataSerializers.BOOLEAN);
 
     // ==================================
@@ -214,6 +287,22 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
     // Earliest game time when pursue movement may start after target-acquire roar
     private long pursueUnlockGameTime = 0L;
+
+    // Game time when the arise animation lock should end
+    private long ariseEndGameTime = 0L;
+
+    // Game time when the pull aura windup should become an active pull
+    private long pullAuraActivateGameTime = 0L;
+
+    // Earliest game time at which pull aura particles can pulse again
+    private long nextPullAuraParticleGameTime = 0L;
+
+    // Tracks whether the pull aura is actively applying force
+    private boolean pullAuraActive = false;
+
+    // Target that caused and owns the current pull aura state
+    @Nullable
+    private LivingEntity pullAuraTarget;
 
     // Tracks whether model-driven head look should be applied this frame
     private boolean allowCustomHeadLook = true;
@@ -241,6 +330,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
+        builder.define(DATA_ARISING, false);
         builder.define(DATA_PURSUING_ACQUIRED_TARGET, false);
         builder.define(DATA_TARGET_ACQUIRE_ROARING, false);
     }
@@ -268,6 +358,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Registers movement, combat, idle, and target-selection goals
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(0, new AriseLockGoal(this));
         this.goalSelector.addGoal(1, new TargetAcquireRoarGoal(this));
         this.goalSelector.addGoal(2, new GloamEyedAmalgamUnreachableRangedAttackGoal(this));
         this.goalSelector.addGoal(3, new GloamEyedAmalgamMeleeAttackGoal(this));
@@ -299,6 +390,101 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
                         target -> target.getType().is(EntityTypeTags.ZOMBIES)
                 )
         );
+    }
+
+    // ============================
+    // MISC HELPERS
+    // ============================
+
+    // Prevents this boss entity from despawning due to player distance
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return false;
+    }
+
+    // Starts the shrieker-summoned arise animation lock
+    public void beginAriseFromSummon() {
+        if (this.level().isClientSide()) return;
+
+        this.setArising(true);
+        this.ariseEndGameTime = this.level().getGameTime() + ARISE_ANIMATION_TICKS;
+        this.setTarget(null);
+        this.lastRoarTarget = null;
+        this.clearPullAuraState();
+        this.setTargetAcquireRoaring(false);
+        this.setPursuingAcquiredTarget(false);
+        this.stopAriseMovement();
+        this.playAriseSound();
+    }
+
+    // Returns whether the entity is currently locked in its arise animation
+    public boolean isArising() {
+        return this.entityData.get(DATA_ARISING);
+    }
+
+    // Syncs arise animation state to clients
+    private void setArising(boolean arising) {
+        if (this.entityData.get(DATA_ARISING) != arising) {
+            this.entityData.set(DATA_ARISING, arising);
+        }
+    }
+
+    // Stops movement while the entity is crawling out
+    private void stopAriseMovement() {
+        this.getNavigation().stop();
+        this.setSpeed(0.0F);
+        this.setDeltaMovement(0.0D, this.getDeltaMovement().y, 0.0D);
+    }
+
+    // Ticks arise particles and unlocks the entity when the animation window ends
+    private void tickAriseServer(ServerLevel level) {
+        long gameTime = level.getGameTime();
+
+        if (gameTime % ARISE_PARTICLE_INTERVAL_TICKS == 0L) {
+            this.spawnAriseParticles(level);
+        }
+
+        if (gameTime >= this.ariseEndGameTime) {
+            this.setArising(false);
+            this.ariseEndGameTime = 0L;
+        }
+    }
+
+    // Spawns block-level debris and sculk soul particles around the emergence point
+    private void spawnAriseParticles(ServerLevel level) {
+        BlockPos basePos = this.blockPosition().below();
+        BlockState baseState = level.getBlockState(basePos);
+
+        level.sendParticles(
+                new BlockParticleOption(ParticleTypes.BLOCK, baseState),
+                this.getX(),
+                this.getY() + 0.05D,
+                this.getZ(),
+                18,
+                0.75D,
+                0.08D,
+                0.75D,
+                0.12D
+        );
+
+        level.sendParticles(
+                ParticleTypes.SCULK_SOUL,
+                this.getX(),
+                this.getY() + 0.15D,
+                this.getZ(),
+                6,
+                0.35D,
+                0.05D,
+                0.35D,
+                0.02D
+        );
+    }
+
+    // Spawns an immediate heavier particle burst when the entity first begins emerging
+    public void spawnInitialAriseParticles(ServerLevel level) {
+        this.spawnAriseParticles(level);
+        this.spawnAriseParticles(level);
+        this.spawnAriseParticles(level);
     }
 
     // ==================================
@@ -337,6 +523,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
     // Starts roar lock, roar animation, and roar sound for a newly acquired target
     private void beginRoarForTarget(LivingEntity target) {
+        this.clearPullAuraState();
         this.pursueUnlockGameTime = this.level().getGameTime() + TARGET_ACQUIRE_ROAR_TICKS;
         this.lastRoarTarget = target;
         this.setTargetAcquireRoaring(true);
@@ -363,6 +550,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         this.pursueUnlockGameTime = 0L;
         this.setTargetAcquireRoaring(false);
         this.setPursuingAcquiredTarget(false);
+        this.clearPullAuraState();
 
         if (this.getVibrationLocation() == null) {
             this.getNavigation().stop();
@@ -408,6 +596,13 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Suppresses horizontal travel while the target-acquire roar is active
     @Override
     public void travel(Vec3 travelVector) {
+        if (this.isArising() || this.isTargetAcquireRoarActive()) {
+            this.stopAriseMovement();
+            super.travel(Vec3.ZERO);
+            this.stopAriseMovement();
+            return;
+        }
+
         if (this.isTargetAcquireRoarActive()) {
             this.stopTargetAcquireRoarMovement();
             super.travel(Vec3.ZERO);
@@ -421,12 +616,27 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // Ticks vibration state, target state, roar immobilization, sync state, and heartbeat sound
     @Override
     public void tick() {
-        if (this.level() instanceof ServerLevel serverLevel) {
+        if (this.level() instanceof ServerLevel serverLevel && !this.isArising()) {
             VibrationSystem.Ticker.tick(serverLevel, this.vibrationData, this.vibrationUser);
             this.tickDarknessAura(serverLevel);
         }
 
         super.tick();
+
+        if (this.isArising()) {
+            this.setTarget(null);
+            this.lastRoarTarget = null;
+            this.clearPullAuraState();
+            this.setTargetAcquireRoaring(false);
+            this.setPursuingAcquiredTarget(false);
+            this.stopAriseMovement();
+
+            if (this.level() instanceof ServerLevel serverLevel) {
+                this.tickAriseServer(serverLevel);
+            }
+
+            return;
+        }
 
         this.clearTargetStateIfNeeded();
 
@@ -436,7 +646,8 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
         this.updatePursuitStateServer();
 
-        if (!this.level().isClientSide()) {
+        if (this.level() instanceof ServerLevel serverLevel) {
+            this.tickPullAuraServer(serverLevel);
             this.tickStepSoundServer();
         }
 
@@ -549,6 +760,11 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             return;
         }
 
+        if (id == EVENT_PULL_AURA_ANIM) {
+            this.triggerAnim(CTRL_PULL_AURA, TRIG_PULL_AURA);
+            return;
+        }
+
         super.handleEntityEvent(id);
     }
 
@@ -570,7 +786,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
     // Returns whether model-level head look overrides are currently allowed
     public boolean allowCustomHeadLook() {
-        return this.allowCustomHeadLook && !this.isTargetAcquireRoaring();
+        return this.allowCustomHeadLook && !this.isTargetAcquireRoaring() && !this.isArising();
     }
 
     // ==================================
@@ -664,6 +880,20 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         );
     }
 
+    // Plays the emergence sound when the shrieker-summoned arise sequence begins
+    private void playAriseSound() {
+        this.level().playSound(
+                null,
+                this.getX(),
+                this.getY(),
+                this.getZ(),
+                ModSounds.ENTITY_GLOAM_EYED_AMALGAM_ARISE.get(),
+                this.getSoundSource(),
+                ARISE_VOLUME,
+                ARISE_PITCH
+        );
+    }
+
     // Plays the roar sound at the same moment the target-acquire roar animation starts
     private void playTargetAcquireRoarSound() {
         this.level().playSound(
@@ -703,6 +933,11 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(
                 new AnimationController<>(this, CTRL_LOCOMOTION, 4, state -> {
+                    if (this.isArising()) {
+                        this.allowCustomHeadLook = false;
+                        return PlayState.STOP;
+                    }
+
                     if (this.isMovingForAnimation()) {
                         this.allowCustomHeadLook = true;
 
@@ -727,6 +962,15 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
                     return state.setAndContinue(GloamEyedAmalgamAnimations.IDLE);
                 }),
 
+                new AnimationController<>(this, CTRL_ARISE, 0, state -> {
+                    if (!this.isArising()) {
+                        return PlayState.STOP;
+                    }
+
+                    this.allowCustomHeadLook = false;
+                    return state.setAndContinue(GloamEyedAmalgamAnimations.ARISE);
+                }),
+
                 new AnimationController<>(this, CTRL_VIBRATION, 2, state -> PlayState.STOP)
                         .triggerableAnim(TRIG_VIBRATION_REACT, GloamEyedAmalgamAnimations.VIBRATION_REACT),
 
@@ -734,7 +978,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
                         .triggerableAnim(TRIG_ATTACK, GloamEyedAmalgamAnimations.ATTACK),
 
                 new AnimationController<>(this, CTRL_ROAR, 2, state -> PlayState.STOP)
-                        .triggerableAnim(TRIG_ROAR, GloamEyedAmalgamAnimations.ROAR)
+                        .triggerableAnim(TRIG_ROAR, GloamEyedAmalgamAnimations.ROAR),
+
+                new AnimationController<>(this, CTRL_PULL_AURA, 2, state -> PlayState.STOP)
+                        .triggerableAnim(TRIG_PULL_AURA, GloamEyedAmalgamAnimations.PULL_AURA)
         );
     }
 
@@ -923,8 +1170,220 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     }
 
     // ==================================
+//  PULL AURA HELPERS
+// ==================================
+
+    // Starts the pull aura windup without interrupting movement or attacks
+    private void beginPullAuraWindup(LivingEntity target) {
+        if (this.isPullAuraStartedFor(target)) {
+            return;
+        }
+
+        this.pullAuraTarget = target;
+        this.pullAuraActive = false;
+        this.pullAuraActivateGameTime = this.level().getGameTime() + PULL_AURA_WINDUP_TICKS;
+        this.nextPullAuraParticleGameTime = 0L;
+
+        if (!this.level().isClientSide()) {
+            this.level().broadcastEntityEvent(this, EVENT_PULL_AURA_ANIM);
+            this.playPullAuraWindupSound();
+        }
+    }
+
+    // Returns true when the current pull aura belongs to the supplied target
+    private boolean isPullAuraStartedFor(LivingEntity target) {
+        return this.pullAuraTarget == target
+                && (this.pullAuraActive || this.pullAuraActivateGameTime > 0L);
+    }
+
+    // Clears all pull aura state
+    private void clearPullAuraState() {
+        this.pullAuraTarget = null;
+        this.pullAuraActive = false;
+        this.pullAuraActivateGameTime = 0L;
+        this.nextPullAuraParticleGameTime = 0L;
+    }
+
+    // Ticks the active pull aura after its windup has completed
+    private void tickPullAuraServer(ServerLevel level) {
+        LivingEntity target = this.getTarget();
+
+        if (!this.isValidPursuitTarget(target)
+                || target != this.pullAuraTarget
+                || !this.shouldPursueAcquiredTarget()) {
+            this.clearPullAuraState();
+            return;
+        }
+
+        long gameTime = level.getGameTime();
+        if (!this.pullAuraActive) {
+            if (gameTime < this.pullAuraActivateGameTime) {
+                return;
+            }
+
+            this.pullAuraActive = true;
+        }
+
+        this.applyPullAuraTo(target);
+        this.spawnPullAuraParticles(level);
+    }
+
+    // Applies distance-scaled pull force toward the entity's lower body
+    private void applyPullAuraTo(LivingEntity target) {
+        Vec3 center = this.getPullAuraCenter();
+        Vec3 targetCenter = target.position().add(0.0D, target.getBbHeight() * 0.5D, 0.0D);
+        Vec3 toCenter = center.subtract(targetCenter);
+        double distance = toCenter.length();
+
+        if (distance < PULL_AURA_MIN_DISTANCE_BLOCKS || distance > PULL_AURA_RADIUS_BLOCKS) {
+            return;
+        }
+
+        Vec3 direction = toCenter.normalize();
+        double clampedDistance = Mth.clamp(
+                distance,
+                PULL_AURA_CLOSE_DISTANCE_BLOCKS,
+                PULL_AURA_RADIUS_BLOCKS
+        );
+        double closeness = 1.0D - ((clampedDistance - PULL_AURA_CLOSE_DISTANCE_BLOCKS)
+                / (PULL_AURA_RADIUS_BLOCKS - PULL_AURA_CLOSE_DISTANCE_BLOCKS));
+        double strength = Mth.lerp(closeness, PULL_AURA_FAR_STRENGTH, PULL_AURA_CLOSE_STRENGTH);
+
+        Vec3 pull = new Vec3(
+                direction.x * strength,
+                direction.y * strength * PULL_AURA_VERTICAL_MULTIPLIER,
+                direction.z * strength
+        );
+
+        Vec3 nextMovement = target.getDeltaMovement().add(pull);
+        nextMovement = this.limitPullAuraInwardSpeed(nextMovement, direction);
+
+        target.setDeltaMovement(nextMovement);
+        target.hasImpulse = true;
+        this.syncPullAuraMovement(target);
+    }
+
+    // Sends forced pull movement to server players so client-side movement prediction receives the new velocity.
+    private void syncPullAuraMovement(LivingEntity target) {
+        if (target instanceof ServerPlayer serverPlayer) {
+            serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+        }
+    }
+
+    // Caps only inward horizontal speed so outside movement remains responsive
+    private Vec3 limitPullAuraInwardSpeed(Vec3 movement, Vec3 pullDirection) {
+        Vec3 horizontalDirection = new Vec3(pullDirection.x, 0.0D, pullDirection.z);
+
+        if (horizontalDirection.lengthSqr() < 1.0E-7D) {
+            return movement;
+        }
+
+        horizontalDirection = horizontalDirection.normalize();
+
+        double inwardSpeed = movement.x * horizontalDirection.x + movement.z * horizontalDirection.z;
+        if (inwardSpeed <= PULL_AURA_MAX_INWARD_SPEED) {
+            return movement;
+        }
+
+        double excessSpeed = inwardSpeed - PULL_AURA_MAX_INWARD_SPEED;
+        return movement.subtract(
+                horizontalDirection.x * excessSpeed,
+                0.0D,
+                horizontalDirection.z * excessSpeed
+        );
+    }
+
+    // Returns the world point the aura pulls toward
+    private Vec3 getPullAuraCenter() {
+        return new Vec3(
+                this.getX(),
+                this.getY() + this.getBbHeight() * PULL_AURA_CENTER_HEIGHT_FACTOR,
+                this.getZ()
+        );
+    }
+
+    // Spawns a sparse ring of particles that drift inward toward the pull center
+    private void spawnPullAuraParticles(ServerLevel level) {
+        long gameTime = level.getGameTime();
+
+        if (gameTime < this.nextPullAuraParticleGameTime) {
+            return;
+        }
+
+        this.nextPullAuraParticleGameTime = gameTime + PULL_AURA_PARTICLE_INTERVAL_TICKS;
+
+        Vec3 center = this.getPullAuraCenter();
+        double phase = (gameTime % 360L) * Mth.DEG_TO_RAD;
+
+        for (int i = 0; i < PULL_AURA_PARTICLES_PER_RING; i++) {
+            double angle = phase + (Mth.TWO_PI * i / PULL_AURA_PARTICLES_PER_RING);
+            double x = center.x + Math.cos(angle) * PULL_AURA_PARTICLE_RING_RADIUS;
+            double y = center.y + 0.15D + (this.getRandom().nextDouble() - 0.5D) * PULL_AURA_PARTICLE_Y_VARIANCE;
+            double z = center.z + Math.sin(angle) * PULL_AURA_PARTICLE_RING_RADIUS;
+
+            Vec3 particlePos = new Vec3(x, y, z);
+            Vec3 velocity = center.subtract(particlePos).normalize().scale(PULL_AURA_PARTICLE_INWARD_SPEED);
+
+            level.sendParticles(
+                    ParticleTypes.SCULK_SOUL,
+                    x,
+                    y,
+                    z,
+                    0,
+                    velocity.x,
+                    velocity.y,
+                    velocity.z,
+                    1.0D
+            );
+        }
+    }
+
+    // Plays feedback when the pull aura windup begins
+    private void playPullAuraWindupSound() {
+        this.level().playSound(
+                null,
+                this.getX(),
+                this.getY(),
+                this.getZ(),
+                SoundEvents.WARDEN_SONIC_CHARGE,
+                this.getSoundSource(),
+                1.6F,
+                0.65F
+        );
+    }
+
+    // ==================================
     //  GOAL IMPLEMENTATIONS
     // ==================================
+
+    // Locks movement, looking, and jumping while the arise animation plays
+    private static class AriseLockGoal extends Goal {
+        private final GloamEyedAmalgamEntity mob;
+
+        // Creates the arise lock goal
+        private AriseLockGoal(GloamEyedAmalgamEntity mob) {
+            this.mob = mob;
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP));
+        }
+
+        // Runs while the entity is arising
+        @Override
+        public boolean canUse() {
+            return this.mob.isArising();
+        }
+
+        // Continues while the entity is arising
+        @Override
+        public boolean canContinueToUse() {
+            return this.mob.isArising();
+        }
+
+        // Keeps the entity fixed in place
+        @Override
+        public void tick() {
+            this.mob.stopAriseMovement();
+        }
+    }
 
     // Tracks newly acquired targets and holds movement until the roar animation ends
     private static class TargetAcquireRoarGoal extends Goal {
@@ -939,6 +1398,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Starts when there is a new live target that has not triggered roar yet
         @Override
         public boolean canUse() {
+            if (this.mob.isArising()) return false;
             LivingEntity target = this.mob.getTarget();
             return this.mob.isValidPursuitTarget(target) && target != this.mob.lastRoarTarget;
         }
@@ -955,6 +1415,8 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Keeps MOVE, LOOK, and JUMP locked until the roar timer ends
         @Override
         public boolean canContinueToUse() {
+            if (this.mob.isArising()) return false;
+
             LivingEntity target = this.mob.getTarget();
             return this.mob.isValidPursuitTarget(target)
                     && target == this.mob.lastRoarTarget
@@ -993,12 +1455,14 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Starts melee pathing only after the roar lock ends
         @Override
         public boolean canUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget() && super.canUse();
         }
 
         // Continues melee pathing only after the roar lock ends
         @Override
         public boolean canContinueToUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget() && super.canContinueToUse();
         }
 
@@ -1030,25 +1494,30 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Starts pursuit only after the roar lock ends
         @Override
         public boolean canUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget() && super.canUse();
         }
 
         // Continues pursuit only after the roar lock ends
         @Override
         public boolean canContinueToUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget() && super.canContinueToUse();
         }
     }
 
-    // Fires a sculk shot when the current target cannot be reached by pathing for several seconds
+    // Fires a sculk shot and later starts pull aura when the target remains unreachable
     private static class GloamEyedAmalgamUnreachableRangedAttackGoal extends Goal {
         private final GloamEyedAmalgamEntity mob;
+
+        @Nullable
+        private LivingEntity trackedTarget;
 
         private int unreachableTicks;
         private long nextPathCheckGameTime;
         private long nextAttackGameTime;
 
-        // Creates the unreachable-target ranged attack monitor goal
+        // Creates the unreachable-target ranged attack and pull aura monitor goal
         private GloamEyedAmalgamUnreachableRangedAttackGoal(GloamEyedAmalgamEntity mob) {
             this.mob = mob;
         }
@@ -1056,18 +1525,21 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Runs while the mob has completed its roar and has a valid pursuit target
         @Override
         public boolean canUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget();
         }
 
         // Continues while the mob has completed its roar and has a valid pursuit target
         @Override
         public boolean canContinueToUse() {
+            if (this.mob.isArising()) return false;
             return this.mob.shouldPursueAcquiredTarget();
         }
 
         // Resets unreachable tracking when the monitor starts
         @Override
         public void start() {
+            this.trackedTarget = null;
             this.unreachableTicks = 0;
             this.nextPathCheckGameTime = 0L;
         }
@@ -1075,17 +1547,25 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         // Clears unreachable tracking when the monitor stops
         @Override
         public void stop() {
+            this.trackedTarget = null;
             this.unreachableTicks = 0;
             this.nextPathCheckGameTime = 0L;
         }
 
-        // Tracks path reachability and fires the ranged attack when the target remains unreachable
+        // Tracks path reachability, fires ranged shots, and escalates into pull aura
         @Override
         public void tick() {
             LivingEntity target = this.mob.getTarget();
             if (!this.mob.isValidPursuitTarget(target)) {
+                this.trackedTarget = null;
                 this.unreachableTicks = 0;
                 return;
+            }
+
+            if (target != this.trackedTarget) {
+                this.trackedTarget = target;
+                this.unreachableTicks = 0;
+                this.nextPathCheckGameTime = 0L;
             }
 
             long gameTime = this.mob.level().getGameTime();
@@ -1102,6 +1582,11 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
 
             this.unreachableTicks += UNREACHABLE_PATH_CHECK_INTERVAL_TICKS;
 
+            if (this.unreachableTicks >= UNREACHABLE_PULL_AURA_TICKS
+                    && !this.mob.isPullAuraStartedFor(target)) {
+                this.mob.beginPullAuraWindup(target);
+            }
+
             if (this.unreachableTicks < UNREACHABLE_RANGED_ATTACK_TICKS) {
                 return;
             }
@@ -1111,10 +1596,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             }
 
             this.nextAttackGameTime = gameTime + SCULK_SHOT_COOLDOWN_TICKS;
-            this.unreachableTicks = 0;
             this.mob.fireSculkShotAt(target);
         }
     }
+
 
     // ==================================
     //  VIBRATION USER

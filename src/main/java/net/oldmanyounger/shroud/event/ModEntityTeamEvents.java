@@ -12,6 +12,7 @@ import net.oldmanyounger.shroud.Shroud;
 import net.oldmanyounger.shroud.entity.custom.BlightedShadeEntity;
 import net.oldmanyounger.shroud.entity.custom.LivingSculkEntity;
 import net.oldmanyounger.shroud.entity.custom.UmbralHowlerEntity;
+import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 
 /**
  * Assigns sculk-aligned entities to a shared no-friendly-fire scoreboard team.
@@ -41,10 +42,8 @@ public final class ModEntityTeamEvents {
 
         Entity entity = event.getEntity();
 
-        if (!(entity instanceof Warden)
-                && !(entity instanceof LivingSculkEntity)
-                && !(entity instanceof UmbralHowlerEntity)
-                && !(entity instanceof BlightedShadeEntity)) {
+        // Only Wardens and sculk-aligned Shroud mobs belong to the shared neutral faction
+        if (!(entity instanceof Warden) && !entity.getType().is(ModEntityTypeTags.SCULK)) {
             return;
         }
 

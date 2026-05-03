@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.oldmanyounger.shroud.tag.ModEntityTypeTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -94,6 +95,10 @@ public class ModBindingPedestalBlockEntity extends net.minecraft.world.level.blo
         if (ritualLocked) return false;
         if (boundMobUuid != null) return false;
         if (!(entity instanceof Mob mob)) return false;
+
+        // Prevent boss and mini-boss entities from being trapped by binding pedestals
+        if (mob.getType().is(ModEntityTypeTags.BINDING_PEDESTAL_IMMUNE)) return false;
+
         if (!mob.isAlive() || mob.isRemoved()) return false;
 
         this.boundMobUuid = mob.getUUID();

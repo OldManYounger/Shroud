@@ -204,12 +204,22 @@ public final class ModSounds {
                             ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.roar")
                     )
             );
+
     // Gloam Eyed Amalgam step sound
     public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_GLOAM_EYED_AMALGAM_STEP =
             SOUND_EVENTS.register(
                     "entity.gloam_eyed_amalgam.step",
                     () -> SoundEvent.createVariableRangeEvent(
                             ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.step")
+                    )
+            );
+
+    // Gloam Eyed Amalgam arise sound used when summoned from sculk shriekers
+    public static final DeferredHolder<SoundEvent, SoundEvent> ENTITY_GLOAM_EYED_AMALGAM_ARISE =
+            SOUND_EVENTS.register(
+                    "entity.gloam_eyed_amalgam.arise",
+                    () -> SoundEvent.createVariableRangeEvent(
+                            ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "entity.gloam_eyed_amalgam.arise")
                     )
             );
 

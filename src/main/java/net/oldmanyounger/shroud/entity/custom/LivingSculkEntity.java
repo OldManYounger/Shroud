@@ -122,6 +122,9 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
     @Nullable
     private BlockPos vibrationLocation;
 
+    // Tracks whether model-driven idle head look should be applied this frame.
+    private boolean allowCustomHeadLook = true;
+
     // ============================================================
     //  STATIC HELPERS
     // ============================================================
@@ -525,6 +528,11 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
         return true;
     }
 
+    // Returns whether model-level idle head look overrides are currently allowed.
+    public boolean allowCustomHeadLook() {
+        return this.allowCustomHeadLook;
+    }
+
     // ============================================================
     //  GECKOLIB ANIMATION
     // ============================================================
@@ -539,17 +547,21 @@ public class LivingSculkEntity extends Monster implements GeoEntity, VibrationLi
                             || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-4D;
 
                     if (moving) {
+                        this.allowCustomHeadLook = false;
                         return state.setAndContinue(LivingSculkAnimations.WALKING);
                     }
 
                     if (state.isCurrentAnimation(LivingSculkAnimations.IDLE_HEAD_SPLIT)) {
+                        this.allowCustomHeadLook = false;
                         return state.setAndContinue(LivingSculkAnimations.IDLE_HEAD_SPLIT);
                     }
 
                     if (this.getRandom().nextInt(1800) == 0) {
+                        this.allowCustomHeadLook = false;
                         return state.setAndContinue(LivingSculkAnimations.IDLE_HEAD_SPLIT);
                     }
 
+                    this.allowCustomHeadLook = true;
                     return state.setAndContinue(LivingSculkAnimations.IDLE);
                 }),
 

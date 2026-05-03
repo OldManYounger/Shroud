@@ -6,7 +6,12 @@
 
 - Version 0.7.0
     Additions
-        - Added new mob: Twinblight Watcher
+        - Added new mob: Gloam-Eyed Amalgam
+            - Warden-type boss entity of the Shrouded dimension
+            - Multiple attack patterns and methods of dealing with 'cheese'
+            - Will eventually drop special gear and/or items
+    Changes
+        - Adjusted animations on Living Sculk and Gloam-Eyed Amalgam
 
 - Version 0.6.0
     Additions

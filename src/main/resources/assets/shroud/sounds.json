@@ -124,6 +124,11 @@
       { "name": "shroud:entity/gloam_eyed_amalgam/step3" }
     ]
   },
+  "entity.gloam_eyed_amalgam.arise": {
+    "sounds": [
+      { "name": "shroud:entity/gloam_eyed_amalgam/arise1" }
+    ]
+  },
   "block.sculk_emitter.spew": {
     "sounds": [
       { "name": "shroud:block/sculk_emitter/spew1" }

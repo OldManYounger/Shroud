@@ -44,6 +44,14 @@ public final class GloamEyedAmalgamAnimations {
     public static final RawAnimation ROAR =
             RawAnimation.begin().thenPlay("roar");
 
+    // One-shot pull aura windup animation
+    public static final RawAnimation PULL_AURA =
+            RawAnimation.begin().thenPlay("pull_aura");
+
+    // One-shot emergence animation used when summoned by a sculk shrieker
+    public static final RawAnimation ARISE =
+            RawAnimation.begin().thenPlay("arise");
+
     // Prevents instantiation of this animation constants holder
     private GloamEyedAmalgamAnimations() {
     }

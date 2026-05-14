@@ -4,7 +4,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.ritual.recipe.RitualRecipeManager;
 
 /**
  * Registers ritual datapack reload listeners.
@@ -20,7 +19,5 @@ public class ModRitualDataEvents {
 
     // Registers ritual recipe loader during reload listener setup
     @SubscribeEvent
-    public static void onAddReloadListeners(AddReloadListenerEvent event) {
-        event.addListener(RitualRecipeManager.INSTANCE);
-    }
+    public static void onAddReloadListeners(AddReloadListenerEvent event) {}
 }

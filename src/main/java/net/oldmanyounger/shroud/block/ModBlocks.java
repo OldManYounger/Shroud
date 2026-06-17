@@ -162,6 +162,15 @@ public class ModBlocks {
     public static final DeferredBlock<Block> GLOAMCANE = registerBlock("gloamcane",
             () -> new ModGloamcaneBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SUGAR_CANE)));
 
+    public static final DeferredBlock<SeagrassBlock> SCULK_SEA_GRASS = registerBlock("sculk_sea_grass",
+            () -> new SeagrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS)));
+
+    public static final DeferredBlock<SeagrassBlock> SCULK_SEA_BUSH = registerBlock("sculk_sea_bush",
+            () -> new SeagrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SEAGRASS)));
+
+    public static final DeferredBlock<ModTallSculkSeaGrassBlock> TALL_SCULK_SEA_GRASS = registerBlock("tall_sculk_sea_grass",
+            () -> new ModTallSculkSeaGrassBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.TALL_SEAGRASS)));
+
     public static final DeferredBlock<ModSculkVinesBlock> SCULK_VINES = registerBlockNoItem("sculk_vines",
             () -> new ModSculkVinesBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.CAVE_VINES),

@@ -5,7 +5,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -51,6 +50,14 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SCULK_SPIKE_PLACED = registerKey("sculk_spike_placed");
     public static final ResourceKey<PlacedFeature> SCULK_ARCH_PLACED = registerKey("sculk_arch_placed");
     public static final ResourceKey<PlacedFeature> SCULK_EMITTER_PLACED = registerKey("sculk_emitter_placed");
+
+    // Underwater plant placed feature keys
+    public static final ResourceKey<PlacedFeature> SCULK_SEA_GRASS_OCEAN_PLACED = registerKey("sculk_sea_grass_ocean");
+    public static final ResourceKey<PlacedFeature> SCULK_SEA_GRASS_RIVER_PLACED = registerKey("sculk_sea_grass_river");
+    public static final ResourceKey<PlacedFeature> SCULK_SEA_BUSH_OCEAN_PLACED = registerKey("sculk_sea_bush_ocean");
+    public static final ResourceKey<PlacedFeature> SCULK_SEA_BUSH_RIVER_PLACED = registerKey("sculk_sea_bush_river");
+    public static final ResourceKey<PlacedFeature> TALL_SCULK_SEA_GRASS_OCEAN_PLACED = registerKey("tall_sculk_sea_grass_ocean");
+    public static final ResourceKey<PlacedFeature> TALL_SCULK_SEA_GRASS_RIVER_PLACED = registerKey("tall_sculk_sea_grass_river");
 
     // ==================================
     //  BOOTSTRAP
@@ -161,6 +168,48 @@ public class ModPlacedFeatures {
                         BiomeFilter.biome()
                 )
         );
+
+        register(
+                context,
+                SCULK_SEA_GRASS_OCEAN_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SEA_GRASS),
+                sculkSeaPlantPatchPlacement(3)
+        );
+
+        register(
+                context,
+                SCULK_SEA_GRASS_RIVER_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SEA_GRASS),
+                sculkSeaPlantPatchPlacement(2)
+        );
+
+        register(
+                context,
+                SCULK_SEA_BUSH_OCEAN_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SEA_BUSH),
+                sculkSeaPlantPatchPlacement(2)
+        );
+
+        register(
+                context,
+                SCULK_SEA_BUSH_RIVER_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SCULK_SEA_BUSH),
+                sculkSeaPlantPatchPlacement(1)
+        );
+
+        register(
+                context,
+                TALL_SCULK_SEA_GRASS_OCEAN_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.TALL_SCULK_SEA_GRASS),
+                sculkSeaPlantPatchPlacement(1)
+        );
+
+        register(
+                context,
+                TALL_SCULK_SEA_GRASS_RIVER_PLACED,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.TALL_SCULK_SEA_GRASS),
+                sculkSeaPlantPatchPlacement(1)
+        );
     }
 
     // ==================================
@@ -196,6 +245,16 @@ public class ModPlacedFeatures {
                                 BlockPredicate.not(BlockPredicate.matchesFluids(BlockPos.ZERO.below(), Fluids.WATER, Fluids.FLOWING_WATER))
                         )
                 ),
+                BiomeFilter.biome()
+        );
+    }
+
+    // Builds vanilla-style patch-center placement for Shroud underwater plants
+    private static List<PlacementModifier> sculkSeaPlantPatchPlacement(int count) {
+        return List.of(
+                CountPlacement.of(count),
+                InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP_TOP_SOLID,
                 BiomeFilter.biome()
         );
     }

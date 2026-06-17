@@ -4,6 +4,22 @@
     Removals
     Bug Fixes
 
+- Version 0.7.2
+    Additions
+        - Added Desolate Plain biome to breakup forests
+        - Added sculk seagrass, tall sculk seagrass, and sculk sea bush for underwater variety
+    Changes
+        - Gloam-Eyed Amalgam
+            - Refined animations for walking and pursuit
+            - Adjusted walking and pursuit speed
+            - Improved logic for secondary and tertiary attack patterns
+        - Disabled precipitation in all biomes of the Shroud dimension
+        - Adjusted noise settings and dimension settings for biome placements
+    Removals
+        - Removed Sculk Beach biome due to looks
+    Bug Fixes
+        - Fixed issue where Gloam-Eyed Amalgam would only move when detecting vibration or pursuing a target
+
 - Version 0.7.1
     Bug Fixes
         - Removed logic that conflicted with Occultism ritual crafts

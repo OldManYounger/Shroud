@@ -94,6 +94,9 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         // Plants and flora
         add(ModBlocks.SCULK_BULB.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_BULB.get()));
         add(ModBlocks.GHOST_BLOOM.get(), block -> createShearsOnlyDrop(ModBlocks.GHOST_BLOOM.get()));
+        add(ModBlocks.SCULK_SEA_GRASS.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_SEA_GRASS.get()));
+        add(ModBlocks.TALL_SCULK_SEA_GRASS.get(), block -> createDoublePlantShearsDrop(ModBlocks.TALL_SCULK_SEA_GRASS.get()));
+        add(ModBlocks.SCULK_SEA_BUSH.get(), block -> createShearsOnlyDrop(ModBlocks.SCULK_SEA_BUSH.get()));
         add(ModBlocks.SCULK_VINES.get(), block -> noDrop());
         add(ModBlocks.SCULK_VINES_PLANT.get(), block -> noDrop());
         dropSelf(ModBlocks.GLOAMCANE.get());

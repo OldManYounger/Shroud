@@ -58,7 +58,14 @@ public class ModBlockTagProvider extends BlockTagsProvider {
         tag(BlockTags.REPLACEABLE)
                 .add(ModBlocks.SCULK_VINES.get())
                 .add(ModBlocks.SCULK_VINES_PLANT.get())
-                .add(ModBlocks.GHOST_BLOOM.get());
+                .add(ModBlocks.GHOST_BLOOM.get())
+                .add(ModBlocks.SCULK_SEA_GRASS.get())
+                .add(ModBlocks.TALL_SCULK_SEA_GRASS.get())
+                .add(ModBlocks.SCULK_SEA_BUSH.get());
+
+        tag(BlockTags.UNDERWATER_BONEMEALS)
+                .add(ModBlocks.SCULK_SEA_GRASS.get())
+                .add(ModBlocks.SCULK_SEA_BUSH.get());
 
         // Mining and ore tags
         tag(BlockTags.MINEABLE_WITH_PICKAXE)

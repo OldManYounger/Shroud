@@ -91,6 +91,9 @@ public class ModItemModelProvider extends ItemModelProvider {
         // Plant and block-derived items
         saplingItem(ModBlocks.SCULK_BULB);
         saplingItem(ModBlocks.GHOST_BLOOM);
+        saplingItem(ModBlocks.SCULK_SEA_GRASS);
+        tallSeaGrassItem(ModBlocks.TALL_SCULK_SEA_GRASS);
+        saplingItem(ModBlocks.SCULK_SEA_BUSH);
         basicItem(ModBlocks.GLOAMCANE.asItem());
         saplingItem(ModBlocks.VIRELITH_SAPLING);
         buttonItem(ModBlocks.VIRELITH_BUTTON, ModBlocks.VIRELITH_PLANKS);
@@ -117,10 +120,17 @@ public class ModItemModelProvider extends ItemModelProvider {
     }
 
     // Creates an item/generated model for a plant-like block item using the block texture
-    private ItemModelBuilder saplingItem(DeferredBlock<Block> item) {
+    private ItemModelBuilder saplingItem(DeferredBlock<? extends Block> item) {
         return withExistingParent(item.getId().getPath(), ResourceLocation.parse("item/generated"))
                 .texture("layer0",
                         ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + item.getId().getPath()));
+    }
+
+    // Creates an item/generated model for a tall sea plant using its bottom texture
+    private ItemModelBuilder tallSeaGrassItem(DeferredBlock<? extends Block> item) {
+        return withExistingParent(item.getId().getPath(), ResourceLocation.parse("item/generated"))
+                .texture("layer0",
+                        ResourceLocation.fromNamespaceAndPath(Shroud.MOD_ID, "block/" + item.getId().getPath() + "_bottom"));
     }
 
     // Creates a handheld item model for tools and weapons

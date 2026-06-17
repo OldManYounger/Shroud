@@ -7,6 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.TallSeagrassBlock;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -92,6 +94,9 @@ public class ModBlockStateProvider extends BlockStateProvider {
         saplingBlock(ModBlocks.SCULK_BULB);
         saplingBlock(ModBlocks.GHOST_BLOOM);
         saplingBlock(ModBlocks.GLOAMCANE);
+        seaGrassBlock(ModBlocks.SCULK_SEA_GRASS);
+        tallSeaGrassBlock(ModBlocks.TALL_SCULK_SEA_GRASS);
+        seaGrassBlock(ModBlocks.SCULK_SEA_BUSH);
         sculkVinesBlock(ModBlocks.SCULK_VINES, ModBlocks.SCULK_VINES_PLANT);
 
         // Technical and resource blocks
@@ -212,6 +217,44 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         blockTexture(blockRegistryObject.get())
                 ).renderType("cutout")
         );
+    }
+
+    // Creates a cutout model using the vanilla seagrass model shape with a custom texture
+    private void seaGrassBlock(DeferredBlock<? extends Block> blockRegistryObject) {
+        simpleBlock(
+                blockRegistryObject.get(),
+                models().singleTexture(
+                        blockRegistryObject.getId().getPath(),
+                        mcLoc("block/template_seagrass"),
+                        "texture",
+                        blockTexture(blockRegistryObject.get())
+                ).renderType("cutout")
+        );
+    }
+
+    // Creates lower and upper cutout models for a two-block-tall seagrass block
+    private void tallSeaGrassBlock(DeferredBlock<? extends TallSeagrassBlock> blockRegistryObject) {
+        String path = blockRegistryObject.getId().getPath();
+
+        ModelFile bottomModel = models().singleTexture(
+                path + "_bottom",
+                mcLoc("block/template_seagrass"),
+                "texture",
+                modLoc("block/" + path + "_bottom")
+        ).renderType("cutout");
+
+        ModelFile topModel = models().singleTexture(
+                path + "_top",
+                mcLoc("block/template_seagrass"),
+                "texture",
+                modLoc("block/" + path + "_top")
+        ).renderType("cutout");
+
+        getVariantBuilder(blockRegistryObject.get())
+                .partialState().with(TallSeagrassBlock.HALF, DoubleBlockHalf.LOWER)
+                .modelForState().modelFile(bottomModel).addModel()
+                .partialState().with(TallSeagrassBlock.HALF, DoubleBlockHalf.UPPER)
+                .modelForState().modelFile(topModel).addModel();
     }
 
     // Creates a cutout leaves model and matching item model

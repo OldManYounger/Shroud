@@ -31,6 +31,12 @@ public class GloamEyedAmalgamModel extends GeoModel<GloamEyedAmalgamEntity> {
     private static final float SECONDARY_PITCH_SCALE = 0.85F;
     private static final float OUTWARD_YAW_OFFSET_DEGREES = 6.0F;
 
+    // Full head look influence used when idle animations are free to follow the target
+    private static final float IDLE_HEAD_LOOK_WEIGHT = 1.0F;
+
+    // Reduced head look influence used while locomotion animations own most head motion
+    private static final float MOVING_HEAD_LOOK_WEIGHT = 0.35F;
+
     // ==================================
     //  MODEL RESOURCES
     // ==================================
@@ -67,7 +73,7 @@ public class GloamEyedAmalgamModel extends GeoModel<GloamEyedAmalgamEntity> {
     //  CUSTOM LOOK ROTATION
     // ==================================
 
-    // Applies vanilla look yaw and pitch directly to left and right head pivots
+    // Applies weighted look yaw and pitch additively so authored head animations still play
     @Override
     public void setCustomAnimations(
             GloamEyedAmalgamEntity animatable,
@@ -91,22 +97,26 @@ public class GloamEyedAmalgamModel extends GeoModel<GloamEyedAmalgamEntity> {
             return;
         }
 
+        float lookWeight = animatable.isMovingForAnimation()
+                ? MOVING_HEAD_LOOK_WEIGHT
+                : IDLE_HEAD_LOOK_WEIGHT;
+
         float yawDeg = clamp(modelData.netHeadYaw(), -MAX_HEAD_YAW_DEGREES, MAX_HEAD_YAW_DEGREES);
         float pitchDeg = clamp(modelData.headPitch(), MIN_HEAD_PITCH_DEGREES, MAX_HEAD_PITCH_DEGREES);
 
-        // Left head acts as primary look head
-        float leftYawRad = degreesToRadians(yawDeg + OUTWARD_YAW_OFFSET_DEGREES);
-        float leftPitchRad = degreesToRadians(pitchDeg);
+        // Left head acts as primary look head while preserving the current animated pose
+        float leftYawRad = degreesToRadians((yawDeg + OUTWARD_YAW_OFFSET_DEGREES) * lookWeight);
+        float leftPitchRad = degreesToRadians(pitchDeg * lookWeight);
 
         // Right head trails slightly and points a little outward for two-head identity
-        float rightYawRad = degreesToRadians((yawDeg * SECONDARY_YAW_SCALE) - OUTWARD_YAW_OFFSET_DEGREES);
-        float rightPitchRad = degreesToRadians(pitchDeg * SECONDARY_PITCH_SCALE);
+        float rightYawRad = degreesToRadians(((yawDeg * SECONDARY_YAW_SCALE) - OUTWARD_YAW_OFFSET_DEGREES) * lookWeight);
+        float rightPitchRad = degreesToRadians((pitchDeg * SECONDARY_PITCH_SCALE) * lookWeight);
 
-        headLeft.setRotY(leftYawRad);
-        headLeft.setRotX(leftPitchRad);
+        headLeft.setRotY(headLeft.getRotY() + leftYawRad);
+        headLeft.setRotX(headLeft.getRotX() + leftPitchRad);
 
-        headRight.setRotY(rightYawRad);
-        headRight.setRotX(rightPitchRad);
+        headRight.setRotY(headRight.getRotY() + rightYawRad);
+        headRight.setRotX(headRight.getRotX() + rightPitchRad);
     }
 
     // Converts degrees to radians

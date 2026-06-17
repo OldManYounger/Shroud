@@ -38,7 +38,10 @@
     [
       "shroud:patch_grass",
       "shroud:patch_sculk_bulb",
-      "shroud:patch_gloamcane"
+      "shroud:patch_gloamcane",
+      "shroud:sculk_sea_grass_ocean",
+      "shroud:tall_sculk_sea_grass_ocean",
+      "shroud:sculk_sea_bush_ocean"
     ],
     [
       "shroud:ore_eventide_placed"

@@ -45,7 +45,6 @@ import net.minecraft.world.level.gameevent.EntityPositionSource;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import net.oldmanyounger.shroud.entity.client.GloamEyedAmalgamAnimations;
 import net.oldmanyounger.shroud.entity.goal.VibrationGoal;
@@ -79,10 +78,13 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     // ==================================
 
     // Normal non-combat movement speed modifier
-    private static final double NORMAL_MOVE_SPEED_MODIFIER = 0.8D;
+    private static final double NORMAL_MOVE_SPEED_MODIFIER = 1.1D;
 
     // Faster movement speed modifier used while pursuing an acquired target
-    private static final double PURSUIT_MOVE_SPEED_MODIFIER = 2.0D;
+    private static final double PURSUIT_MOVE_SPEED_MODIFIER = 2.4D;
+
+    // Shorter ambient wander interval makes idle less common without removing idle animations
+    private static final int AMBIENT_WANDER_INTERVAL_TICKS = 40;
 
     // Extra melee reach in blocks beyond vanilla-sized baseline
     private static final double MELEE_REACH_BONUS_BLOCKS = 2.0D;
@@ -97,11 +99,13 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  RANGED ATTACK
     // ==================================
 
-    // Time the target must be unreachable before a sculk shot can fire
-    private static final int UNREACHABLE_RANGED_ATTACK_TICKS = 80;
+    // Minecraft server ticks per real-time second
+    private static final int TICKS_PER_SECOND = 20;
 
-    // Interval for expensive path reachability checks
-    private static final int UNREACHABLE_PATH_CHECK_INTERVAL_TICKS = 10;
+    // Time without a successful melee hit before the sculk shot phase begins
+    private static final int SECONDARY_ABILITY_NO_MELEE_ATTACK_SECONDS = 4;
+    private static final int SECONDARY_ABILITY_NO_MELEE_ATTACK_TICKS =
+            SECONDARY_ABILITY_NO_MELEE_ATTACK_SECONDS * TICKS_PER_SECOND;
 
     // Cooldown between sculk shot attacks
     private static final int SCULK_SHOT_COOLDOWN_TICKS = 100;
@@ -116,8 +120,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  PULL AURA
     // ==================================
 
-    // Time the target must remain unreachable before pull aura windup begins
-    private static final int UNREACHABLE_PULL_AURA_TICKS = 360;
+    // Time without a successful melee hit before the pull aura phase begins
+    private static final int THIRD_PHASE_NO_MELEE_ATTACK_SECONDS = 18;
+    private static final int THIRD_PHASE_NO_MELEE_ATTACK_TICKS =
+            THIRD_PHASE_NO_MELEE_ATTACK_SECONDS * TICKS_PER_SECOND;
 
     // Delay between pull aura animation start and active pull force
     private static final int PULL_AURA_WINDUP_TICKS = 30;
@@ -315,6 +321,9 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     @Nullable
     private BlockPos vibrationLocation;
 
+    // Last server game time when this entity landed a melee hit
+    private long lastSuccessfulMeleeAttackGameTime = 0L;
+
     // ==================================
     //  CONSTRUCTION / SYNC DATA
     // ==================================
@@ -364,7 +373,12 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         this.goalSelector.addGoal(3, new GloamEyedAmalgamMeleeAttackGoal(this));
         this.goalSelector.addGoal(4, new GloamEyedAmalgamPursuitGoal(this));
         this.goalSelector.addGoal(5, new VibrationGoal(this, NORMAL_MOVE_SPEED_MODIFIER));
-        this.goalSelector.addGoal(6, new RandomStrollGoal(this, NORMAL_MOVE_SPEED_MODIFIER));
+        this.goalSelector.addGoal(6, new RandomStrollGoal(
+                this,
+                NORMAL_MOVE_SPEED_MODIFIER,
+                AMBIENT_WANDER_INTERVAL_TICKS,
+                false
+        ));
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
@@ -525,6 +539,9 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     private void beginRoarForTarget(LivingEntity target) {
         this.clearPullAuraState();
         this.pursueUnlockGameTime = this.level().getGameTime() + TARGET_ACQUIRE_ROAR_TICKS;
+
+        // Starts phase escalation only after the roar lock ends
+        this.lastSuccessfulMeleeAttackGameTime = this.pursueUnlockGameTime;
         this.lastRoarTarget = target;
         this.setTargetAcquireRoaring(true);
 
@@ -545,20 +562,29 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             return;
         }
 
+        if (!this.hasCombatStateToClear()) {
+            return;
+        }
+
         this.setTarget(null);
         this.lastRoarTarget = null;
+        this.lastSuccessfulMeleeAttackGameTime = 0L;
         this.pursueUnlockGameTime = 0L;
         this.setTargetAcquireRoaring(false);
         this.setPursuingAcquiredTarget(false);
         this.clearPullAuraState();
+    }
 
-        if (this.getVibrationLocation() == null) {
-            this.getNavigation().stop();
-            this.setSpeed(0.0F);
-
-            Vec3 movement = this.getDeltaMovement();
-            this.setDeltaMovement(0.0D, movement.y, 0.0D);
-        }
+    // Returns true when stale combat-only state needs to be cleared
+    private boolean hasCombatStateToClear() {
+        return this.lastRoarTarget != null
+                || this.lastSuccessfulMeleeAttackGameTime > 0L
+                || this.pursueUnlockGameTime > 0L
+                || this.isTargetAcquireRoaring()
+                || this.isPursuingAcquiredTarget()
+                || this.pullAuraTarget != null
+                || this.pullAuraActive
+                || this.pullAuraActivateGameTime > 0L;
     }
 
     // Updates server-owned pursuit and roar state for client animation selection
@@ -593,10 +619,10 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     //  TICKING / MOVEMENT
     // ==================================
 
-    // Suppresses horizontal travel while the target-acquire roar is active
+    // Suppresses horizontal travel while arise or target-acquire roar locks are active
     @Override
     public void travel(Vec3 travelVector) {
-        if (this.isArising() || this.isTargetAcquireRoarActive()) {
+        if (this.isArising()) {
             this.stopAriseMovement();
             super.travel(Vec3.ZERO);
             this.stopAriseMovement();
@@ -657,7 +683,7 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
     }
 
     // Returns true when locomotion animation should use a moving state
-    private boolean isMovingForAnimation() {
+    public boolean isMovingForAnimation() {
         return this.getNavigation().isInProgress()
                 || this.getDeltaMovement().horizontalDistanceSqr() > MOVING_HORIZONTAL_DISTANCE_SQR;
     }
@@ -721,10 +747,15 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         }
     }
 
-    // Processes successful melee hits with feedback sound
+    // Processes successful melee hits with feedback sound and resets phase escalation
     @Override
     public boolean doHurtTarget(Entity target) {
         boolean result = super.doHurtTarget(target);
+
+        if (result && !this.level().isClientSide()) {
+            this.lastSuccessfulMeleeAttackGameTime = this.level().getGameTime();
+            this.clearPullAuraState();
+        }
 
         if (result) {
             this.level().playSound(
@@ -1046,6 +1077,11 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
                 && !isCreativePlayer(target);
     }
 
+    // Returns how long this entity has gone without landing a melee hit
+    private long getTicksSinceLastSuccessfulMeleeAttack() {
+        return Math.max(0L, this.level().getGameTime() - this.lastSuccessfulMeleeAttackGameTime);
+    }
+
     // Returns synced client-visible roar state for animation-safe head control
     private boolean isTargetAcquireRoaring() {
         return this.entityData.get(DATA_TARGET_ACQUIRE_ROARING);
@@ -1163,15 +1199,9 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         return baseReachSqr + bonusReachSqr;
     }
 
-    // Returns true when navigation can build a complete path to the target
-    private boolean hasReachablePathTo(LivingEntity target) {
-        Path path = this.getNavigation().createPath(target, 0);
-        return path != null && path.canReach();
-    }
-
     // ==================================
-//  PULL AURA HELPERS
-// ==================================
+    //  PULL AURA HELPERS
+    // ==================================
 
     // Starts the pull aura windup without interrupting movement or attacks
     private void beginPullAuraWindup(LivingEntity target) {
@@ -1211,6 +1241,12 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         if (!this.isValidPursuitTarget(target)
                 || target != this.pullAuraTarget
                 || !this.shouldPursueAcquiredTarget()) {
+            this.clearPullAuraState();
+            return;
+        }
+
+        // Stops the third phase once the entity successfully lands melee again
+        if (this.getTicksSinceLastSuccessfulMeleeAttack() < THIRD_PHASE_NO_MELEE_ATTACK_TICKS) {
             this.clearPullAuraState();
             return;
         }
@@ -1506,18 +1542,16 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
         }
     }
 
-    // Fires a sculk shot and later starts pull aura when the target remains unreachable
+    // Escalates secondary and third phase abilities when melee pressure fails
     private static class GloamEyedAmalgamUnreachableRangedAttackGoal extends Goal {
         private final GloamEyedAmalgamEntity mob;
 
         @Nullable
         private LivingEntity trackedTarget;
 
-        private int unreachableTicks;
-        private long nextPathCheckGameTime;
         private long nextAttackGameTime;
 
-        // Creates the unreachable-target ranged attack and pull aura monitor goal
+        // Creates the missed-melee phase escalation goal
         private GloamEyedAmalgamUnreachableRangedAttackGoal(GloamEyedAmalgamEntity mob) {
             this.mob = mob;
         }
@@ -1536,61 +1570,46 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             return this.mob.shouldPursueAcquiredTarget();
         }
 
-        // Resets unreachable tracking when the monitor starts
+        // Resets per-target ranged cooldown tracking
         @Override
         public void start() {
             this.trackedTarget = null;
-            this.unreachableTicks = 0;
-            this.nextPathCheckGameTime = 0L;
+            this.nextAttackGameTime = 0L;
         }
 
-        // Clears unreachable tracking when the monitor stops
+        // Clears per-target ranged cooldown tracking
         @Override
         public void stop() {
             this.trackedTarget = null;
-            this.unreachableTicks = 0;
-            this.nextPathCheckGameTime = 0L;
+            this.nextAttackGameTime = 0L;
         }
 
-        // Tracks path reachability, fires ranged shots, and escalates into pull aura
+        // Starts secondary and third phase abilities based on time since the last melee hit
         @Override
         public void tick() {
             LivingEntity target = this.mob.getTarget();
             if (!this.mob.isValidPursuitTarget(target)) {
                 this.trackedTarget = null;
-                this.unreachableTicks = 0;
                 return;
             }
 
             if (target != this.trackedTarget) {
                 this.trackedTarget = target;
-                this.unreachableTicks = 0;
-                this.nextPathCheckGameTime = 0L;
+                this.nextAttackGameTime = 0L;
             }
 
-            long gameTime = this.mob.level().getGameTime();
-            if (gameTime < this.nextPathCheckGameTime) {
-                return;
-            }
+            long ticksSinceMelee = this.mob.getTicksSinceLastSuccessfulMeleeAttack();
 
-            this.nextPathCheckGameTime = gameTime + UNREACHABLE_PATH_CHECK_INTERVAL_TICKS;
-
-            if (this.mob.isWithinMeleeAttackReach(target) || this.mob.hasReachablePathTo(target)) {
-                this.unreachableTicks = 0;
-                return;
-            }
-
-            this.unreachableTicks += UNREACHABLE_PATH_CHECK_INTERVAL_TICKS;
-
-            if (this.unreachableTicks >= UNREACHABLE_PULL_AURA_TICKS
+            if (ticksSinceMelee >= THIRD_PHASE_NO_MELEE_ATTACK_TICKS
                     && !this.mob.isPullAuraStartedFor(target)) {
                 this.mob.beginPullAuraWindup(target);
             }
 
-            if (this.unreachableTicks < UNREACHABLE_RANGED_ATTACK_TICKS) {
+            if (ticksSinceMelee < SECONDARY_ABILITY_NO_MELEE_ATTACK_TICKS) {
                 return;
             }
 
+            long gameTime = this.mob.level().getGameTime();
             if (gameTime < this.nextAttackGameTime) {
                 return;
             }
@@ -1599,7 +1618,6 @@ public class GloamEyedAmalgamEntity extends Monster implements GeoEntity, Vibrat
             this.mob.fireSculkShotAt(target);
         }
     }
-
 
     // ==================================
     //  VIBRATION USER

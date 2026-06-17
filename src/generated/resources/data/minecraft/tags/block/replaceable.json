@@ -2,6 +2,9 @@
   "values": [
     "shroud:sculk_vines",
     "shroud:sculk_vines_plant",
-    "shroud:ghost_bloom"
+    "shroud:ghost_bloom",
+    "shroud:sculk_sea_grass",
+    "shroud:tall_sculk_sea_grass",
+    "shroud:sculk_sea_bush"
   ]
 }

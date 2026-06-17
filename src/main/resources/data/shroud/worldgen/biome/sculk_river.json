@@ -34,7 +34,11 @@
     [
       "shroud:patch_grass",
       "shroud:patch_tall_grass",
-      "shroud:patch_sculk_bulb"
+      "shroud:patch_sculk_bulb",
+      "shroud:sculk_sea_grass_river",
+      "shroud:tall_sculk_sea_grass_river",
+      "shroud:sculk_sea_bush_river",
+      "shroud:patch_gloamcane"
     ],
     [
       "shroud:sculk_patch"
@@ -48,7 +52,7 @@
       "shroud:sculk_gloomstone_geode"
     ]
   ],
-  "has_precipitation": true,
+  "has_precipitation": false,
   "spawn_costs": {},
   "spawners": {
     "ambient": [],

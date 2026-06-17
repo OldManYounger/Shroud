@@ -2,14 +2,13 @@ package net.oldmanyounger.shroud.worldgen;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.oldmanyounger.shroud.Shroud;
-import net.oldmanyounger.shroud.worldgen.feature.SculkArchFeature;
-import net.oldmanyounger.shroud.worldgen.feature.SculkEmitterFeature;
-import net.oldmanyounger.shroud.worldgen.feature.SculkSpikeFeature;
+import net.oldmanyounger.shroud.worldgen.feature.*;
 
 /**
  * Registers custom feature types used by Shroud world generation.
@@ -41,6 +40,16 @@ public final class ModFeatures {
     public static final DeferredHolder<Feature<?>, Feature<NoneFeatureConfiguration>> SCULK_EMITTER =
             FEATURES.register("sculk_emitter",
                     () -> new SculkEmitterFeature(NoneFeatureConfiguration.CODEC));
+
+    // Feature type for placing two-block-tall underwater plants
+    public static final DeferredHolder<Feature<?>, Feature<BlockStateConfiguration>> TALL_WATER_PLANT =
+            FEATURES.register("tall_water_plant",
+                    () -> new ModTallWaterPlantFeature(BlockStateConfiguration.CODEC));
+
+    // Feature type for patchy Shroud underwater plant placement
+    public static final DeferredHolder<Feature<?>, Feature<BlockStateConfiguration>> SCULK_SEA_PLANT_PATCH =
+            FEATURES.register("sculk_sea_plant_patch",
+                    () -> new ModSculkSeaPlantPatchFeature(BlockStateConfiguration.CODEC));
 
     // Prevents instantiation of this static registration class
     private ModFeatures() {

@@ -80,6 +80,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.SCULK_BULB.get());
                         output.accept(ModBlocks.GHOST_BLOOM.get());
                         output.accept(ModBlocks.GLOAMCANE.get());
+                        output.accept(ModBlocks.SCULK_SEA_GRASS.get());
+                        output.accept(ModBlocks.TALL_SCULK_SEA_GRASS.get());
+                        output.accept(ModBlocks.SCULK_SEA_BUSH.get());
                         output.accept(ModBlocks.GLOOMSTONE.get());
                         output.accept(ModBlocks.SCULK_EMITTER.get());
 

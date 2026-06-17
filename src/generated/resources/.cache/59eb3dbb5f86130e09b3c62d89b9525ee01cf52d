@@ -1,4 +1,4 @@
-// 1.21.1	2026-04-25T15:19:51.8889767	Loot Tables
+// 1.21.1	2026-06-16T13:02:15.2958486	Loot Tables
 0e2c2e625dc7ad2fdb52e9997f3f95780702c270 data/shroud/loot_table/blocks/binding_pedestal.json
 e9bf82aea1ba268dea679101d20ab81ed6eda304 data/shroud/loot_table/blocks/chiseled_sculk_stone_bricks.json
 223c87792749534a1c050cd158888f7c91f2bfca data/shroud/loot_table/blocks/cobbled_sculk_deepslate.json
@@ -35,6 +35,8 @@ e4293c81b2d1831695a25649f897067031bbc1d8 data/shroud/loot_table/blocks/sculk_emi
 875363027fac201eb2686a04d9907646052a303d data/shroud/loot_table/blocks/sculk_grass.json
 5a31a10993bd94f36010b35559ce1260a18fc6e5 data/shroud/loot_table/blocks/sculk_gravel.json
 7e6bedbd3f1d0175b11c0c5cb130639828e489a6 data/shroud/loot_table/blocks/sculk_portal.json
+b3d7829df6cbef8ecdc2cb47cc2e138a32239b1c data/shroud/loot_table/blocks/sculk_sea_bush.json
+d9efa10138604307380a9812777c55b90a079c08 data/shroud/loot_table/blocks/sculk_sea_grass.json
 40af9eb4b51e63ccc1710af2e8106e04588db590 data/shroud/loot_table/blocks/sculk_stone.json
 d2c8452e8eb7d509b16c22e27a48d081053142c7 data/shroud/loot_table/blocks/sculk_stone_bricks.json
 e525bb6b429ab55e8a18202f2a45c01242d605db data/shroud/loot_table/blocks/sculk_stone_brick_slab.json
@@ -47,6 +49,7 @@ d5916bec8e4cf0d550fa949ff71bb493b737db9f data/shroud/loot_table/blocks/stripped_
 16d7528951471ccc17a2d69e9478b93c4b8f4e0b data/shroud/loot_table/blocks/stripped_umber_wood.json
 18457000f72d5af87120a5559609bf9790edfb1a data/shroud/loot_table/blocks/stripped_virelith_log.json
 f5d35764dcc36cd5885ff55054365b91ee11e4a8 data/shroud/loot_table/blocks/stripped_virelith_wood.json
+9ac1a9cf6353baeca6051bd0afbdf00551578275 data/shroud/loot_table/blocks/tall_sculk_sea_grass.json
 da2b0f5dabed53cb953b36360cce7848703701f8 data/shroud/loot_table/blocks/umber_button.json
 45f6e08a4a62d9f9693bef723c3e5e34f873f601 data/shroud/loot_table/blocks/umber_door.json
 bb206cabb3825888b37a1d8ca2206dea5cef5ca5 data/shroud/loot_table/blocks/umber_fence.json

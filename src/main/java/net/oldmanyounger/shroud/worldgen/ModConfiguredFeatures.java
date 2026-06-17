@@ -12,10 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.*;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.CherryFoliagePlacer;
@@ -63,6 +60,9 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SPIKE = registerKey("sculk_spike");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_ARCH = registerKey("sculk_arch");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_EMITTER = registerKey("sculk_emitter");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SEA_GRASS = registerKey("sculk_sea_grass");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> TALL_SCULK_SEA_GRASS = registerKey("tall_sculk_sea_grass");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SCULK_SEA_BUSH = registerKey("sculk_sea_bush");
 
     // ==================================
     //  BOOTSTRAP
@@ -81,6 +81,12 @@ public class ModConfiguredFeatures {
         register(context, SCULK_SPIKE, ModFeatures.SCULK_SPIKE.get(), NoneFeatureConfiguration.INSTANCE);
         register(context, SCULK_ARCH, ModFeatures.SCULK_ARCH.get(), NoneFeatureConfiguration.INSTANCE);
         register(context, SCULK_EMITTER, ModFeatures.SCULK_EMITTER.get(), NoneFeatureConfiguration.INSTANCE);
+        register(context, SCULK_SEA_GRASS, ModFeatures.SCULK_SEA_PLANT_PATCH.get(),
+                new BlockStateConfiguration(ModBlocks.SCULK_SEA_GRASS.get().defaultBlockState()));
+        register(context, TALL_SCULK_SEA_GRASS, ModFeatures.SCULK_SEA_PLANT_PATCH.get(),
+                new BlockStateConfiguration(ModBlocks.TALL_SCULK_SEA_GRASS.get().defaultBlockState()));
+        register(context, SCULK_SEA_BUSH, ModFeatures.SCULK_SEA_PLANT_PATCH.get(),
+                new BlockStateConfiguration(ModBlocks.SCULK_SEA_BUSH.get().defaultBlockState()));
     }
 
     // ==================================

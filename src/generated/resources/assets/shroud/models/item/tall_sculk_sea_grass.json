@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "shroud:block/tall_sculk_sea_grass_bottom"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "type": "shroud:sculk_sea_plant_patch",
+  "config": {
+    "state": {
+      "Name": "shroud:sculk_sea_bush"
+    }
+  }
+}

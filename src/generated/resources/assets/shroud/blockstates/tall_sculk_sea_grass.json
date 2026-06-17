@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "shroud:block/tall_sculk_sea_grass_bottom"
+    },
+    "half=upper": {
+      "model": "shroud:block/tall_sculk_sea_grass_top"
+    }
+  }
+}

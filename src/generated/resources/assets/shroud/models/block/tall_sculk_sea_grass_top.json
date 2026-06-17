@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_seagrass",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "texture": "shroud:block/tall_sculk_sea_grass_top"
+  }
+}

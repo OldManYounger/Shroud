@@ -1,0 +1,11 @@
+{
+  "type": "shroud:sculk_sea_plant_patch",
+  "config": {
+    "state": {
+      "Name": "shroud:tall_sculk_sea_grass",
+      "Properties": {
+        "half": "lower"
+      }
+    }
+  }
+}
